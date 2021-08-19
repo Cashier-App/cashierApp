@@ -1,0 +1,127 @@
+{
+  "StockItems": [
+    {
+      "id": 1,
+      "name": "Bakmi Ayam Komplit",
+      "category": {
+        "_Id": 1,
+        "name": "Foods"
+      },
+      "price": 35000,
+      "imageUrl": "https://ik.imagekit.io/damario789/bakmipolim/Bakmi-Ayam-Original-Komplit_ESX7TDS3A.jpeg?updatedAt=1627366608044",
+      "stock": 10,
+      "Recipe": [
+        {
+          "id": 7,
+          "name": "Pangsit Goreng",
+          "unit": "Unit",
+          "qty": 1,
+          "total": 300
+        },
+        {
+          "id": 1,
+          "name": "Mie",
+          "unit": "Pack",
+          "qty": 1,
+          "total": 200
+        },
+        {
+          "id": 3,
+          "name": "Lada",
+          "unit": "Kg",
+          "qty": 0.1,
+          "total": 2
+        }
+      ]
+    }
+  ],
+  "StockIngredients": [
+    {
+      "id": 1,
+      "name": "Mie",
+      "unit": "Pack",
+      "total": 199
+    },
+    {
+      "id": 2,
+      "name": "Mie Shirataki",
+      "unit": "Pack",
+      "total": 200
+    },
+    {
+      "id": 3,
+      "name": "Lada",
+      "unit": "Kg",
+      "total": 2
+    },
+    {
+      "id": 4,
+      "name": "Garam",
+      "unit": "Kg",
+      "total": 2
+    },
+    {
+      "id": 5,
+      "name": "Sawi",
+      "unit": "Kg",
+      "total": 2
+    },
+    {
+      "id": 6,
+      "name": "Bakso",
+      "unit": "Unit",
+      "total": 300
+    },
+    {
+      "id": 7,
+      "name": "Pangsit Goreng",
+      "unit": "Unit",
+      "total": 299
+    },
+    {
+      "id": 8,
+      "name": "Pangsit Rebus",
+      "unit": "Kg",
+      "total": 3
+    },
+    {
+      "id": 9,
+      "name": "Pangsit Rebus",
+      "unit": "Kg",
+      "total": 3
+    },
+    {
+      "id": 10,
+      "name": "Kecap Manis",
+      "unit": "Liter",
+      "total": 2
+    },
+    {
+      "id": 11,
+      "name": "Kecap Asin",
+      "unit": "Liter",
+      "total": 2
+    },
+    {
+      "id": 12,
+      "name": "Minyak",
+      "unit": "Liter",
+      "total": 2
+    }
+  ],
+  "Categories": [
+    {
+      "id": 1,
+      "name": "Foods"
+    },
+    {
+      "id": 2,
+      "name": "Drinks"
+    },
+    {
+      "id": 3,
+      "name": "Additionals"
+    }
+  ],
+  "Sales": []
+}
