@@ -6,8 +6,8 @@ const StockItemSchema = new mongoose.Schema({
     unique: true,
   },
   category: {
-    type: String,
-    required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "category",
   },
   price: {
     type: Number,
@@ -22,7 +22,7 @@ const StockItemSchema = new mongoose.Schema({
     required: true,
   },
   ingredients: {
-    type: [String], //Array of apa?
+    type: [], //Array of apa?
     required: true,
   },
 });

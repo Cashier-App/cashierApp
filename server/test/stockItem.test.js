@@ -25,41 +25,26 @@ describe("Stock Item case", () => {
     await mongoose.disconnect();
   });
 
-  it("should be able to create an item", async () => {
-    const response = await request(app)
-      .get("/StockItems")
-      .send({
-        name: "Bakmi Ayam Komplit",
-        category: "Makanan",
-        price: 35000,
-        stock: 20,
-        imageUrl: "tes",
-        ingredients: [
-          {
-            id: 7,
-            name: "Pangsit Goreng",
-            unit: "Unit",
-            qty: 1,
-            total: 300,
-          },
-          {
-            id: 1,
-            name: "Mie",
-            unit: "Pack",
-            qty: 1,
-            total: 200,
-          },
-          {
-            id: 3,
-            name: "Lada",
-            unit: "Kg",
-            qty: 0.1,
-            total: 2,
-          },
-        ],
-      });
-    expect(response.status).toBe(201);
+  it("GET '/StockItems' [SUCCESS CASE] should be able to return array", async () => {
+    const response = await request(app).get("/StockItems").send();
+    expect(response.status).toBe(200);
+    expect(Array.isArray(response.body)).toBe(true);
+    // console.log(response);
   });
+
+  // it("GET '/StockItems' [SUCCESS CASE] should be able to return array of all stock items", async () => {
+  //   const response = await request(app).get(`/StockItems/${id}`).send();
+  //   console.log(response);
+  //   expect(response.status).toBe(200);
+  // });
+
+  it("GET '/StockItems' [ERROR CASE] should be able to return array of all stock items", async () => {
+    const response = await request(app).get("/StockItems/611f86749442233e1c67332d").send();
+    console.log(response);
+    expect(response.status).toBe(404);
+    expect(response.body).toHaveProperty("message", "Stock Item not found");
+  });
+  // });
   // it("should be able to create an item", async () => {
   //   const response = await request(app)
   //     .post("/StockItem")

@@ -3,7 +3,7 @@ const StockItem = require("../model/StockItem");
 class Controller {
   static async list(req, res, next) {
     try {
-      const response = await StockItem.find().toArray();
+      const response = await StockItem.find();
       console.log(response);
       res.status(200).json(response);
     } catch (error) {
