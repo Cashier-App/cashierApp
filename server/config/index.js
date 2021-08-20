@@ -9,11 +9,9 @@ const connectDB = async () => {
       useCreateIndex: true,
       useFindAndModify: false,
     });
-    console.log("MongoDB connected");
   } catch (err) {
+    /* istanbul ignore next */
     console.log(err.message);
-    // to exit if there is error with failure
-    process.exit(1);
   }
 };
 
