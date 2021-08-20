@@ -2,6 +2,9 @@ const request = require("supertest");
 const mongoose = require("mongoose");
 // const User = require("../model/User");
 const app = require("../app");
+let ingredientId;
+let categoryId;
+let itemsId;
 
 describe("Stock Item case", () => {
   beforeAll(async () => {
@@ -12,6 +15,16 @@ describe("Stock Item case", () => {
         useCreateIndex: true,
         useFindAndModify: false,
       });
+      const response = await request(app).post("/StockIngredients").send();
+      const responseIngredient = await request(app).post("/StockIngredients").send({
+        name: "Kecap",
+        unit: "Liter",
+        total: 2,
+      });
+      ingredientId = responseIngredient.body._id;
+      console.log(responseIngredient, 909098);
+      let category = new Category({ name: "makanan" });
+      categoryId = await category.save();
     } catch (err) {
       console.log(err.message);
     }
@@ -29,91 +42,85 @@ describe("Stock Item case", () => {
     const response = await request(app).get("/StockItems").send();
     expect(response.status).toBe(200);
     expect(Array.isArray(response.body)).toBe(true);
-    // console.log(response);
   });
 
-  // it("GET '/StockItems' [SUCCESS CASE] should be able to return array of all stock items", async () => {
-  //   const response = await request(app).get(`/StockItems/${id}`).send();
-  //   console.log(response);
-  //   expect(response.status).toBe(200);
-  // });
+  it("POST /StockItems [SUCCESS CASE] should be able to create an item", async () => {
+    const response = await request(app)
+      .post("/StockItems")
+      .send({
+        name: "Bakmi Ayam Komplit",
+        category: categoryId,
+        price: 35000,
+        stock: 20,
+        imageUrl: "tes",
+        recipes: [{ ingredient: ingredientId, qty: 5 }],
+      });
+    expect(response.status).toBe(201);
+    itemsId = response.body._id;
+  });
 
-  it("GET '/StockItems' [ERROR CASE] should be able to return array of all stock items", async () => {
+  it("POST /StockItems [ERROR CASE] should be able to create an item", async () => {
+    const response = await request(app)
+      .post("/StockItems")
+      .send({
+        name: "Bakmi Ayam Komplit",
+        category: categoryId,
+        price: 35000,
+        stock: 20,
+        imageUrl: "tes",
+        recipes: [{ ingredient: ingredientId, qty: 5 }],
+      });
+    expect(response.status).toBe(400);
+  });
+
+  it("GET '/StockItems' [SUCCESS CASE] should be able to object of one item", async () => {
+    const response = await request(app).get(`/StockItems/${itemsId}`).send();
+    expect(response.status).toBe(200);
+  });
+
+  it("GET '/StockItems' [ERROR CASE] should be able to error message", async () => {
     const response = await request(app).get("/StockItems/611f86749442233e1c67332d").send();
-    console.log(response);
     expect(response.status).toBe(404);
     expect(response.body).toHaveProperty("message", "Stock Item not found");
   });
-  // });
-  // it("should be able to create an item", async () => {
-  //   const response = await request(app)
-  //     .post("/StockItem")
-  //     .send({
-  //       name: "Bakmi Ayam Komplit",
-  //       category: "Makanan",
-  //       price: 35000,
-  //       stock: 20,
-  //       imageUrl: "tes",
-  //       ingredients: [
-  //         {
-  //           id: 7,
-  //           name: "Pangsit Goreng",
-  //           unit: "Unit",
-  //           qty: 1,
-  //           total: 300,
-  //         },
-  //         {
-  //           id: 1,
-  //           name: "Mie",
-  //           unit: "Pack",
-  //           qty: 1,
-  //           total: 200,
-  //         },
-  //         {
-  //           id: 3,
-  //           name: "Lada",
-  //           unit: "Kg",
-  //           qty: 0.1,
-  //           total: 2,
-  //         },
-  //       ],
-  //     });
-  //   expect(response.status).toBe(201);
-  // });
-  // it("should be able to get access_token", async () => {
-  //   const response = await request(app).post("/User/login").send({
-  //     email: "admin@admin.com",
-  //     password: "admin",
-  //   });
-  //   expect(response.status).toBe(200);
-  //   expect(response.body).toHaveProperty("access_token");
-  // });
-  // it("should not be able to register when email already exists", async () => {
-  //   const response = await request(app).post("/User").send({
-  //     email: "admin@admin.com",
-  //     password: "admin",
-  //   });
-  //   expect(response.status).toBe(400);
-  // });
-  // it("should not be able to register a user when email / password is empty", async () => {
-  //   const response = await request(app).post("/User").send({
-  //     email: "",
-  //     password: "admin",
-  //   });
-  //   expect(response.status).toBe(400);
-  // });
-  // it("should not be able to login with invalid password", async () => {
-  //   const response = await request(app).post("/User/login").send({
-  //     email: "admin@admin.com",
-  //     password: "admin-",
-  //   });
-  //   expect(response.status).toBe(401);
-  // });
-  // it("should not be able to login,if user not exists", async () => {
-  //   const response = await request(app).post("/User/login").send({
-  //     email: "admin123123@admin.com",
-  //     password: "admin-",
-  //   });
-  //   expect(response.status).toBe(401);
-  // });
+
+  it("PUT /StockItems/:id [SUCCESS CASE] should be able to update stock item", async () => {
+    const response = await request(app)
+      .put(`/StockItems/${itemsId}`)
+      .send({
+        name: "Bakmi Ayam Komplit Mewah",
+        category: categoryId,
+        price: 35000,
+        stock: 20,
+        imageUrl: "tes",
+        recipes: [{ ingredient: ingredientId, qty: 5 }],
+      });
+    expect(response.status).toBe(200);
+    expect(response.body.name).toBe("Bakmi Ayam Komplit Mewah");
+  });
+
+  it("PUT /StockItems/:id [ERROR CASE] should not be able to update stock item", async () => {
+    const response = await request(app)
+      .put(`/StockItems/611f86749442233e1c67332d`)
+      .send({
+        name: "Bakmi Ayam Komplit Mewah",
+        category: categoryId,
+        price: 35000,
+        stock: 20,
+        imageUrl: "tes",
+        recipes: [{ ingredient: ingredientId, qty: 5 }],
+      });
+    expect(response.status).toBe(404);
+    expect(response.body).toHaveProperty("message", "Stock Item not found");
+  });
+
+  it("DELETE /StockItems/:id [SUCCESS CASE] should be able to delete stock Item by id", async () => {
+    const response = await request(app).delete(`/StockItems/${itemsId}`).send();
+    expect(response.status).toBe(200);
+  });
+
+  it("DELETE /StockItems/:id [ERROR CASE] should not be able to delete stock Item by id", async () => {
+    const response = await request(app).delete(`/StockItems/611f86749442233e1c67312d`).send();
+    expect(response.status).toBe(404);
+  });
 });

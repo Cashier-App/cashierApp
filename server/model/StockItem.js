@@ -21,10 +21,16 @@ const StockItemSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  ingredients: {
-    type: [], //Array of apa?
-    required: true,
-  },
+  recipes: [
+    {
+      ingredient: {
+        type: mongoose.Schema.Types.ObjectId,
+        require: true,
+        ref: "stockIngredient",
+      },
+      qty: Number,
+    },
+  ],
 });
 
 module.exports = StockItem = mongoose.model("stockItem", StockItemSchema);
