@@ -5,7 +5,7 @@ const routerSales = require("./routerSales");
 const routerCategories = require("./routerCategories");
 const routerUser = require("./routerUser");
 
-// router.use("/StockItems", routerStockItems);
+router.use("/StockItems", routerStockItems);
 // router.use("/StockIngredients", StockIngredients);
 // router.use("/Sales", routerSales);
 router.use("/Categories", routerCategories);
