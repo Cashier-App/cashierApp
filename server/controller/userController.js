@@ -4,12 +4,10 @@ const jwt = require("jsonwebtoken");
 class Controller {
   static async register(req, res) {
     const { email, password } = req.body;
-
+    if (!email || !password) {
+      return res.status(400).json({ message: "email/password is required" });
+    }
     try {
-      if (!email && !password)
-        return res
-          .status(404)
-          .json({ message: "email/password cant be empty" });
       let user = await User.findOne({ email });
       if (user) {
         // check if user is already exist
@@ -26,9 +24,8 @@ class Controller {
         res.status(201).json({ message: "User saved successfully" });
       }
     } catch (err) {
-      if (err.errors !== undefined) {
-        res.status(400).json({ message: "email/password is required" });
-      } else res.status(500).json({ message: "Internal server error" });
+      /* istanbul ignore next */
+      res.status(500).json({ message: "Internal server error" });
     }
   }
   static async login(req, res) {
@@ -44,8 +41,10 @@ class Controller {
             },
           };
           jwt.sign(payload, "SECRET", { expiresIn: 36000 }, (err, token) => {
-            if (err) throw err;
-            res.status(200).json({ access_token: token });
+            /* istanbul ignore next */
+            if (err) {
+              throw new Error(err);
+            } else res.status(200).json({ access_token: token });
           });
         } else {
           res.status(401).json({ message: "invalid email / password" });
@@ -54,9 +53,8 @@ class Controller {
         res.status(401).json({ message: "invalid email / password" });
       }
     } catch (err) {
-      if (err.errors !== undefined) {
-        res.status(400).json({ message: "email/password is required" });
-      } else res.status(500).json({ message: "Internal server error" });
+      /* istanbul ignore next */
+      res.status(500).json({ message: "Internal server error" });
     }
   }
 }
