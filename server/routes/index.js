@@ -6,7 +6,7 @@ const routerCategories = require("./routerCategories");
 const routerUser = require("./routerUser");
 
 // router.use("/StockItems", routerStockItems);
-// router.use("/StockIngredients", StockIngredients);
+router.use("/StockIngredients", routerStockIngredients);
 // router.use("/Sales", routerSales);
 router.use("/Categories", routerCategories);
 router.use("/User", routerUser);
