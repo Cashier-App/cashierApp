@@ -12,9 +12,7 @@ describe("User test case", () => {
         useCreateIndex: true,
         useFindAndModify: false,
       });
-    } catch (err) {
-      console.log(err.message);
-    }
+    } catch (err) {}
   });
 
   afterAll(async () => {
