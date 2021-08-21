@@ -3,7 +3,7 @@ const Sale = require("../model/Sale");
 class Controller {
   static async getAll(req, res) {
     try {
-      let response = await Sale.find({}).populate("items.item");
+      let response = await Sale.find({}).populate({ path: "items.item", populate: [{ path: "category" }, { path: "recipes.ingredient" }] });
       res.status(200).json(response);
     } catch (error) {
       /* istanbul ignore next */
