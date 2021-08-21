@@ -233,21 +233,86 @@ const getStockItems = async () => {
   }
 };
 const getStockItem = async (id) => {
-  // let stockItems = await redis.get("stockItems");
-  // if (stockItems) {
-  //   stockItem = JSON.parse(stockItems).find(
-  //     (stockItem) => stockItem._id === id
-  //   );
-  //   if (stockItem) return stockItem;
-  // } else {
+  let stockItems = await redis.get("stockItems");
+  if (stockItems) {
+    stockItem = JSON.parse(stockItems).find(
+      (stockItem) => stockItem._id === id
+    );
+    if (stockItem) return stockItem;
+  } else {
+    try {
+      let res = await API.get(`/StockItems/${id}`);
+      const { data } = res;
+      return data;
+    } catch (err) {
+      throw new Error(err.response.data.message);
+    }
+  }
+};
+const postAddStockItem = async (
+  name,
+  price,
+  category,
+  imageUrl,
+  recipes,
+  stock
+) => {
+  console.log(name, price);
+  // console.log(category, recipes, stock);
   try {
-    let res = await API.get(`/StockItems/${id}`);
+    await redis.del("stockItems");
+    let res = await API.post(
+      "/StockItems",
+      {
+        name,
+        price,
+        category,
+        imageUrl,
+        recipes,
+        stock,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
     const { data } = res;
     return data;
   } catch (err) {
     throw new Error(err.response.data.message);
   }
-  // }
+};
+const postEditStockItem = async (
+  _id,
+  name,
+  price,
+  category,
+  recipes,
+  stock
+) => {
+  try {
+    await redis.del("stockIngredients");
+    let res = await API.put(
+      `/StockItems/${_id}`,
+      {
+        name,
+        price,
+        category,
+        recipes,
+        stock,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const { data } = res;
+    return data;
+  } catch (err) {
+    throw new Error(err.response.data.message);
+  }
 };
 module.exports = {
   // categories
@@ -268,4 +333,6 @@ module.exports = {
   // stock Items
   getStockItems,
   getStockItem,
+  postAddStockItem,
+  postEditStockItem,
 };

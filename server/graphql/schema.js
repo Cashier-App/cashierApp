@@ -14,6 +14,7 @@ const {
   postRegisterUser,
   getStockItems,
   getStockItem,
+  postAddStockItem,
 } = require("./apisCall");
 
 const typeDefs = gql`
@@ -61,6 +62,8 @@ const typeDefs = gql`
     _id: ID
     name: String
     price: Float
+    category: Category
+    imageUrl: String
     recipes: [Recipe]
     stock: Float
   }
@@ -71,6 +74,10 @@ const typeDefs = gql`
   }
   type access_token {
     access_token: String
+  }
+  input add_recipe {
+    ingredient: String
+    qty: Float
   }
   type Mutation {
     # mutation category
@@ -93,6 +100,24 @@ const typeDefs = gql`
     # mutation user
     loginUser(email: String, password: String): access_token
     registerUser(email: String, password: String, name: String): String
+    # mutation stockItems
+    addStockItem(
+      name: String
+      price: Float
+      category: String
+      imageUrl: String
+      recipes: [add_recipe]
+      stock: Float
+    ): StockItem
+    editStockItem(
+      _id: ID
+      name: String
+      price: Float
+      category: String
+      imageUrl: String
+      recipes: [add_recipe]
+      stock: Float
+    ): StockItem
   }
 `;
 
@@ -120,6 +145,26 @@ const resolvers = {
     editStockIngredient: (_, args) =>
       postEditStockIngredient(args._id, args.name, args.unit, args.total),
     deleteStockIngredient: (_, args) => deleteStockIngredient(args._id),
+    // Stock Items
+    addStockItem: (_, args) =>
+      postAddStockItem(
+        args.name,
+        args.price,
+        args.category,
+        args.imageUrl,
+        args.recipes,
+        args.stock
+      ),
+    editStockItem: (_, args) =>
+      postEditStockItem(
+        args._id,
+        args.name,
+        args.category,
+        args.imageUrl,
+        args.price,
+        args.recipes,
+        args.stock
+      ),
     // User
     loginUser: (_, args) => postLoginUser(args.email, args.password),
     registerUser: (_, args) =>
