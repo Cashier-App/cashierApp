@@ -1,12 +1,10 @@
-import { Link } from "react-router-dom" 
+import { Link } from "react-router-dom";
 
 const Login = () => {
-     return (
-          <div
-      class="min-h-screen flex flex-col items-center justify-center bg-gray-100"
-    >
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
       <div
-        class="
+        className="
           flex flex-col
           bg-white
           shadow-md
@@ -20,24 +18,25 @@ const Login = () => {
           max-w-md
         "
       >
-        <div class="font-medium self-center text-xl sm:text-3xl text-gray-800">
+        <div className="font-medium self-center text-xl sm:text-3xl text-gray-800">
           Welcome Back
         </div>
-        <div class="mt-4 self-center text-xl sm:text-sm text-gray-800">
+        <div className="mt-4 self-center text-xl sm:text-sm text-gray-800">
           Enter your credentials to access your account
         </div>
 
-        <div class="mt-10">
+        <div className="mt-10">
           <form action="#">
-            <div class="flex flex-col mb-5">
+            <div className="flex flex-col mb-5">
               <label
                 for="email"
-                class="mb-1 text-xs tracking-wide text-gray-600"
-                >E-Mail Address:</label
+                className="mb-1 text-xs tracking-wide text-gray-600"
               >
-              <div class="relative">
+                E-Mail Address:
+              </label>
+              <div className="relative">
                 <div
-                  class="
+                  className="
                     inline-flex
                     items-center
                     justify-center
@@ -49,14 +48,14 @@ const Login = () => {
                     text-gray-400
                   "
                 >
-                  <i class="fas fa-at text-blue-500"></i>
+                  <i className="fas fa-at text-blue-500"></i>
                 </div>
 
                 <input
                   id="email"
                   type="email"
                   name="email"
-                  class="
+                  className="
                     text-sm
                     placeholder-gray-500
                     pl-10
@@ -71,15 +70,16 @@ const Login = () => {
                 />
               </div>
             </div>
-            <div class="flex flex-col mb-6">
+            <div className="flex flex-col mb-6">
               <label
                 for="password"
-                class="mb-1 text-xs sm:text-sm tracking-wide text-gray-600"
-                >Password:</label
+                className="mb-1 text-xs sm:text-sm tracking-wide text-gray-600"
               >
-              <div class="relative">
+                Password:
+              </label>
+              <div className="relative">
                 <div
-                  class="
+                  className="
                     inline-flex
                     items-center
                     justify-center
@@ -92,7 +92,7 @@ const Login = () => {
                   "
                 >
                   <span>
-                    <i class="fas fa-lock text-blue-500"></i>
+                    <i className="fas fa-lock text-blue-500"></i>
                   </span>
                 </div>
 
@@ -100,7 +100,7 @@ const Login = () => {
                   id="password"
                   type="password"
                   name="password"
-                  class="
+                  className="
                     text-sm
                     placeholder-gray-500
                     pl-10
@@ -116,10 +116,10 @@ const Login = () => {
               </div>
             </div>
 
-            <div class="flex w-full">
+            <div className="flex w-full">
               <button
                 type="submit"
-                class="
+                className="
                   flex
                   mt-2
                   items-center
@@ -137,10 +137,10 @@ const Login = () => {
                   ease-in
                 "
               >
-                <span class="mr-2 uppercase">Sign In</span>
+                <span className="mr-2 uppercase">Sign In</span>
                 <span>
                   <svg
-                    class="h-6 w-6"
+                    className="h-6 w-6"
                     fill="none"
                     stroke-linecap="round"
                     stroke-linejoin="round"
@@ -148,9 +148,7 @@ const Login = () => {
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                   >
-                    <path
-                      d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
+                    <path d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </span>
               </button>
@@ -158,9 +156,9 @@ const Login = () => {
           </form>
         </div>
       </div>
-      <div class="flex justify-center items-center mt-6">
+      <div className="flex justify-center items-center mt-6">
         <div
-          class="
+          className="
             inline-flex
             items-center
             text-gray-700
@@ -168,16 +166,20 @@ const Login = () => {
             text-xs text-center
           "
         >
-          <span class="ml-2"
-            >You don't have an account?
-            <Link to="/register"
+          <span className="ml-2">
+            You don't have an account?
+            <Link
+              to="/register"
               href="register.html"
-              class="text-xs ml-2 text-blue-500 font-semibold"
-              >Register now</Link></span>
+              className="text-xs ml-2 text-blue-500 font-semibold"
+            >
+              Register now
+            </Link>
+          </span>
         </div>
       </div>
     </div>
-     );
-}
+  );
+};
 
 export default Login;
