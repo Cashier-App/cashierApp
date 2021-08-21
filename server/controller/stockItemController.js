@@ -16,7 +16,7 @@ class Controller {
   static async findById(req, res, next) {
     const id = req.params.id;
     try {
-      let response = await StockItem.findOne({ _id: id });
+      let response = await StockItem.findOne({ _id: id }).populate("category").populate("recipes.ingredient");
       if (response) {
         res.status(200).json(response);
       } else {
