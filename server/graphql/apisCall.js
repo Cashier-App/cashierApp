@@ -55,7 +55,6 @@ const postAddCategory = async (name) => {
 };
 
 const postEditCategory = async (_id, name) => {
-  console.log(_id, name);
   try {
     await redis.del("categories");
     let res = await API.put(
@@ -81,7 +80,6 @@ const deleteCategory = async (_id) => {
     await redis.del("categories");
     let res = await API.delete(`/Categories/${_id}`);
     const { data } = res;
-    console.log(data);
     return "category deleted";
   } catch (err) {
     throw new Error(err.response.data.message);
@@ -176,7 +174,6 @@ const deleteStockIngredient = async (_id) => {
 };
 
 const postLoginUser = async (email, password) => {
-  console.log(email, password);
   try {
     let res = await API.post(
       `/user/login`,
@@ -257,8 +254,6 @@ const postAddStockItem = async (
   recipes,
   stock
 ) => {
-  console.log(name, price);
-  // console.log(category, recipes, stock);
   try {
     await redis.del("stockItems");
     let res = await API.post(
@@ -288,10 +283,12 @@ const postEditStockItem = async (
   name,
   price,
   category,
+  imageUrl,
   recipes,
   stock
 ) => {
   try {
+    console.log(name, price, category, imageUrl, recipes, stock);
     await redis.del("stockIngredients");
     let res = await API.put(
       `/StockItems/${_id}`,
@@ -299,6 +296,7 @@ const postEditStockItem = async (
         name,
         price,
         category,
+        imageUrl,
         recipes,
         stock,
       },

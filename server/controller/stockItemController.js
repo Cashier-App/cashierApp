@@ -5,7 +5,10 @@ const { getMaxStock } = require("../helpers/getStock");
 class Controller {
   static async list(req, res, next) {
     try {
-      const response = await StockItem.find({}).populate("category").populate("recipes.ingredient").lean();
+      const response = await StockItem.find({})
+        .populate("category")
+        .populate("recipes.ingredient")
+        .lean();
       res.status(200).json(response);
     } catch (error) {
       /* istanbul ignore next */
@@ -16,7 +19,9 @@ class Controller {
   static async findById(req, res, next) {
     const id = req.params.id;
     try {
-      let response = await StockItem.findOne({ _id: id }).populate("category").populate("recipes.ingredient");
+      let response = await StockItem.findOne({ _id: id })
+        .populate("category")
+        .populate("recipes.ingredient");
       if (response) {
         res.status(200).json(response);
       } else {
@@ -51,7 +56,9 @@ class Controller {
       });
 
       let saveStockItem = await newStockItem.save();
-      let reponse = await StockItem.findOne({ _id: saveStockItem._id }).populate("category").populate("recipes.ingredient");
+      let response = await StockItem.findOne({ _id: saveStockItem._id })
+        .populate("category")
+        .populate("recipes.ingredient");
       return res.status(201).json(response);
     } catch (error) {
       /* istanbul ignore next */
@@ -66,6 +73,7 @@ class Controller {
   static async update(req, res, next) {
     const id = req.params.id;
     const { stock, category, recipes } = req.body;
+    console.log(req.body);
     try {
       let responseCategory = await Category.findOne({ _id: category });
       /* istanbul ignore next */

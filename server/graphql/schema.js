@@ -15,6 +15,7 @@ const {
   getStockItems,
   getStockItem,
   postAddStockItem,
+  postEditStockItem,
 } = require("./apisCall");
 
 const typeDefs = gql`
