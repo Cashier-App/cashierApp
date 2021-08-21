@@ -50,7 +50,8 @@ class Controller {
         recipes,
       });
 
-      let response = await newStockItem.save();
+      let saveStockItem = await newStockItem.save();
+      let reponse = await StockItem.findOne({ _id: saveStockItem._id }).populate("category").populate("recipes.ingredient");
       return res.status(201).json(response);
     } catch (error) {
       /* istanbul ignore next */
