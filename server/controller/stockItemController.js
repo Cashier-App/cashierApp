@@ -29,8 +29,7 @@ class Controller {
   }
 
   static async create(req, res, next) {
-    let { name, category, price, stock, imageUrl, recipes, ingredient, qty } = req.body;
-    console.log(req.body, "reqbody create");
+    let { name, category, price, stock, imageUrl, recipes } = req.body;
     try {
       let responseCategory = await Category.findOne({ _id: category });
       /* istanbul ignore next */
@@ -52,7 +51,6 @@ class Controller {
       });
 
       let response = await newStockItem.save();
-      console.log(response, "<<<< response create");
       return res.status(201).json(response);
     } catch (error) {
       /* istanbul ignore next */
