@@ -12,25 +12,14 @@
       "stock": 10,
       "Recipe": [
         {
-          "id": 7,
-          "name": "Pangsit Goreng",
-          "unit": "Unit",
-          "qty": 1,
-          "total": 300
-        },
-        {
-          "id": 1,
-          "name": "Mie",
-          "unit": "Pack",
-          "qty": 1,
-          "total": 200
-        },
-        {
-          "id": 3,
-          "name": "Lada",
-          "unit": "Kg",
-          "qty": 0.1,
-          "total": 2
+          "_id": 1,
+          "ingredient": {
+            "id": 1,
+            "name": "Mie",
+            "unit": "Pack",
+            "total": 100
+          },
+          "qty": 1
         }
       ]
     }
@@ -40,7 +29,7 @@
       "id": 1,
       "name": "Mie",
       "unit": "Pack",
-      "total": 199
+      "total": 100
     },
     {
       "id": 2,
@@ -123,5 +112,32 @@
       "name": "Additionals"
     }
   ],
-  "Sales": []
+  "Sales": [
+    {
+      "date": "2021-08-21T16:40:37.181Z",
+      "id": 1,
+      "items": [
+        {
+          "id": 1,
+          "item": {
+            "id": 1,
+            "name": "Bakmi Ayam Komplit",
+            "categoryId": 1,
+            "price": 35000,
+            "stock": 2,
+            "imageUrl": "https://ik.imagekit.io/damario789/bakmipolim/Bakmi-Ayam-Original-Komplit_ESX7TDS3A.jpeg?updatedAt=1627366608044",
+            "recipes": [
+              {
+                "id": 1,
+                "ingredientId": 1,
+                "qty": 1
+              }
+            ]
+          },
+          "qty": 2
+        }
+      ],
+      "payment": "Debit"
+    }
+  ]
 }
