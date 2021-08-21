@@ -16,14 +16,16 @@ describe("Stock Item case", () => {
         useFindAndModify: false,
       });
       const response = await request(app).post("/StockIngredients").send();
-      const responseIngredient = await request(app).post("/StockIngredients").send({
-        name: "Kecap",
-        unit: "Liter",
-        total: 2,
-      });
+      const responseIngredient = await request(app)
+        .post("/StockIngredients")
+        .send({
+          name: "Kecap",
+          unit: "Liter",
+          total: 2,
+        });
       ingredientId = responseIngredient.body._id;
       console.log(responseIngredient, 909098);
-      let category = new Category({ name: "makanan" });
+      let category = new Category({ name: "Food" });
       categoryId = await category.save();
     } catch (err) {
       console.log(err.message);
@@ -51,9 +53,9 @@ describe("Stock Item case", () => {
         name: "Bakmi Ayam Komplit",
         category: categoryId,
         price: 35000,
-        stock: 20,
+        stock: 5,
         imageUrl: "tes",
-        recipes: [{ ingredient: ingredientId, qty: 5 }],
+        recipes: [{ ingredient: ingredientId, qty: 0.05 }],
       });
     expect(response.status).toBe(201);
     itemsId = response.body._id;
@@ -68,7 +70,7 @@ describe("Stock Item case", () => {
         price: 35000,
         stock: 20,
         imageUrl: "tes",
-        recipes: [{ ingredient: ingredientId, qty: 5 }],
+        recipes: [{ ingredient: ingredientId, qty: 0.05 }],
       });
     expect(response.status).toBe(400);
   });
@@ -79,7 +81,9 @@ describe("Stock Item case", () => {
   });
 
   it("GET '/StockItems' [ERROR CASE] should be able to error message", async () => {
-    const response = await request(app).get("/StockItems/611f86749442233e1c67332d").send();
+    const response = await request(app)
+      .get("/StockItems/611f86749442233e1c67332d")
+      .send();
     expect(response.status).toBe(404);
     expect(response.body).toHaveProperty("message", "Stock Item not found");
   });
@@ -91,9 +95,9 @@ describe("Stock Item case", () => {
         name: "Bakmi Ayam Komplit Mewah",
         category: categoryId,
         price: 35000,
-        stock: 20,
+        stock: 5,
         imageUrl: "tes",
-        recipes: [{ ingredient: ingredientId, qty: 5 }],
+        recipes: [{ ingredient: ingredientId, qty: 0.05 }],
       });
     expect(response.status).toBe(200);
     expect(response.body.name).toBe("Bakmi Ayam Komplit Mewah");
@@ -106,9 +110,9 @@ describe("Stock Item case", () => {
         name: "Bakmi Ayam Komplit Mewah",
         category: categoryId,
         price: 35000,
-        stock: 20,
+        stock: 5,
         imageUrl: "tes",
-        recipes: [{ ingredient: ingredientId, qty: 5 }],
+        recipes: [{ ingredient: ingredientId, qty: 0.05 }],
       });
     expect(response.status).toBe(404);
     expect(response.body).toHaveProperty("message", "Stock Item not found");
@@ -120,7 +124,9 @@ describe("Stock Item case", () => {
   });
 
   it("DELETE /StockItems/:id [ERROR CASE] should not be able to delete stock Item by id", async () => {
-    const response = await request(app).delete(`/StockItems/611f86749442233e1c67312d`).send();
+    const response = await request(app)
+      .delete(`/StockItems/611f86749442233e1c67312d`)
+      .send();
     expect(response.status).toBe(404);
   });
 });
