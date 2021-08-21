@@ -217,6 +217,38 @@ const postRegisterUser = async (email, password, name) => {
     throw new Error(err.response.data.message);
   }
 };
+// Stock Items
+const getStockItems = async () => {
+  let stockItems = await redis.get("stockItems");
+  if (stockItems) return JSON.parse(stockItems);
+  else {
+    try {
+      let response = await API.get("/StockItems");
+      const { data: dataCategories } = response;
+      await redis.set("stockItems", JSON.stringify(dataCategories));
+      return dataCategories;
+    } catch (err) {
+      throw new Error(err.response.data.message);
+    }
+  }
+};
+const getStockItem = async (id) => {
+  // let stockItems = await redis.get("stockItems");
+  // if (stockItems) {
+  //   stockItem = JSON.parse(stockItems).find(
+  //     (stockItem) => stockItem._id === id
+  //   );
+  //   if (stockItem) return stockItem;
+  // } else {
+  try {
+    let res = await API.get(`/StockItems/${id}`);
+    const { data } = res;
+    return data;
+  } catch (err) {
+    throw new Error(err.response.data.message);
+  }
+  // }
+};
 module.exports = {
   // categories
   getAllCategories,
@@ -233,4 +265,7 @@ module.exports = {
   // user
   postLoginUser,
   postRegisterUser,
+  // stock Items
+  getStockItems,
+  getStockItem,
 };

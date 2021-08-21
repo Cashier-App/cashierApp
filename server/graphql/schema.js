@@ -12,6 +12,8 @@ const {
   deleteStockIngredient,
   postLoginUser,
   postRegisterUser,
+  getStockItems,
+  getStockItem,
 } = require("./apisCall");
 
 const typeDefs = gql`
@@ -26,6 +28,7 @@ const typeDefs = gql`
     stockIngredient(id: String): StockIngredient
     stockItems: [StockItem]
     stockItem(id: String): StockItem
+    ingredient(id: String): StockIngredient
   }
   type User {
     _id: ID
@@ -46,10 +49,13 @@ const typeDefs = gql`
   type Recipe {
     _id: ID
     ingredient: Ingredient
+    qty: Float
   }
   type Ingredient {
-    stockIngredient: StockIngredient
-    qty: Float
+    _id: ID
+    name: String
+    unit: String
+    total: Float
   }
   type StockItem {
     _id: ID
@@ -98,6 +104,10 @@ const resolvers = {
     // Stock Ingredients
     stockIngredients: () => getStockIngredients(),
     stockIngredient: (_, args) => getStockIngredient(args.id),
+    ingredient: (_, args) => getStockIngredient(args.id),
+    // Stock Items
+    stockItems: () => getStockItems(),
+    stockItem: (_, args) => getStockItem(args.id),
   },
   Mutation: {
     // Categories

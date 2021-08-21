@@ -28,7 +28,7 @@ const StockItemSchema = new mongoose.Schema({
         require: true,
         ref: "stockIngredient",
       },
-      // qty: Number,
+      qty: Number,
     },
   ],
 });
