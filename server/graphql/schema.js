@@ -45,6 +45,9 @@ const typeDefs = gql`
   }
   type Recipe {
     _id: ID
+    ingredient: Ingredient
+  }
+  type Ingredient {
     stockIngredient: StockIngredient
     qty: Float
   }
