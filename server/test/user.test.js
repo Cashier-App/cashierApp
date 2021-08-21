@@ -27,6 +27,7 @@ describe("User test case", () => {
     const response = await request(app).post("/User").send({
       email: "admin@admin.com",
       password: "admin",
+      name: "admin",
     });
     expect(response.status).toBe(201);
   });
@@ -34,6 +35,7 @@ describe("User test case", () => {
     const response = await request(app).post("/User/login").send({
       email: "admin@admin.com",
       password: "admin",
+      name: "admin",
     });
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("access_token");
@@ -42,6 +44,7 @@ describe("User test case", () => {
     const response = await request(app).post("/User").send({
       email: "admin@admin.com",
       password: "admin",
+      name: "admin",
     });
     expect(response.status).toBe(400);
   });
