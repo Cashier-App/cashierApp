@@ -1,5 +1,6 @@
 const StockItem = require("../model/StockItem");
-
+const StockIngredient = require("../model/StockIngredient");
+const Category = require("../model/Category");
 class Controller {
   static async list(req, res, next) {
     try {
@@ -29,19 +30,35 @@ class Controller {
 
   static async create(req, res, next) {
     const { name, category, price, stock, imageUrl, recipes } = req.body;
-    // console.log(req.body, 123123);
     try {
-      let newStockItem = new StockItem({
-        name,
-        category,
-        price,
-        stock,
-        imageUrl,
-        recipes,
-      });
-      let response = await newStockItem.save();
-      console.log(newStockItem);
-      res.status(201).json(response);
+      let allStock = [];
+      let responseCategory = await Category.findOne({ _id: category });
+      if (responseCategory.name === "Food") {
+        recipes.forEach(async (recipe) => {
+          let responseIngredient = await StockIngredient.findOne({ _id: recipe.ingredient });
+          let allTotal = responseIngredient.total / recipe.qty;
+          console.log(responseIngredient.total, recipe.qty);
+          allStock.push(allTotal);
+        });
+        setTimeout(function () {
+          console.log(allStock.sort((a, b) => a - b));
+        }, 400);
+        console.log(113123123123);
+      } else {
+      }
+      res.send("halo");
+      // let newStockItem = new StockItem({
+      //   name,
+      //   category,
+      //   price,
+      //   stock,
+      //   imageUrl,
+      //   recipes,
+      // });
+      // let response = await newStockItem.save();
+      // // console.log(newStockItem);
+      // console.log(response);
+      // res.status(201).json(response);
     } catch (error) {
       console.log(error.message);
       /* istanbul ignore next */
