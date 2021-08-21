@@ -3,9 +3,11 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 class Controller {
   static async register(req, res) {
-    const { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({ message: "email/password is required" });
+    const { email, password, name } = req.body;
+    if (!email || !password || !name) {
+      return res
+        .status(400)
+        .json({ message: "email,password and name is required" });
     }
     try {
       let user = await User.findOne({ email });
@@ -16,6 +18,7 @@ class Controller {
         user = new User({
           email,
           password,
+          name,
         });
         // encrypt password
         const salt = await bcrypt.genSalt(10);
@@ -31,6 +34,7 @@ class Controller {
   static async login(req, res) {
     const { email, password: plainPass } = req.body;
     try {
+      console.log("masuk");
       let user = await User.findOne({ email });
       if (user) {
         if (bcrypt.compareSync(plainPass, user.password)) {
