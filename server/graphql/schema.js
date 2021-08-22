@@ -19,6 +19,7 @@ const {
   deleteStockItem,
   getSales,
   getSale,
+  postAddSale,
 } = require("./apisCall");
 
 const typeDefs = gql`
@@ -132,6 +133,8 @@ const typeDefs = gql`
       stock: Float
     ): StockItem
     deleteStockItem(_id: ID): String
+    # mutation sales
+    addSales(items: [add_item], payment: String): Sale
   }
 `;
 
@@ -187,6 +190,8 @@ const resolvers = {
     loginUser: (_, args) => postLoginUser(args.email, args.password),
     registerUser: (_, args) =>
       postRegisterUser(args.email, args.password, args.name),
+    //
+    addSales: (_, args) => postAddSale(args.items, args.payment),
   },
 };
 

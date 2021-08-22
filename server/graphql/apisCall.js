@@ -354,6 +354,28 @@ const getSale = async (id) => {
     }
   }
 };
+
+const postAddSale = async (items, payment) => {
+  try {
+    await redis.del("sales");
+    let res = await API.post(
+      "/Sales",
+      {
+        items,
+        payment,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const { data } = res;
+    return data;
+  } catch (err) {
+    throw new Error(err.response.data.message);
+  }
+};
 module.exports = {
   // categories
   getAllCategories,
@@ -379,4 +401,5 @@ module.exports = {
   // sales
   getSales,
   getSale,
+  postAddSale,
 };
