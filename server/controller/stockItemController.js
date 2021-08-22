@@ -73,7 +73,6 @@ class Controller {
   static async update(req, res, next) {
     const id = req.params.id;
     const { stock, category, recipes } = req.body;
-    console.log(req.body);
     let responseCategory;
     try {
       let responseById = await StockItem.findOne({ _id: id });
@@ -87,7 +86,6 @@ class Controller {
       }
       /* istanbul ignore next */
       if (stock && !recipes) {
-        console.log(1111);
         if (responseCategory.name === "Food") {
           let maxStock;
           if (!category) {
@@ -107,7 +105,6 @@ class Controller {
       }
       /* istanbul ignore next */
       if (!stock && recipes) {
-        console.log(2222);
         if (responseCategory.name === "Food") {
           let maxStock;
           if (!category) {
@@ -124,7 +121,6 @@ class Controller {
       }
       /* istanbul ignore next */
       if (!stock && !recipes) {
-        console.log(33333);
         if (responseCategory.name === "Food") {
           let maxStock;
           if (!category) {
@@ -145,7 +141,6 @@ class Controller {
 
       /* istanbul ignore next */
       if (stock && recipes) {
-        console.log(4444);
         if (responseCategory.name === "Food") {
           let maxStock;
           if (!category) {
@@ -164,7 +159,9 @@ class Controller {
         new: true,
         runValidators: true,
       });
-      let responseUpdated = await StockItem.findOne({ _id: id }).populate({ path: "category" }).populate({ path: "recipes.ingredient" });
+      let responseUpdated = await StockItem.findOne({ _id: id })
+        .populate({ path: "category" })
+        .populate({ path: "recipes.ingredient" });
       if (response) {
         return res.status(200).json(responseUpdated);
       } else {

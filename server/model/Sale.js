@@ -13,6 +13,14 @@ const saleSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  total: {
+    type: Number,
+    required: true,
+  },
+  adminName: {
+    type: String,
+    required: true,
+  },
   date: {
     type: Date,
     default: Date.now(),
