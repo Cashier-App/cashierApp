@@ -1,11 +1,11 @@
 import {
   Navbar,
   Sidebar,
-  StatusTransaction,
-  TableTransaction,
+  StatusStockItem,
+  TableStockItem,
 } from "../components";
 
-const Transaction = () => {
+const StockItem = () => {
   return (
     <div>
       <div
@@ -22,13 +22,12 @@ const Transaction = () => {
         <Navbar />
         <Sidebar />
         <div class="h-full ml-14 mt-14 mb-10 md:ml-56 bg-gray-200">
-          <StatusTransaction />
-          <TableTransaction />
-          {/* <CardItem /> */}
+          <StatusStockItem />
+          <TableStockItem />
         </div>
       </div>
     </div>
   );
 };
 
-export default Transaction;
+export default StockItem;
