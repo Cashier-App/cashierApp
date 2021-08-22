@@ -1,6 +1,40 @@
+import React from 'react';
 import { Link } from "react-router-dom";
+import { gql, useMutation } from "@apollo/client";
+import { useHistory } from "react-router-dom";
+
+const LOGIN_MUTATION = gql`
+mutation Mutation($email: String, $password: String, $name: String) {
+  loginUser(email: $email, password: $password, name: $name){
+    access_token
+  }
+}
+`;
 
 const Login = () => {
+  const history = useHistory();
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+
+  const [loginUser] = useMutation(LOGIN_MUTATION, {
+    onCompleted(data) {
+      console.log("mutation selesai", data);
+
+      // history.push("/");
+    },
+  })
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    let inputLoginUser = {
+      email,
+      password
+    }
+
+    loginUser({
+      variables: inputLoginUser
+    })
+  }
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
       <div
@@ -26,7 +60,7 @@ const Login = () => {
         </div>
 
         <div className="mt-10">
-          <form action="#">
+        <form onSubmit={handleSubmit}>
             <div className="flex flex-col mb-5">
               <label
                 for="email"
@@ -67,6 +101,7 @@ const Login = () => {
                     focus:outline-none focus:border-blue-400
                   "
                   placeholder="Enter your email"
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
             </div>
@@ -112,6 +147,7 @@ const Login = () => {
                     focus:outline-none focus:border-blue-400
                   "
                   placeholder="Enter your password"
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
             </div>

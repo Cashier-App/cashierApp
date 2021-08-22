@@ -1,6 +1,36 @@
+import React from 'react';
 import { Link } from "react-router-dom";
+import { gql, useMutation } from "@apollo/client";
+import { useHistory } from "react-router-dom";
+
+const REGISTER_MUTATION = gql`
+mutation Mutation($email: String, $password: String, $name: String) {
+  registerUser(email: $email, password: $password, name: $name)
+}
+`;
 
 const Register = () => {
+  const history = useHistory();
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [name, setName] = React.useState("");
+
+  const [registerUser] = useMutation(REGISTER_MUTATION)
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    let newRegisterUser = {
+      name,
+      email,
+      password
+    }
+
+    registerUser({
+      variables: newRegisterUser
+    })
+    history.push('/login')
+  }
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
       <div
@@ -26,7 +56,7 @@ const Register = () => {
         </div>
 
         <div className="mt-10">
-          <form action="#">
+          <form onSubmit={handleSubmit}>
             <div className="flex flex-col mb-5">
               <label
                 for="email"
@@ -67,6 +97,7 @@ const Register = () => {
                     focus:outline-none focus:border-blue-400
                   "
                   placeholder="Enter your name"
+                  onChange={(e) => setName(e.target.value)}
                 />
               </div>
             </div>
@@ -110,6 +141,7 @@ const Register = () => {
                     focus:outline-none focus:border-blue-400
                   "
                   placeholder="Enter your email"
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
             </div>
@@ -155,6 +187,7 @@ const Register = () => {
                     focus:outline-none focus:border-blue-400
                   "
                   placeholder="Enter your password"
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
             </div>
