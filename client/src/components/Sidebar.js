@@ -56,7 +56,6 @@ const Sidebar = () => {
           <li>
             <Link
               to="/"
-              //     className={pathname === "/" ? "hover:bg-gray-100" : "hover:bg-gray-100"}
               className="
                  relative
                  flex flex-row
@@ -135,8 +134,8 @@ const Sidebar = () => {
             </Link>
           </li>
           <li>
-            <a
-              href="#"
+            <Link
+              to="/statistic"
               className="
                  relative
                  flex flex-row
@@ -171,7 +170,7 @@ const Sidebar = () => {
               >
                 Statistics
               </span>
-            </a>
+            </Link>
           </li>
           <li>
             <a

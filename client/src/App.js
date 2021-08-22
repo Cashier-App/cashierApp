@@ -1,6 +1,8 @@
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { Home, Login, Register } from "./pages";
+import { Login, Register } from "./pages";
+import Statistic2 from "./pages/Statistic";
 import Transaction from "./pages/Transaction";
+import Home from "./pages/Home";
 
 function App() {
   return (
@@ -14,6 +16,9 @@ function App() {
         </Route>
         <Route path="/register">
           <Register />
+        </Route>
+        <Route path="/statistic">
+          <Statistic2 />
         </Route>
         <Route path="/">
           <Home />
