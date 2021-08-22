@@ -4,9 +4,9 @@ const routerStockIngredients = require("./routerStockIngredients");
 const routerSales = require("./routerSales");
 const routerCategories = require("./routerCategories");
 const routerUser = require("./routerUser");
-const { authentification } = require("../middlewares/auth");
+
 router.use("/User", routerUser);
-router.use(authentification);
+
 router.use("/StockItems", routerStockItems);
 router.use("/StockIngredients", routerStockIngredients);
 router.use("/Sales", routerSales);

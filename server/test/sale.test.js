@@ -1,5 +1,6 @@
 const request = require("supertest");
 const mongoose = require("mongoose");
+const path = require("path");
 // const User = require("../model/User");
 const app = require("../app");
 let ingredientId;
@@ -64,14 +65,13 @@ describe("Sale case", () => {
     const response = await request(app)
       .post("/StockItems")
       .set({ access_token })
-      .send({
-        name: "Bakmi Ayam Komplit",
-        category: categoryId,
-        price: 35000,
-        stock: 2,
-        imageUrl: "tes",
-        recipes: [{ ingredient: ingredientId, qty: 0.05 }],
-      });
+      .field("name", "Bakmi Ayam Komplit")
+      .field("category", categoryId.id)
+      .field("price", "350000")
+      .field("stock", "2")
+      .field("recipes[0][ingredient]", ingredientId)
+      .field("recipes[0][qty]", 0.05)
+      .attach("image", path.resolve(__dirname, "./test_image.jpg"));
     itemsId = response.body._id;
     const responseSales = await request(app)
       .post("/Sales")
@@ -84,7 +84,7 @@ describe("Sale case", () => {
     expect(responseSales.status).toBe(201);
   });
 
-  it("POST /Sales [ERROR CASE] should be able to create an item", async () => {
+  it("POST /Sales [ERROR CASE] should be able to create an item,if payment is not provided", async () => {
     const responseSales = await request(app)
       .post("/Sales")
       .set({ access_token })

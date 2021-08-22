@@ -68,7 +68,7 @@ describe("Category test case", () => {
         name: "",
       });
     expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty("message");
+    expect(response.body).toHaveProperty("message", "Path `name` is required.");
   });
   it("should be able to get single category by id", async () => {
     const response = await request(app)

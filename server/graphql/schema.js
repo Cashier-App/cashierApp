@@ -1,3 +1,8 @@
+const {
+  GraphQLUpload,
+  graphqlUploadExpress, // A Koa implementation is also exported.
+} = require("graphql-upload");
+const finished = require("stream").promises;
 const { gql } = require("apollo-server");
 const {
   getAllCategories,
@@ -84,6 +89,11 @@ const typeDefs = gql`
   }
   type access_token {
     access_token: String
+  }
+  type File {
+    filename: String!
+    mimetype: String!
+    encoding: String!
   }
   input add_recipe {
     ingredient: String

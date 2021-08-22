@@ -97,6 +97,7 @@ const getStockIngredients = async () => {
       await redis.set("stockIngredients", JSON.stringify(dataCategories));
       return dataCategories;
     } catch (err) {
+      console.log(err);
       throw new Error(err.response.data.message);
     }
   }

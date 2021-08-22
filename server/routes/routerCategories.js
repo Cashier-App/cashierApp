@@ -1,5 +1,7 @@
 const router = require("express").Router();
 const Controller = require("../controller/categoryController");
+const { authentification } = require("../middlewares/auth");
+router.use(authentification);
 router.post("/", Controller.create);
 router.get("/:id", Controller.getById);
 router.put("/:id", Controller.update);
