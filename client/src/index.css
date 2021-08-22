@@ -3,21 +3,26 @@
 @tailwind utilities;
 
 .box-statistic {
-  width: 921px;
-  height: 391px;
+  width: 971px;
+  height: 351px;
+  background: #ffffff;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 21px;
 }
 
 .mini-box {
-  width: 623px;
-  height: 391px;
+  width: 613px;
+  height: 381px;
 }
 
 .input-box {
-  width: 302px;
-  height: 186px;
+  width: 252px;
+  height: 156px;
   background: #ffffff;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 21px;
+}
+
+.stats-color {
+  background: #4fa8e9;
 }

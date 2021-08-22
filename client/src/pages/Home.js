@@ -1,7 +1,6 @@
-import { Navbar, Sidebar, StatusItem } from "../components";
-import Statistic from "./Stats";
+import { CardItem, Cart, Navbar, Sidebar, StatusItem } from "../components";
 
-const Statistic2 = () => {
+const Home = () => {
   return (
     <div>
       <div
@@ -18,11 +17,12 @@ const Statistic2 = () => {
         <Sidebar />
         <div class="h-full ml-14 mt-14 mb-10 md:ml-52 bg-gray-200 mr-14 md:mr-80">
           <StatusItem />
-          <Statistic />
+          <CardItem />
         </div>
+        <Cart />
       </div>
     </div>
   );
 };
 
-export default Statistic2;
+export default Home;
