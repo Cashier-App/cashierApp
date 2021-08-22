@@ -18,9 +18,9 @@ class Controller {
     try {
       let response = await StockItem.findOne({ _id: id }).populate("category").populate("recipes.ingredient");
       if (response) {
-        res.status(200).json(response);
+        return res.status(200).json(response);
       } else {
-        res.status(404).json({ message: "Stock Item not found" });
+        return res.status(404).json({ message: "Stock Item not found" });
       }
     } catch (error) {
       /* istanbul ignore next */
@@ -56,9 +56,9 @@ class Controller {
     } catch (error) {
       /* istanbul ignore next */
       if (error.message !== undefined) {
-        res.status(400).json({ message: error.message });
+        return res.status(400).json({ message: error.message });
       } else {
-        res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" });
       }
     }
   }
@@ -151,9 +151,9 @@ class Controller {
       });
       let responseUpdated = await StockItem.findOne({ _id: id }).populate({ path: "category" }).populate({ path: "recipes.ingredient" });
       if (response) {
-        res.status(200).json(responseUpdated);
+        return res.status(200).json(responseUpdated);
       } else {
-        res.status(404).json({ message: "Stock Item not found" });
+        return res.status(404).json({ message: "Stock Item not found" });
       }
     } catch (error) {
       /* istanbul ignore next */
@@ -171,9 +171,9 @@ class Controller {
       let response = await StockItem.findOne({ _id: id });
       if (response) {
         response = await StockItem.deleteOne({ _id: id });
-        res.status(200).json(response);
+        return res.status(200).json(response);
       } else {
-        res.status(404).json({ message: "Stock Item not found" });
+        return res.status(404).json({ message: "Stock Item not found" });
       }
     } catch (error) {
       /* istanbul ignore next */

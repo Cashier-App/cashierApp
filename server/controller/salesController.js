@@ -4,7 +4,7 @@ class Controller {
   static async getAll(req, res) {
     try {
       let response = await Sale.find({}).populate({ path: "items.item", populate: [{ path: "category" }, { path: "recipes.ingredient" }] });
-      res.status(200).json(response);
+      return res.status(200).json(response);
     } catch (error) {
       /* istanbul ignore next */
       res.status(500).json({ message: "Internal server error" });
@@ -16,9 +16,9 @@ class Controller {
     try {
       let response = await Sale.findOne({ _id: id }).populate("items.item");
       if (response) {
-        res.status(200).json(response);
+        return res.status(200).json(response);
       } else {
-        res.status(404).json({ message: "Sale not found" });
+        return res.status(404).json({ message: "Sale not found" });
       }
     } catch (error) {
       /* istanbul ignore next */
@@ -35,7 +35,7 @@ class Controller {
       });
       let response = await newSale.save();
       let responsePopulated = await Sale.findOne({ _id: response._id }).populate({ path: "items.item", populate: [{ path: "category" }, { path: "recipes.ingredient" }] });
-      res.status(201).json(responsePopulated);
+      return res.status(201).json(responsePopulated);
     } catch (error) {
       /* istanbul ignore next */
       if (error.message !== undefined) {
