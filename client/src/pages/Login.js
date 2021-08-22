@@ -1,17 +1,10 @@
-import React from 'react';
+import React from "react";
 import { Link } from "react-router-dom";
-import { gql, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
+import { LOGIN_MUTATION } from "../config/loginMutation";
 import { useHistory } from "react-router-dom";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
-const LOGIN_MUTATION = gql`
-mutation loginUser($email: String, $password: String) {
-  loginUser(email: $email, password: $password){
-    access_token
-  }
-}
-`;
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const history = useHistory();
@@ -20,8 +13,8 @@ const Login = () => {
 
   const [loginUser] = useMutation(LOGIN_MUTATION, {
     onCompleted(data) {
-      localStorage.setItem("access_token", data.loginUser.access_token)
-      toast.success('Login Success!', {
+      localStorage.setItem("access_token", data.loginUser.access_token);
+      toast.success("Login Success!", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -32,9 +25,9 @@ const Login = () => {
       });
       history.push("/");
     },
-    onError(err){
+    onError(err) {
       console.log(err);
-      toast.error('Invalid email / password!', {
+      toast.error("Invalid email / password!", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -43,17 +36,17 @@ const Login = () => {
         draggable: true,
         progress: undefined,
       });
-    }
-  })
+    },
+  });
 
   function handleSubmit(e) {
     e.preventDefault();
     let inputLoginUser = {
       email,
-      password
-    }
+      password,
+    };
     if (!email || !password) {
-      toast.error('Make sure you insert all data', {
+      toast.error("Make sure you insert all data", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -64,8 +57,8 @@ const Login = () => {
       });
     } else {
       loginUser({
-        variables: inputLoginUser
-      })
+        variables: inputLoginUser,
+      });
     }
   }
   return (
@@ -93,7 +86,7 @@ const Login = () => {
         </div>
 
         <div className="mt-10">
-        <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit}>
             <div className="flex flex-col mb-5">
               <label
                 for="email"
@@ -206,7 +199,9 @@ const Login = () => {
                   ease-in
                 "
               >
-                <span type="submit" className="mr-2 uppercase">Sign In</span>
+                <span type="submit" className="mr-2 uppercase">
+                  Sign In
+                </span>
                 <span>
                   <svg
                     className="h-6 w-6"
@@ -257,7 +252,7 @@ const Login = () => {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        />
+      />
       <ToastContainer />
     </div>
   );

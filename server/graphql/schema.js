@@ -1,3 +1,8 @@
+const {
+  GraphQLUpload,
+  graphqlUploadExpress, // A Koa implementation is also exported.
+} = require("graphql-upload");
+const finished = require("stream").promises;
 const { gql } = require("apollo-server");
 const {
   getAllCategories,
@@ -24,8 +29,6 @@ const {
 
 const typeDefs = gql`
   type Query {
-    users: [User]
-    user(id: String): User
     categories: [Category]
     category(id: String): Category
     sales: [Sale]
@@ -81,9 +84,17 @@ const typeDefs = gql`
     _id: ID
     items: [Item]
     payment: String
+    total: Float
+    adminName: String
+    date: String
   }
   type access_token {
     access_token: String
+  }
+  type File {
+    filename: String!
+    mimetype: String!
+    encoding: String!
   }
   input add_recipe {
     ingredient: String
@@ -134,7 +145,7 @@ const typeDefs = gql`
     ): StockItem
     deleteStockItem(_id: ID): String
     # mutation sales
-    addSales(items: [add_item], payment: String): Sale
+    addSales(items: [add_item], payment: String, adminName: String): Sale
   }
 `;
 
@@ -191,7 +202,8 @@ const resolvers = {
     registerUser: (_, args) =>
       postRegisterUser(args.email, args.password, args.name),
     //
-    addSales: (_, args) => postAddSale(args.items, args.payment),
+    addSales: (_, args) =>
+      postAddSale(args.items, args.payment, args.adminName),
   },
 };
 

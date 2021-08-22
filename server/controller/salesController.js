@@ -30,13 +30,13 @@ class Controller {
   }
 
   static async create(req, res, next) {
-    let { items, payment } = req.body;
+    let { items, payment, adminName } = req.body;
     let total = 0;
     try {
       let newSale = new Sale({
         items,
         payment,
-        adminName: req.user.name,
+        adminName,
         total,
       });
       let response = await newSale.save();
@@ -58,6 +58,7 @@ class Controller {
         path: "items.item",
         populate: [{ path: "category" }, { path: "recipes.ingredient" }],
       });
+      console.log(responsePopulated);
       return res.status(201).json(responsePopulated);
     } catch (error) {
       /* istanbul ignore next */

@@ -1,5 +1,6 @@
 const request = require("supertest");
 const mongoose = require("mongoose");
+const path = require("path");
 // const User = require("../model/User");
 const app = require("../app");
 let ingredientId;
@@ -16,10 +17,7 @@ describe("Stock Item case", () => {
         useCreateIndex: true,
         useFindAndModify: false,
       });
-      const response = await request(app)
-        .post("/StockIngredients")
-        .set({ access_token })
-        .send();
+      const response = await request(app).post("/StockIngredients").send();
     } catch (err) {
       console.log(err.message);
     }
@@ -34,20 +32,7 @@ describe("Stock Item case", () => {
   });
 
   it("GET '/StockItems' [SUCCESS CASE] should be able to return array", async () => {
-    await request(app).post("/User").send({
-      name: "admin",
-      email: "admin@admin.com",
-      password: "admin",
-    });
-    let response_login = await request(app).post("/User/login").send({
-      email: "admin@admin.com",
-      password: "admin",
-    });
-    access_token = response_login.body.access_token;
-    const response = await request(app)
-      .get("/StockItems")
-      .set({ access_token })
-      .send();
+    const response = await request(app).get("/StockItems").send();
     expect(response.status).toBe(200);
     expect(Array.isArray(response.body)).toBe(true);
   });
@@ -55,7 +40,6 @@ describe("Stock Item case", () => {
   it("POST /StockItems [SUCCESS CASE] should be able to create an item", async () => {
     const responseIngredient = await request(app)
       .post("/StockIngredients")
-      .set({ access_token })
       .send({
         name: "Kecap",
         unit: "Liter",
@@ -66,114 +50,139 @@ describe("Stock Item case", () => {
     categoryId = await category.save();
     const response = await request(app)
       .post("/StockItems")
-      .set({ access_token })
-      .send({
-        name: "Bakmi Ayam Komplit",
-        category: categoryId,
-        price: 35000,
-        stock: 2,
-        imageUrl: "tes",
-        recipes: [{ ingredient: ingredientId, qty: 0.05 }],
-      });
+      .field("name", "Bakmi Ayam Komplit")
+      .field("category", categoryId.id)
+      .field("price", "350000")
+      .field("stock", "2")
+      .field("recipes[0][ingredient]", ingredientId)
+      .field("recipes[0][qty]", 0.05)
+      .attach("image", path.resolve(__dirname, "./test_image.jpg"));
     expect(response.status).toBe(201);
     itemsId = response.body._id;
   });
 
-  it("POST /StockItems [ERROR CASE] should be able to create an item", async () => {
+  it("POST /StockItems [ERROR CASE] should be able to create an item, if stock > maxStock ", async () => {
     const response = await request(app)
       .post("/StockItems")
-      .set({ access_token })
-      .send({
-        name: "Bakmi Ayam Komplit 2",
-        category: categoryId,
-        price: 35000,
-        stock: 10000,
-        imageUrl: "tes",
-        recipes: [{ ingredient: ingredientId, qty: 0.05 }],
-      });
+      .field("name", "Bakmi Ayam Komplit 2")
+      .field("category", categoryId.id)
+      .field("price", "350000")
+      .field("stock", "10000")
+      .field("recipes[0][ingredient]", ingredientId)
+      .field("recipes[0][qty]", 0.05)
+      .attach("image", path.resolve(__dirname, "./test_image.jpg"));
     expect(response.status).toBe(400);
     expect(response.body).toHaveProperty(
       "message",
       "maximum stock for this item is 40 based on ingredients stock"
     );
   });
-
-  it("POST /StockItems [ERROR CASE] should be able to create an item", async () => {
+  it("POST /StockItems [ERROR CASE] should be able to create an item, if image type is invalid ", async () => {
     const response = await request(app)
       .post("/StockItems")
-      .set({ access_token })
-      .send({
-        name: "Bakmi Ayam Komplit",
-        category: categoryId,
-        price: 35000,
-        stock: 5,
-        imageUrl: "tes",
-        recipes: [{ ingredient: ingredientId, qty: 0.05 }],
-      });
+      .field("name", "Bakmi Ayam Komplit 32")
+      .field("category", categoryId.id)
+      .field("price", "350000")
+      .field("stock", "1")
+      .field("recipes[0][ingredient]", ingredientId)
+      .field("recipes[0][qty]", 0.05)
+      .attach("image", path.resolve(__dirname, "./test_image3.svg"));
     expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty(
+      "message",
+      "Image file must be lower than 255Kb and extension must be jpeg,jpeg or png"
+    );
+  });
+  it("POST /StockItems [ERROR CASE] should be able to create an item, if name already exist", async () => {
+    const response = await request(app)
+      .post("/StockItems")
+      .field("name", "Bakmi Ayam Komplit")
+      .field("category", categoryId.id)
+      .field("price", "350000")
+      .field("stock", "2")
+      .field("recipes[0][ingredient]", ingredientId)
+      .field("recipes[0][qty]", 0.05)
+      .attach("image", path.resolve(__dirname, "./test_image.jpg"));
+    expect(response.status).toBe(400);
+  });
+  it("POST /StockItems [ERROR CASE] should be able to create an item, if image notexist", async () => {
+    const response = await request(app)
+      .post("/StockItems")
+      .field("name", "Bakmi Ayam Komplit")
+      .field("category", categoryId.id)
+      .field("price", "350000")
+      .field("stock", "2")
+      .field("recipes[0][ingredient]", ingredientId)
+      .field("recipes[0][qty]", 0.05);
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty("message", "Image cant be empty");
+  });
+  it("POST /StockItems [ERROR CASE] should be able to create an item, if image larger than 255kb", async () => {
+    const response = await request(app)
+      .post("/StockItems")
+      .field("name", "Bakmi Ayam Komplit")
+      .field("category", categoryId.id)
+      .field("price", "350000")
+      .field("stock", "2")
+      .field("recipes[0][ingredient]", ingredientId)
+      .field("recipes[0][qty]", 0.05)
+      .attach("image", path.resolve(__dirname, "./test_image2.jpg"));
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty(
+      "message",
+      "Image file must be lower than 255Kb and extension must be jpeg,jpeg or png"
+    );
   });
 
   it("GET '/StockItems' [SUCCESS CASE] should be able to object of one item", async () => {
-    const response = await request(app)
-      .get(`/StockItems/${itemsId}`)
-      .set({ access_token })
-      .send();
+    const response = await request(app).get(`/StockItems/${itemsId}`).send();
     expect(response.status).toBe(200);
   });
 
-  it("GET '/StockItems' [ERROR CASE] should be able to error message", async () => {
+  it("GET '/StockItems' [ERROR CASE] should be able to error message, if item not exist", async () => {
     const response = await request(app)
       .get("/StockItems/611f86749442233e1c67332d")
-      .set({ access_token })
       .send();
     expect(response.status).toBe(404);
     expect(response.body).toHaveProperty("message", "Stock Item not found");
   });
-  //Update Put
+  // Update Put
   it("PUT /StockItems/:id [SUCCESS CASE] should be able to update stock item", async () => {
     const response = await request(app)
       .put(`/StockItems/${itemsId}`)
-      .set({ access_token })
       .send({
         name: "Bakmi Ayam Komplit Mewah",
-        category: categoryId,
+        category: categoryId.id,
         price: 35000,
         stock: 5,
-        imageUrl: "tes",
         recipes: [{ ingredient: ingredientId, qty: 0.05 }],
       });
     expect(response.status).toBe(200);
     expect(response.body.name).toBe("Bakmi Ayam Komplit Mewah");
   });
 
-  it("PUT /StockItems/:id [ERROR CASE] should not be able to update stock item", async () => {
+  it("PUT /StockItems/:id [ERROR CASE] should not be able to update stock item, if item not exist", async () => {
     const response = await request(app)
       .put(`/StockItems/611f86749442233e1c67332d`)
-      .set({ access_token })
       .send({
         name: "Bakmi Ayam Komplit Mewah",
-        category: categoryId,
+        category: categoryId.id,
         price: 35000,
         stock: 5,
-        imageUrl: "tes",
         recipes: [{ ingredient: ingredientId, qty: 0.05 }],
       });
     expect(response.status).toBe(404);
     expect(response.body).toHaveProperty("message", "Stock Item not found");
   });
 
-  it("PUT /StockItems/:id [ERROR CASE] should not be able to update stock item", async () => {
-    const response = await request(app)
-      .put(`/StockItems/${itemsId}`)
-      .set({ access_token })
-      .send({
-        name: "Bakmi Ayam Komplit Mewah 2",
-        category: categoryId,
-        price: 35000,
-        stock: 10000,
-        imageUrl: "tes",
-        recipes: 123,
-      });
+  it("PUT /StockItems/:id [ERROR CASE] should not be able to update stock item, if recipes is invalid", async () => {
+    const response = await request(app).put(`/StockItems/${itemsId}`).send({
+      name: "Bakmi Ayam Komplit Mewah 2",
+      category: categoryId.id,
+      price: 35000,
+      stock: 10000,
+      recipes: 123,
+    });
     expect(response.status).toBe(400);
     expect(response.body).toHaveProperty(
       "message",
@@ -181,33 +190,27 @@ describe("Stock Item case", () => {
     );
   });
 
-  it("PUT /StockItems/:id [ERROR CASE] should not be able to update stock item", async () => {
+  it("PUT /StockItems/:id [ERROR CASE] should not be able to update stock item,if name is not empty", async () => {
     const response = await request(app)
       .put(`/StockItems/${itemsId}`)
-      .set({ access_token })
       .send({
         name: "",
         category: categoryId,
         price: 35000,
         stock: 100,
-        imageUrl: "tes",
         recipes: [{ ingredient: ingredientId, qty: 0.05 }],
       });
     expect(response.status).toBe(400);
   });
 
   it("DELETE /StockItems/:id [SUCCESS CASE] should be able to delete stock Item by id", async () => {
-    const response = await request(app)
-      .delete(`/StockItems/${itemsId}`)
-      .set({ access_token })
-      .send();
+    const response = await request(app).delete(`/StockItems/${itemsId}`).send();
     expect(response.status).toBe(200);
   });
 
   it("DELETE /StockItems/:id [ERROR CASE] should not be able to delete stock Item by id", async () => {
     const response = await request(app)
       .delete(`/StockItems/611f86749442233e1c67312d`)
-      .set({ access_token })
       .send();
     expect(response.status).toBe(404);
   });

@@ -97,6 +97,7 @@ const getStockIngredients = async () => {
       await redis.set("stockIngredients", JSON.stringify(dataCategories));
       return dataCategories;
     } catch (err) {
+      console.log(err);
       throw new Error(err.response.data.message);
     }
   }
@@ -348,6 +349,7 @@ const getSale = async (id) => {
     try {
       let res = await API.get(`/Sales/${id}`);
       const { data } = res;
+      console.log(data);
       return data;
     } catch (err) {
       throw new Error(err.response.data.message);
@@ -355,7 +357,7 @@ const getSale = async (id) => {
   }
 };
 
-const postAddSale = async (items, payment) => {
+const postAddSale = async (items, payment, adminName) => {
   try {
     await redis.del("sales");
     let res = await API.post(
@@ -363,6 +365,7 @@ const postAddSale = async (items, payment) => {
       {
         items,
         payment,
+        adminName,
       },
       {
         headers: {

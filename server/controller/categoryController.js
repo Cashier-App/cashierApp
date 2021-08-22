@@ -20,10 +20,10 @@ class Controller {
         return res.status(201).json(response);
       } else return res.status(400).json({ message: "Category already exist" });
     } catch (err) {
-      /* istanbul ignore next */
       if (err.errors !== undefined) {
-        return res.status(400).json({ message: "name is required" });
+        return res.status(400).json({ message: err.errors.name.message });
       } else {
+        /* istanbul ignore next */
         return res.status(500).json({ message: "Internal Server Error" });
       }
     }
