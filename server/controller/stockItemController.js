@@ -5,7 +5,10 @@ const { getMaxStock } = require("../helpers/getStock");
 class Controller {
   static async list(req, res, next) {
     try {
-      const response = await StockItem.find({}).populate("category").populate("recipes.ingredient").lean();
+      const response = await StockItem.find({})
+        .populate("category")
+        .populate("recipes.ingredient")
+        .lean();
       res.status(200).json(response);
     } catch (error) {
       /* istanbul ignore next */
@@ -16,7 +19,9 @@ class Controller {
   static async findById(req, res, next) {
     const id = req.params.id;
     try {
-      let response = await StockItem.findOne({ _id: id }).populate("category").populate("recipes.ingredient");
+      let response = await StockItem.findOne({ _id: id })
+        .populate("category")
+        .populate("recipes.ingredient");
       if (response) {
         return res.status(200).json(response);
       } else {
@@ -51,7 +56,9 @@ class Controller {
       });
 
       let saveStockItem = await newStockItem.save();
-      let response = await StockItem.findOne({ _id: saveStockItem._id }).populate("category").populate("recipes.ingredient");
+      let response = await StockItem.findOne({ _id: saveStockItem._id })
+        .populate("category")
+        .populate("recipes.ingredient");
       return res.status(201).json(response);
     } catch (error) {
       /* istanbul ignore next */
@@ -72,7 +79,9 @@ class Controller {
       let responseById = await StockItem.findOne({ _id: id });
       /* istanbul ignore next */
       if (!category) {
-        responseCategory = await Category.findOne({ _id: responseById.category._id });
+        responseCategory = await Category.findOne({
+          _id: responseById.category._id,
+        });
       } else {
         responseCategory = await Category.findOne({ _id: category });
       }
@@ -82,7 +91,10 @@ class Controller {
         if (responseCategory.name === "Food") {
           let maxStock;
           if (!category) {
-            maxStock = await getMaxStock(responseById.category._id, responseById.recipes);
+            maxStock = await getMaxStock(
+              responseById.category._id,
+              responseById.recipes
+            );
           } else {
             maxStock = await getMaxStock(category, responseById.recipes);
           }
@@ -116,7 +128,10 @@ class Controller {
         if (responseCategory.name === "Food") {
           let maxStock;
           if (!category) {
-            maxStock = await getMaxStock(responseById.category._id, responseById.recipes);
+            maxStock = await getMaxStock(
+              responseById.category._id,
+              responseById.recipes
+            );
           } else {
             maxStock = await getMaxStock(category, responseById.recipes);
           }

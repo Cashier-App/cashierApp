@@ -3,7 +3,10 @@ const Sale = require("../model/Sale");
 class Controller {
   static async getAll(req, res) {
     try {
-      let response = await Sale.find({}).populate({ path: "items.item", populate: [{ path: "category" }, { path: "recipes.ingredient" }] });
+      let response = await Sale.find({}).populate({
+        path: "items.item",
+        populate: [{ path: "category" }, { path: "recipes.ingredient" }],
+      });
       return res.status(200).json(response);
     } catch (error) {
       /* istanbul ignore next */
@@ -34,7 +37,12 @@ class Controller {
         payment,
       });
       let response = await newSale.save();
-      let responsePopulated = await Sale.findOne({ _id: response._id }).populate({ path: "items.item", populate: [{ path: "category" }, { path: "recipes.ingredient" }] });
+      let responsePopulated = await Sale.findOne({
+        _id: response._id,
+      }).populate({
+        path: "items.item",
+        populate: [{ path: "category" }, { path: "recipes.ingredient" }],
+      });
       return res.status(201).json(responsePopulated);
     } catch (error) {
       /* istanbul ignore next */

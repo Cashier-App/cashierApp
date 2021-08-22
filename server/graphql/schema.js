@@ -12,6 +12,14 @@ const {
   deleteStockIngredient,
   postLoginUser,
   postRegisterUser,
+  getStockItems,
+  getStockItem,
+  postAddStockItem,
+  postEditStockItem,
+  deleteStockItem,
+  getSales,
+  getSale,
+  postAddSale,
 } = require("./apisCall");
 
 const typeDefs = gql`
@@ -26,6 +34,7 @@ const typeDefs = gql`
     stockIngredient(id: String): StockIngredient
     stockItems: [StockItem]
     stockItem(id: String): StockItem
+    ingredient(id: String): StockIngredient
   }
   type User {
     _id: ID
@@ -46,25 +55,43 @@ const typeDefs = gql`
   type Recipe {
     _id: ID
     ingredient: Ingredient
+    qty: Float
   }
   type Ingredient {
-    stockIngredient: StockIngredient
-    qty: Float
+    _id: ID
+    name: String
+    unit: String
+    total: Float
   }
   type StockItem {
     _id: ID
     name: String
     price: Float
+    category: Category
+    imageUrl: String
     recipes: [Recipe]
     stock: Float
   }
-  type Sale {
+  type Item {
     _id: ID
     item: StockItem
+    qty: Float
+  }
+  type Sale {
+    _id: ID
+    items: [Item]
     payment: String
   }
   type access_token {
     access_token: String
+  }
+  input add_recipe {
+    ingredient: String
+    qty: Float
+  }
+  input add_item {
+    item: String
+    qty: Float
   }
   type Mutation {
     # mutation category
@@ -87,6 +114,27 @@ const typeDefs = gql`
     # mutation user
     loginUser(email: String, password: String): access_token
     registerUser(email: String, password: String, name: String): String
+    # mutation stockItems
+    addStockItem(
+      name: String
+      price: Float
+      category: String
+      imageUrl: String
+      recipes: [add_recipe]
+      stock: Float
+    ): StockItem
+    editStockItem(
+      _id: ID
+      name: String
+      price: Float
+      category: String
+      imageUrl: String
+      recipes: [add_recipe]
+      stock: Float
+    ): StockItem
+    deleteStockItem(_id: ID): String
+    # mutation sales
+    addSales(items: [add_item], payment: String): Sale
   }
 `;
 
@@ -98,6 +146,13 @@ const resolvers = {
     // Stock Ingredients
     stockIngredients: () => getStockIngredients(),
     stockIngredient: (_, args) => getStockIngredient(args.id),
+    ingredient: (_, args) => getStockIngredient(args.id),
+    // Stock Items
+    stockItems: () => getStockItems(),
+    stockItem: (_, args) => getStockItem(args.id),
+    // sales
+    sales: () => getSales(),
+    sale: (_, args) => getSale(args.id),
   },
   Mutation: {
     // Categories
@@ -110,10 +165,33 @@ const resolvers = {
     editStockIngredient: (_, args) =>
       postEditStockIngredient(args._id, args.name, args.unit, args.total),
     deleteStockIngredient: (_, args) => deleteStockIngredient(args._id),
+    // Stock Items
+    addStockItem: (_, args) =>
+      postAddStockItem(
+        args.name,
+        args.price,
+        args.category,
+        args.imageUrl,
+        args.recipes,
+        args.stock
+      ),
+    editStockItem: (_, args) =>
+      postEditStockItem(
+        args._id,
+        args.name,
+        args.price,
+        args.category,
+        args.imageUrl,
+        args.recipes,
+        args.stock
+      ),
+    deleteStockItem: (_, args) => deleteStockItem(args._id),
     // User
     loginUser: (_, args) => postLoginUser(args.email, args.password),
     registerUser: (_, args) =>
       postRegisterUser(args.email, args.password, args.name),
+    //
+    addSales: (_, args) => postAddSale(args.items, args.payment),
   },
 };
 

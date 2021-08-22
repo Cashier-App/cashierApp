@@ -55,7 +55,6 @@ const postAddCategory = async (name) => {
 };
 
 const postEditCategory = async (_id, name) => {
-  console.log(_id, name);
   try {
     await redis.del("categories");
     let res = await API.put(
@@ -81,7 +80,6 @@ const deleteCategory = async (_id) => {
     await redis.del("categories");
     let res = await API.delete(`/Categories/${_id}`);
     const { data } = res;
-    console.log(data);
     return "category deleted";
   } catch (err) {
     throw new Error(err.response.data.message);
@@ -176,7 +174,6 @@ const deleteStockIngredient = async (_id) => {
 };
 
 const postLoginUser = async (email, password) => {
-  console.log(email, password);
   try {
     let res = await API.post(
       `/user/login`,
@@ -217,6 +214,168 @@ const postRegisterUser = async (email, password, name) => {
     throw new Error(err.response.data.message);
   }
 };
+// Stock Items
+const getStockItems = async () => {
+  let stockItems = await redis.get("stockItems");
+  if (stockItems) return JSON.parse(stockItems);
+  else {
+    try {
+      let response = await API.get("/StockItems");
+      const { data: dataCategories } = response;
+      await redis.set("stockItems", JSON.stringify(dataCategories));
+      return dataCategories;
+    } catch (err) {
+      throw new Error(err.response.data.message);
+    }
+  }
+};
+const getStockItem = async (id) => {
+  let stockItems = await redis.get("stockItems");
+  if (stockItems) {
+    stockItem = JSON.parse(stockItems).find(
+      (stockItem) => stockItem._id === id
+    );
+    if (stockItem) return stockItem;
+  } else {
+    try {
+      let res = await API.get(`/StockItems/${id}`);
+      const { data } = res;
+      return data;
+    } catch (err) {
+      throw new Error(err.response.data.message);
+    }
+  }
+};
+const postAddStockItem = async (
+  name,
+  price,
+  category,
+  imageUrl,
+  recipes,
+  stock
+) => {
+  try {
+    await redis.del("stockItems");
+    let res = await API.post(
+      "/StockItems",
+      {
+        name,
+        price,
+        category,
+        imageUrl,
+        recipes,
+        stock,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const { data } = res;
+    return data;
+  } catch (err) {
+    throw new Error(err.response.data.message);
+  }
+};
+const postEditStockItem = async (
+  _id,
+  name,
+  price,
+  category,
+  imageUrl,
+  recipes,
+  stock
+) => {
+  try {
+    await redis.del("stockItems");
+    let res = await API.put(
+      `/StockItems/${_id}`,
+      {
+        name,
+        price,
+        category,
+        imageUrl,
+        recipes,
+        stock,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const { data } = res;
+    return data;
+  } catch (err) {
+    throw new Error(err.response.data.message);
+  }
+};
+
+const deleteStockItem = async (_id) => {
+  try {
+    await redis.del("stockItems");
+    let res = await API.delete(`/StockItems/${_id}`);
+    const { data } = res;
+    return "stock item deleted successfully";
+  } catch (err) {
+    throw new Error(err.response.data.message);
+  }
+};
+
+// sales
+const getSales = async () => {
+  let sales = await redis.get("sales");
+  if (sales) return JSON.parse(sales);
+  else {
+    try {
+      let response = await API.get("/Sales");
+      const { data: dataSales } = response;
+      await redis.set("sales", JSON.stringify(dataSales));
+      return dataSales;
+    } catch (err) {
+      throw new Error(err.response.data.message);
+    }
+  }
+};
+
+const getSale = async (id) => {
+  let sales = await redis.get("sales");
+  if (sales) {
+    category = JSON.parse(sales).find((category) => category._id === id);
+    if (category) return category;
+  } else {
+    try {
+      let res = await API.get(`/Sales/${id}`);
+      const { data } = res;
+      return data;
+    } catch (err) {
+      throw new Error(err.response.data.message);
+    }
+  }
+};
+
+const postAddSale = async (items, payment) => {
+  try {
+    await redis.del("sales");
+    let res = await API.post(
+      "/Sales",
+      {
+        items,
+        payment,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const { data } = res;
+    return data;
+  } catch (err) {
+    throw new Error(err.response.data.message);
+  }
+};
 module.exports = {
   // categories
   getAllCategories,
@@ -233,4 +392,14 @@ module.exports = {
   // user
   postLoginUser,
   postRegisterUser,
+  // stock Items
+  getStockItems,
+  getStockItem,
+  postAddStockItem,
+  postEditStockItem,
+  deleteStockItem,
+  // sales
+  getSales,
+  getSale,
+  postAddSale,
 };
