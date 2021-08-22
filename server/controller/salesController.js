@@ -14,7 +14,7 @@ class Controller {
   static async getById(req, res) {
     const id = req.params.id;
     try {
-      let response = await Sale.findOne({ _id: id }).populate("items.item", ["name"]);
+      let response = await Sale.findOne({ _id: id }).populate("items.item");
       if (response) {
         res.status(200).json(response);
       } else {
@@ -34,7 +34,8 @@ class Controller {
         payment,
       });
       let response = await newSale.save();
-      res.status(201).json(response);
+      let responsePopulated = await Sale.findOne({ _id: response._id }).populate({ path: "items.item", populate: [{ path: "category" }, { path: "recipes.ingredient" }] });
+      res.status(201).json(responsePopulated);
     } catch (error) {
       /* istanbul ignore next */
       if (error.message !== undefined) {
