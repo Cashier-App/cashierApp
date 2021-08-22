@@ -140,7 +140,7 @@ const Cart = () => {
            text-2xl
          "
       >
-        PRINT BILLS
+        CHECKOUT
       </button>
       <div className="h-auto w-auto m-4 bg-white text-white">@</div>
     </div>

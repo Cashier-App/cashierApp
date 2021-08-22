@@ -14,14 +14,14 @@ const Transaction = () => {
               min-h-screen
               flex flex-col flex-auto flex-shrink-0
               antialiased
-              bg-white
+              bg-gray-200
               dark:bg-gray-700
               text-black
               dark:text-white"
       >
         <Navbar />
         <Sidebar />
-        <div class="h-full ml-14 mt-14 mb-10 md:ml-52 bg-gray-100">
+        <div class="h-full ml-14 mt-14 mb-10 md:ml-52 bg-gray-200">
           <StatusTransaction />
           <TableTransaction />
           {/* <CardItem /> */}
