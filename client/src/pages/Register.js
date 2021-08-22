@@ -1,6 +1,73 @@
+import React from 'react';
 import { Link } from "react-router-dom";
+import { gql, useMutation } from "@apollo/client";
+import { useHistory } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+const REGISTER_MUTATION = gql`
+mutation Mutation($email: String, $password: String, $name: String) {
+  registerUser(email: $email, password: $password, name: $name)
+}
+`;
 
 const Register = () => {
+  const history = useHistory();
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [name, setName] = React.useState("");
+
+  const [registerUser] = useMutation(REGISTER_MUTATION, {
+    onCompleted() {
+      toast.success('Register Success!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      history.push('/login')
+    },
+    onError(err) {
+      console.log(err);
+      toast.error('Invalid Register!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  })
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    let newRegisterUser = {
+      name,
+      email,
+      password
+    }
+    if (!name || !email || !password) {
+      toast.error('Make sure you insert all data', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } else {
+      registerUser({
+        variables: newRegisterUser
+      })
+    }
+  }
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
       <div
@@ -26,7 +93,7 @@ const Register = () => {
         </div>
 
         <div className="mt-10">
-          <form action="#">
+          <form onSubmit={handleSubmit}>
             <div className="flex flex-col mb-5">
               <label
                 for="email"
@@ -52,9 +119,9 @@ const Register = () => {
                 </div>
 
                 <input
-                  id="email"
-                  type="email"
-                  name="email"
+                  id="name"
+                  type="text"
+                  name="name"
                   className="
                     text-sm
                     placeholder-gray-500
@@ -67,6 +134,7 @@ const Register = () => {
                     focus:outline-none focus:border-blue-400
                   "
                   placeholder="Enter your name"
+                  onChange={(e) => setName(e.target.value)}
                 />
               </div>
             </div>
@@ -110,6 +178,7 @@ const Register = () => {
                     focus:outline-none focus:border-blue-400
                   "
                   placeholder="Enter your email"
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
             </div>
@@ -155,6 +224,7 @@ const Register = () => {
                     focus:outline-none focus:border-blue-400
                   "
                   placeholder="Enter your password"
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
             </div>
@@ -221,6 +291,18 @@ const Register = () => {
           </span>
         </div>
       </div>
+        <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        />
+      <ToastContainer />
     </div>
   );
 };
