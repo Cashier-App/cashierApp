@@ -73,6 +73,7 @@ class Controller {
   static async update(req, res, next) {
     const id = req.params.id;
     const { stock, category, recipes } = req.body;
+    console.log(req.body);
     let responseCategory;
     try {
       let responseById = await StockItem.findOne({ _id: id });
@@ -86,6 +87,7 @@ class Controller {
       }
       /* istanbul ignore next */
       if (stock && !recipes) {
+        console.log(1111);
         if (responseCategory.name === "Food") {
           let maxStock;
           if (!category) {
@@ -105,6 +107,7 @@ class Controller {
       }
       /* istanbul ignore next */
       if (!stock && recipes) {
+        console.log(2222);
         if (responseCategory.name === "Food") {
           let maxStock;
           if (!category) {
@@ -121,6 +124,7 @@ class Controller {
       }
       /* istanbul ignore next */
       if (!stock && !recipes) {
+        console.log(33333);
         if (responseCategory.name === "Food") {
           let maxStock;
           if (!category) {
@@ -132,6 +136,24 @@ class Controller {
             maxStock = await getMaxStock(category, responseById.recipes);
           }
           if (responseById.stock > maxStock) {
+            return res.status(400).json({
+              message: `maximum stock for this item is ${maxStock} based on ingredients stock`,
+            });
+          }
+        }
+      }
+
+      /* istanbul ignore next */
+      if (stock && recipes) {
+        console.log(4444);
+        if (responseCategory.name === "Food") {
+          let maxStock;
+          if (!category) {
+            maxStock = await getMaxStock(responseById.category._id, recipes);
+          } else {
+            maxStock = await getMaxStock(category, recipes);
+          }
+          if (stock > maxStock) {
             return res.status(400).json({
               message: `maximum stock for this item is ${maxStock} based on ingredients stock`,
             });

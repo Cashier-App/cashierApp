@@ -138,7 +138,7 @@ describe("Stock Item case", () => {
       recipes: 123,
     });
     expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty("message", 'Cast to embedded failed for value "123" (type string) at path "recipes"');
+    expect(response.body).toHaveProperty("message", "recipes.map is not a function");
   });
 
   it("PUT /StockItems/:id [ERROR CASE] should not be able to update stock item", async () => {
