@@ -86,6 +86,7 @@ const typeDefs = gql`
     payment: String
     total: Float
     adminName: String
+    date: String
   }
   type access_token {
     access_token: String

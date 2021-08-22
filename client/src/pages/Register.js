@@ -1,15 +1,10 @@
-import React from 'react';
+import React from "react";
 import { Link } from "react-router-dom";
-import { gql, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
+import { REGISTER_MUTATION } from "../config/registerMutation";
 import { useHistory } from "react-router-dom";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
-const REGISTER_MUTATION = gql`
-mutation Mutation($email: String, $password: String, $name: String) {
-  registerUser(email: $email, password: $password, name: $name)
-}
-`;
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Register = () => {
   const history = useHistory();
@@ -19,7 +14,7 @@ const Register = () => {
 
   const [registerUser] = useMutation(REGISTER_MUTATION, {
     onCompleted() {
-      toast.success('Register Success!', {
+      toast.success("Register Success!", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -28,11 +23,11 @@ const Register = () => {
         draggable: true,
         progress: undefined,
       });
-      history.push('/login')
+      history.push("/login");
     },
     onError(err) {
       console.log(err);
-      toast.error('Invalid Register!', {
+      toast.error("Invalid Register!", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -41,18 +36,18 @@ const Register = () => {
         draggable: true,
         progress: undefined,
       });
-    }
-  })
+    },
+  });
 
   function handleSubmit(e) {
     e.preventDefault();
     let newRegisterUser = {
       name,
       email,
-      password
-    }
+      password,
+    };
     if (!name || !email || !password) {
-      toast.error('Make sure you insert all data', {
+      toast.error("Make sure you insert all data", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -63,8 +58,8 @@ const Register = () => {
       });
     } else {
       registerUser({
-        variables: newRegisterUser
-      })
+        variables: newRegisterUser,
+      });
     }
   }
 
@@ -291,7 +286,7 @@ const Register = () => {
           </span>
         </div>
       </div>
-        <ToastContainer
+      <ToastContainer
         position="top-right"
         autoClose={5000}
         hideProgressBar={false}
@@ -301,7 +296,7 @@ const Register = () => {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        />
+      />
       <ToastContainer />
     </div>
   );
