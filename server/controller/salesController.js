@@ -31,13 +31,28 @@ class Controller {
 
   static async create(req, res, next) {
     let { items, payment } = req.body;
+    let total = 0;
     try {
       let newSale = new Sale({
         items,
         payment,
+        adminName: req.user.name,
+        total,
       });
       let response = await newSale.save();
       let responsePopulated = await Sale.findOne({
+        _id: response._id,
+      }).populate({
+        path: "items.item",
+        populate: [{ path: "category" }, { path: "recipes.ingredient" }],
+      });
+      responsePopulated.items.forEach((item) => {
+        total += item.item.price * item.qty;
+        // console.log(total);
+      });
+      newSale.total = total;
+      await newSale.save();
+      responsePopulated = await Sale.findOne({
         _id: response._id,
       }).populate({
         path: "items.item",

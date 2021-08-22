@@ -9,10 +9,8 @@ const connectDB = async () => {
       useCreateIndex: true,
       useFindAndModify: false,
     });
-  } catch (err) {
     /* istanbul ignore next */
-    console.log(err.message);
-  }
+  } catch (err) {}
 };
 
 module.exports = connectDB;
