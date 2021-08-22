@@ -129,31 +129,30 @@ describe("Stock Item case", () => {
   });
 
   it("PUT /StockItems/:id [ERROR CASE] should not be able to update stock item", async () => {
-    const response = await request(app)
-      .put(`/StockItems/${itemsId}`)
-      .send({
-        name: "Bakmi Ayam Komplit Mewah 2",
-        category: categoryId,
-        price: 35000,
-        stock: 10000,
-        imageUrl: "tes",
-        recipes: [{ ingredient: ingredientId, qty: 0.05 }],
-      });
+    const response = await request(app).put(`/StockItems/${itemsId}`).send({
+      name: "Bakmi Ayam Komplit Mewah 2",
+      category: categoryId,
+      price: 35000,
+      stock: 10000,
+      imageUrl: "tes",
+      recipes: 123,
+    });
     expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty("message", "maximum stock for this item is 40 based on ingredients stock");
+    expect(response.body).toHaveProperty("message", 'Cast to embedded failed for value "123" (type string) at path "recipes"');
   });
 
   it("PUT /StockItems/:id [ERROR CASE] should not be able to update stock item", async () => {
     const response = await request(app)
       .put(`/StockItems/${itemsId}`)
       .send({
-        name: 990,
+        name: "",
         category: categoryId,
         price: 35000,
-        stock: 10000,
+        stock: 100,
         imageUrl: "tes",
         recipes: [{ ingredient: ingredientId, qty: 0.05 }],
       });
+    console.log(response.body);
     expect(response.status).toBe(400);
   });
 

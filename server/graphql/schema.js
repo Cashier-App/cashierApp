@@ -160,9 +160,9 @@ const resolvers = {
       postEditStockItem(
         args._id,
         args.name,
+        args.price,
         args.category,
         args.imageUrl,
-        args.price,
         args.recipes,
         args.stock
       ),
