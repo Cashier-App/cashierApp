@@ -2,10 +2,12 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import { gql, useMutation } from "@apollo/client";
 import { useHistory } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const LOGIN_MUTATION = gql`
-mutation Mutation($email: String, $password: String, $name: String) {
-  loginUser(email: $email, password: $password, name: $name){
+mutation loginUser($email: String, $password: String) {
+  loginUser(email: $email, password: $password){
     access_token
   }
 }
@@ -18,10 +20,30 @@ const Login = () => {
 
   const [loginUser] = useMutation(LOGIN_MUTATION, {
     onCompleted(data) {
-      console.log("mutation selesai", data);
-
-      // history.push("/");
+      localStorage.setItem("access_token", data.loginUser.access_token)
+      toast.success('Login Success!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      history.push("/");
     },
+    onError(err){
+      console.log(err);
+      toast.error('Invalid email / password!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
   })
 
   function handleSubmit(e) {
@@ -30,10 +52,21 @@ const Login = () => {
       email,
       password
     }
-
-    loginUser({
-      variables: inputLoginUser
-    })
+    if (!email || !password) {
+      toast.error('Make sure you insert all data', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } else {
+      loginUser({
+        variables: inputLoginUser
+      })
+    }
   }
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
@@ -173,14 +206,14 @@ const Login = () => {
                   ease-in
                 "
               >
-                <span className="mr-2 uppercase">Sign In</span>
+                <span type="submit" className="mr-2 uppercase">Sign In</span>
                 <span>
                   <svg
                     className="h-6 w-6"
                     fill="none"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                   >
@@ -214,6 +247,18 @@ const Login = () => {
           </span>
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        />
+      <ToastContainer />
     </div>
   );
 };

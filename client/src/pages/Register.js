@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import { gql, useMutation } from "@apollo/client";
 import { useHistory } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const REGISTER_MUTATION = gql`
 mutation Mutation($email: String, $password: String, $name: String) {
@@ -15,7 +17,32 @@ const Register = () => {
   const [password, setPassword] = React.useState("");
   const [name, setName] = React.useState("");
 
-  const [registerUser] = useMutation(REGISTER_MUTATION)
+  const [registerUser] = useMutation(REGISTER_MUTATION, {
+    onCompleted() {
+      toast.success('Register Success!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      history.push('/login')
+    },
+    onError(err) {
+      console.log(err);
+      toast.error('Invalid Register!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  })
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -24,11 +51,21 @@ const Register = () => {
       email,
       password
     }
-
-    registerUser({
-      variables: newRegisterUser
-    })
-    history.push('/login')
+    if (!name || !email || !password) {
+      toast.error('Make sure you insert all data', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } else {
+      registerUser({
+        variables: newRegisterUser
+      })
+    }
   }
 
   return (
@@ -82,9 +119,9 @@ const Register = () => {
                 </div>
 
                 <input
-                  id="email"
-                  type="email"
-                  name="email"
+                  id="name"
+                  type="text"
+                  name="name"
                   className="
                     text-sm
                     placeholder-gray-500
@@ -254,6 +291,18 @@ const Register = () => {
           </span>
         </div>
       </div>
+        <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        />
+      <ToastContainer />
     </div>
   );
 };
