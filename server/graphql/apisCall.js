@@ -288,8 +288,7 @@ const postEditStockItem = async (
   stock
 ) => {
   try {
-    console.log(name, price, category, imageUrl, recipes, stock);
-    await redis.del("stockIngredients");
+    await redis.del("stockItems");
     let res = await API.put(
       `/StockItems/${_id}`,
       {
@@ -310,6 +309,49 @@ const postEditStockItem = async (
     return data;
   } catch (err) {
     throw new Error(err.response.data.message);
+  }
+};
+
+const deleteStockItem = async (_id) => {
+  try {
+    await redis.del("stockItems");
+    let res = await API.delete(`/StockItems/${_id}`);
+    const { data } = res;
+    return "stock item deleted successfully";
+  } catch (err) {
+    throw new Error(err.response.data.message);
+  }
+};
+
+// sales
+const getSales = async () => {
+  let sales = await redis.get("sales");
+  if (sales) return JSON.parse(sales);
+  else {
+    try {
+      let response = await API.get("/Sales");
+      const { data: dataSales } = response;
+      await redis.set("sales", JSON.stringify(dataSales));
+      return dataSales;
+    } catch (err) {
+      throw new Error(err.response.data.message);
+    }
+  }
+};
+
+const getSale = async (id) => {
+  let sales = await redis.get("sales");
+  if (sales) {
+    category = JSON.parse(sales).find((category) => category._id === id);
+    if (category) return category;
+  } else {
+    try {
+      let res = await API.get(`/Sales/${id}`);
+      const { data } = res;
+      return data;
+    } catch (err) {
+      throw new Error(err.response.data.message);
+    }
   }
 };
 module.exports = {
@@ -333,4 +375,8 @@ module.exports = {
   getStockItem,
   postAddStockItem,
   postEditStockItem,
+  deleteStockItem,
+  // sales
+  getSales,
+  getSale,
 };

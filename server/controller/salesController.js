@@ -3,7 +3,10 @@ const Sale = require("../model/Sale");
 class Controller {
   static async getAll(req, res) {
     try {
-      let response = await Sale.find({}).populate({ path: "items.item", populate: [{ path: "category" }, { path: "recipes.ingredient" }] });
+      let response = await Sale.find({}).populate({
+        path: "items.item",
+        populate: [{ path: "category" }, { path: "recipes.ingredient" }],
+      });
       res.status(200).json(response);
     } catch (error) {
       /* istanbul ignore next */
@@ -14,9 +17,12 @@ class Controller {
   static async getById(req, res) {
     const id = req.params.id;
     try {
-      let response = await Sale.findOne({ _id: id }).populate("items.item", ["name"]);
+      let response = await Sale.findOne({ _id: id }).populate("items.item", [
+        "name",
+      ]);
       if (response) {
         res.status(200).json(response);
+        git;
       } else {
         res.status(404).json({ message: "Sale not found" });
       }

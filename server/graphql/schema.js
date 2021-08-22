@@ -16,6 +16,9 @@ const {
   getStockItem,
   postAddStockItem,
   postEditStockItem,
+  deleteStockItem,
+  getSales,
+  getSale,
 } = require("./apisCall");
 
 const typeDefs = gql`
@@ -68,9 +71,14 @@ const typeDefs = gql`
     recipes: [Recipe]
     stock: Float
   }
-  type Sale {
+  type Item {
     _id: ID
     item: StockItem
+    qty: Float
+  }
+  type Sale {
+    _id: ID
+    items: [Item]
     payment: String
   }
   type access_token {
@@ -78,6 +86,10 @@ const typeDefs = gql`
   }
   input add_recipe {
     ingredient: String
+    qty: Float
+  }
+  input add_item {
+    item: String
     qty: Float
   }
   type Mutation {
@@ -119,6 +131,7 @@ const typeDefs = gql`
       recipes: [add_recipe]
       stock: Float
     ): StockItem
+    deleteStockItem(_id: ID): String
   }
 `;
 
@@ -134,6 +147,9 @@ const resolvers = {
     // Stock Items
     stockItems: () => getStockItems(),
     stockItem: (_, args) => getStockItem(args.id),
+    // sales
+    sales: () => getSales(),
+    sale: (_, args) => getSale(args.id),
   },
   Mutation: {
     // Categories
@@ -166,6 +182,7 @@ const resolvers = {
         args.recipes,
         args.stock
       ),
+    deleteStockItem: (_, args) => deleteStockItem(args._id),
     // User
     loginUser: (_, args) => postLoginUser(args.email, args.password),
     registerUser: (_, args) =>
