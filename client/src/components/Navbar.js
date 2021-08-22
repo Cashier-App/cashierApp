@@ -1,4 +1,5 @@
 import Logo from "../assets/logo.png";
+import Avatar from "../assets/abdan.png";
 
 const Navbar = () => {
   return (
@@ -89,28 +90,20 @@ const Navbar = () => {
         </div>
         <ul className="flex items-center">
           <li>
-            <div className="block w-px h-6 mx-3 bg-gray-400 dark:bg-gray-700"></div>
-          </li>
-          <li>
-            <a href="#" className="flex items-center mr-4 hover:text-blue-100">
-              <span className="inline-flex mr-1">
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                  ></path>
-                </svg>
-              </span>
-              Logout
-            </a>
+            <div className="flex items-center mr-4 hover:text-blue-100">
+              <div className="flex justify-start items-center mr-1">
+                <img
+                  src={Avatar}
+                  className="w-9 h-9 rounded-full mr-2 border-2"
+                />
+                <div>
+                  <div className="text-md font-semibold">Abdan Zam Zam R</div>
+                  <div className="text-xs -mt-1 text-gray-200 font-normal">
+                    Admin
+                  </div>
+                </div>
+              </div>
+            </div>
           </li>
         </ul>
       </div>

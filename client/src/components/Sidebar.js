@@ -14,8 +14,8 @@ const Sidebar = () => {
          top-14
          left-0
          w-14
-         hover:w-52
-         md:w-52
+         hover:w-56
+         md:w-56
          bg-white
          shadow-xl
          xl
@@ -156,16 +156,17 @@ const Sidebar = () => {
                "
             >
               <span className="inline-flex justify-center items-center ml-4">
-                <i className="fas fa-signal text-blue-500 text-lg pr-1"></i>
+                <i class="fas fa-chart-line text-blue-500 text-lg pl-1"></i>
               </span>
               <span
                 className="
-                   ml-2
+                   ml-3
                    text-sm
                    tracking-wide
                    truncate
                    text-blue-500
                    font-semibold
+
                  "
               >
                 Statistics
@@ -173,8 +174,8 @@ const Sidebar = () => {
             </Link>
           </li>
           <li>
-            <a
-              href="#"
+            <Link
+              to="/stock-items"
               className="
                  relative
                  flex flex-row
@@ -208,28 +209,13 @@ const Sidebar = () => {
                    pl-1
                  "
               >
-                Stock Update
+                Stock Items
               </span>
-            </a>
-          </li>
-          <li className="px-5 hidden md:block">
-            <div className="flex flex-row items-center mt-5 h-8">
-              <div
-                className="
-                   text-sm
-                   font-normal
-                   tracking-wide
-                   text-gray-400
-                   uppercase
-                 "
-              >
-                Settings
-              </div>
-            </div>
+            </Link>
           </li>
           <li>
-            <a
-              href="#"
+            <Link
+              to="/stock-ingredient"
               className="
                  relative
                  flex flex-row
@@ -250,7 +236,7 @@ const Sidebar = () => {
                "
             >
               <span className="inline-flex justify-center items-center ml-4">
-                <i className="fas fa-user text-blue-500 text-lg p-1"></i>
+                <i className="fas fa-database text-blue-500 text-lg p-1"></i>
               </span>
               <span
                 className="
@@ -263,56 +249,16 @@ const Sidebar = () => {
                    pl-1
                  "
               >
-                Profil
+                Stock Ingredients
               </span>
-            </a>
+            </Link>
           </li>
           <li>
             <a
               href="#"
               className="
                  relative
-                 flex flex-row
-                 items-center
-                 h-11
-                 md:mx-4
-                 lg:mx-4
-                 xl:mx-4
-                 mx-1
-                 rounded-2xl
-                 focus:outline-none
-                 hover:bg-gray-100
-                 dark:hover:bg-gray-600
-                 text-white-600
-                 hover:text-white-800
-                 dark:hover:border-gray-800
-                 pr-6
-               "
-            >
-              <span className="inline-flex justify-center items-center ml-4 p-1">
-                <i className="fas fa-database text-blue-500 text-lg"></i>
-              </span>
-              <span
-                className="
-                   ml-2
-                   text-sm
-                   tracking-wide
-                   truncate
-                   text-blue-500
-                   font-semibold
-                   pl-1
-                 "
-              >
-                Setting
-              </span>
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              className="
-                 relative
-                 flex flex-row
+                 flex flex-row              
                  items-center
                  h-11
                  md:mx-4

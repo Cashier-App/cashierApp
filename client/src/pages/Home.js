@@ -15,7 +15,7 @@ const Home = () => {
       >
         <Navbar />
         <Sidebar />
-        <div class="h-full ml-14 mt-14 mb-10 md:ml-52 bg-gray-200 mr-14 md:mr-80">
+        <div class="h-full ml-14 mt-14 mb-10 md:ml-56 bg-gray-200 mr-14 md:mr-80">
           <StatusItem />
           <CardItem />
         </div>

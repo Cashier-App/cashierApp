@@ -5,7 +5,7 @@ const StatusTransaction = () => {
          fixed rounded-b-2xl
          top-14
          right-0
-         left-52
+         left-56
          grid grid-cols-1
          sm:grid-cols-2
          lg:grid-cols-4
