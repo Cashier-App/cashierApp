@@ -149,8 +149,9 @@ class Controller {
         new: true,
         runValidators: true,
       });
+      let responseUpdated = await StockItem.findOne({ _id: id }).populate({ path: "category" }).populate({ path: "recipes.ingredient" });
       if (response) {
-        res.status(200).json(response);
+        res.status(200).json(responseUpdated);
       } else {
         res.status(404).json({ message: "Stock Item not found" });
       }
