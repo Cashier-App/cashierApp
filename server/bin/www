@@ -1,3 +1,5 @@
+const connectDB = require("../config");
 const app = require("../app.js")
 const port = 4001
+connectDB();
 app.listen(port, () => console.log("server running at port", port));

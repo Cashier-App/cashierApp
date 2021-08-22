@@ -6,7 +6,7 @@ let ingredientId;
 let categoryId;
 let itemsId;
 let saleId;
-
+let access_token = "";
 describe("Sale case", () => {
   beforeAll(async () => {
     try {
@@ -31,22 +31,39 @@ describe("Sale case", () => {
   });
 
   it("GET '/Sales' [SUCCESS CASE] should be able to return array", async () => {
-    const response = await request(app).get("/Sales").send();
+    await request(app).post("/User").send({
+      name: "admin",
+      email: "admin@admin.com",
+      password: "admin",
+    });
+    let response_login = await request(app).post("/User/login").send({
+      email: "admin@admin.com",
+      password: "admin",
+    });
+    access_token = response_login.body.access_token;
+    const response = await request(app)
+      .get("/Sales")
+      .set({ access_token })
+      .send();
     expect(response.status).toBe(200);
     expect(Array.isArray(response.body)).toBe(true);
   });
   // CREATE POST
   it("POST /Sales [SUCCESS CASE] should be able to create a sale data", async () => {
-    const responseIngredient = await request(app).post("/StockIngredients").send({
-      name: "Kecap",
-      unit: "Liter",
-      total: 2,
-    });
+    const responseIngredient = await request(app)
+      .post("/StockIngredients")
+      .set({ access_token })
+      .send({
+        name: "Kecap",
+        unit: "Liter",
+        total: 2,
+      });
     ingredientId = responseIngredient.body._id;
     let category = new Category({ name: "Food" });
     categoryId = await category.save();
     const response = await request(app)
       .post("/StockItems")
+      .set({ access_token })
       .send({
         name: "Bakmi Ayam Komplit",
         category: categoryId,
@@ -58,6 +75,7 @@ describe("Sale case", () => {
     itemsId = response.body._id;
     const responseSales = await request(app)
       .post("/Sales")
+      .set({ access_token })
       .send({
         items: [{ item: itemsId, qty: 2 }],
         payment: "Debit",
@@ -69,6 +87,7 @@ describe("Sale case", () => {
   it("POST /Sales [ERROR CASE] should be able to create an item", async () => {
     const responseSales = await request(app)
       .post("/Sales")
+      .set({ access_token })
       .send({
         items: [{ item: itemsId, qty: 2 }],
         payment: null,
@@ -77,12 +96,18 @@ describe("Sale case", () => {
   });
 
   it("GET '/Sales' [SUCCESS CASE] should be able to object of one item", async () => {
-    const response = await request(app).get(`/Sales/${saleId}`).send();
+    const response = await request(app)
+      .get(`/Sales/${saleId}`)
+      .set({ access_token })
+      .send();
     expect(response.status).toBe(200);
   });
 
   it("GET '/StockItems' [ERROR CASE] should be able to error message", async () => {
-    const response = await request(app).get("/Sales/611f86749442233e1c67332d").send();
+    const response = await request(app)
+      .get("/Sales/611f86749442233e1c67332d")
+      .set({ access_token })
+      .send();
     expect(response.status).toBe(404);
     expect(response.body).toHaveProperty("message", "Sale not found");
   });

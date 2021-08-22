@@ -14,10 +14,9 @@ const getMaxStock = async (category, recipes) => {
       return stock;
     });
     await Promise.all(allStock).then((values) => {
-      console.log(values);
+      // console.log(values);
     });
     let maxStock = await allStock.sort((a, b) => a - b)[0];
-    console.log(maxStock);
     return Math.floor(maxStock);
   }
 };

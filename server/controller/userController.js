@@ -34,7 +34,6 @@ class Controller {
   static async login(req, res) {
     const { email, password: plainPass } = req.body;
     try {
-      console.log("masuk");
       let user = await User.findOne({ email });
       if (user) {
         if (bcrypt.compareSync(plainPass, user.password)) {
@@ -42,6 +41,7 @@ class Controller {
             user: {
               id: user.id,
               email: user.email,
+              name: user.name,
             },
           };
           jwt.sign(payload, "SECRET", { expiresIn: 36000 }, (err, token) => {
