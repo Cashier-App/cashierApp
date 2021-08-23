@@ -1,5 +1,20 @@
-const { ApolloServer } = require("apollo-server");
-const { resolvers, typeDefs } = require("./graphQL/schema");
+const { ApolloServer } = require("apollo-server-express");
+const { typeDefs } = require("./graphQL/typeDef");
+const { resolvers } = require("./graphQL/resolvers");
+const {
+  GraphQLUpload,
+  graphqlUploadExpress, // A Koa implementation is also exported.
+} = require("graphql-upload");
+const express = require("express");
 const port = process.env.PORT || 4000;
 const server = new ApolloServer({ typeDefs, resolvers });
-server.listen(port, () => console.log("Server running at port", port));
+// server.listen(port, () => console.log("Server running at port", port));
+
+server.start().then(async () => {
+  const app = express();
+  app.use(graphqlUploadExpress());
+  server.applyMiddleware({ app });
+  await new Promise((r) =>
+    app.listen({ port }, console.log("Server running at port", port))
+  );
+});
