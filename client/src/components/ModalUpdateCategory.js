@@ -1,16 +1,16 @@
 import React, {useState} from "react";
-import { ADD_CATEGORY_MUTATION, FETCH_CATEGORY } from "../config/categoryQuery"
+import { UPDATE_CATEGORY_MUTATION, FETCH_CATEGORY } from "../config/categoryQuery"
 import { ToastContainer, toast } from "react-toastify";
 import { useQuery, useMutation, useApolloClient } from "@apollo/client";
 
 
-const ModalAddCategory = ({ setShowModal }) => {
+const ModalUpdateCategory = ({ setShowModalUpdate, dataPopulate }) => {
   const [name, setName] = useState("");
   const client = useApolloClient();
   const { data, loading } = useQuery(FETCH_CATEGORY);
-  const [addCategory] = useMutation(ADD_CATEGORY_MUTATION, {
+  const [editCategory] = useMutation(UPDATE_CATEGORY_MUTATION, {
     onCompleted(data) {
-      toast.success('Add category success!', {
+      toast.success('Edit category success!', {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -20,17 +20,23 @@ const ModalAddCategory = ({ setShowModal }) => {
         progress: undefined,
       });
       const { categories } = client.readQuery({ query: FETCH_CATEGORY });
-      let newCategoryList = [...categories, data.addCategory];
+
+      categories.forEach((el) => {
+        if (el._id === data.editCategory._id) {
+          el = data.editCategory;
+        }
+      });
 
       client.writeQuery({
         query: FETCH_CATEGORY,
         data: {
-          categories: newCategoryList,
+          categories,
         },
       });
     },
-    onError() {
-      toast.error("Add category error", {
+    onError(err) {
+      console.log(err);
+      toast.error("Edit category error", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -44,7 +50,8 @@ const ModalAddCategory = ({ setShowModal }) => {
 
   function handleSubmit(e) {
     e.preventDefault();
-    let newCategory = {
+    let editedCategory = {
+      _id: dataPopulate._id,
       name
     }
     if (!name) {
@@ -58,8 +65,8 @@ const ModalAddCategory = ({ setShowModal }) => {
         progress: undefined,
       });
     } else {
-      addCategory({
-        variables: newCategory
+      editCategory({
+        variables: editedCategory
       })
     }
   }
@@ -70,10 +77,10 @@ const ModalAddCategory = ({ setShowModal }) => {
         <div className="relative w-auto my-6 mx-auto max-w-3xl">
           <div className="border-0 p-10 rounded-lg shadow-xl relative flex flex-col w-full bg-white outline-none focus:outline-none">
             <div className="font-medium self-center text-xl sm:text-3xl text-gray-800">
-              Add Category
+              Edit Category
             </div>
             <div className="mt-4 self-center text-xl sm:text-sm text-gray-800">
-              Please enter your credentials to add new category
+              Please enter your credentials to edit category
             </div>
 
             <div className="mt-5">
@@ -111,8 +118,11 @@ const ModalAddCategory = ({ setShowModal }) => {
                     py-2
                     focus:outline-none focus:border-blue-400
                   "
+                      defaultValue={dataPopulate?.name}
                       placeholder="Enter your category name"
-                      onChange={(e) => setName(e.target.value)}
+                      onChange={(e) => {
+                        console.log(e.target.value);
+                        setName(e.target.value)}}
                     />
                   </div>
                 </div>
@@ -142,7 +152,7 @@ const ModalAddCategory = ({ setShowModal }) => {
                 </div>
                 <div className="flex w-full">
                   <button
-                    onClick={() => setShowModal(false)}
+                    onClick={() => setShowModalUpdate(false)}
                     className="
                   flex
                   mt-2
@@ -185,4 +195,4 @@ const ModalAddCategory = ({ setShowModal }) => {
   );
 };
 
-export default ModalAddCategory;
+export default ModalUpdateCategory;

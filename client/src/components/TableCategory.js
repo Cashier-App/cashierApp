@@ -1,15 +1,75 @@
 import { useState } from "react";
 import ModalAddCategory from "./ModalAddCategory";
-import { FETCH_CATEGORY } from "../config/categoryQuery";
-import { useQuery } from "@apollo/client";
+import ModalUpdateCategory from "./ModalUpdateCategory";
+import { FETCH_CATEGORY, DELETE_CATEGORY_MUTATION } from "../config/categoryQuery";
+import { useQuery, useMutation, useApolloClient } from "@apollo/client";
+import { ToastContainer, toast } from "react-toastify";
 
 const TableCategory = () => {
+  const client = useApolloClient();
   const [showModal, setShowModal] = useState(false);
+  const [showModalUpdate, setShowModalUpdate] = useState(false);
+  const [dataPopulate, setDataPopulate] = useState("");
+  const [dataDelete, setDataDelete] = useState("");
   const { data, loading } = useQuery(FETCH_CATEGORY);
-  console.log(data);
+  const [deleteCategory] = useMutation(DELETE_CATEGORY_MUTATION, {
+    onCompleted() {
+      toast.success('Delete category success!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      const { categories } = client.readQuery({ query: FETCH_CATEGORY });
+
+      let newCategoryList = [...categories]
+
+      newCategoryList.forEach((el, index) => {
+        if (el._id === dataDelete) {
+          newCategoryList.splice(index, 1);
+        }
+      });
+
+      client.writeQuery({
+        query: FETCH_CATEGORY,
+        data: {
+          categories: newCategoryList
+        },
+      });
+    },
+    onError() {
+      toast.error("Edit category error", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  })
+
+
+  
+  function handleUpdate(dataCategory) {
+    setDataPopulate(dataCategory);
+    setShowModalUpdate(true)
+  }
+  function handleDelete(dataCategory) {
+    setDataDelete(dataCategory._id);
+    const _id = dataCategory._id;
+    deleteCategory({
+      variables: { _id },
+    });
+  }
   return (
     <div>
       {showModal ? <ModalAddCategory setShowModal={setShowModal} /> : null}
+      {showModalUpdate ? <ModalUpdateCategory setShowModalUpdate={setShowModalUpdate} dataPopulate={dataPopulate}/> : null}
 
       <div className="mb-20 mx-4 mt-6">
         <div className="mb-5">
@@ -38,7 +98,7 @@ const TableCategory = () => {
                   "
                 >
                   <th className="px-4 py-3">Category</th>
-                  <th className="px-4 py-3">Actions</th>
+                  <th className="px-4 py-3 flex justify-end">Actions</th>
                 </tr>
               </thead>
               <tbody
@@ -48,7 +108,7 @@ const TableCategory = () => {
                   dark:divide-gray-700 dark:bg-gray-800
                 "
               >
-                {loading ? (<div>Please Wait...</div>) : (
+                {loading ? null : (
                 <>
                   {data.categories.map((category, index) => (
                   <tr
@@ -69,11 +129,10 @@ const TableCategory = () => {
                         </div>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-sm">
-                      <div className="flex justify-start items-center text-md">
-                        <i className="far fa-edit mr-2 text-blue-500 font-semibold"></i>
-                        <i className="far fa-eye mr-2 text-green-500 font-semibold"></i>
-                        <i className="far fa-trash-alt text-red-500 font-semibold"></i>
+                    <td className="px-4 py-3 text-sm flex justify-end">
+                      <div className="flex justify-start items-center text-md pr-2">
+                        <i className="far fa-edit mr-2 text-blue-500 font-semibold cursor-pointer" onClick={()=> handleUpdate(category)}></i>
+                        <i className="far fa-trash-alt text-red-500 font-semibold cursor-pointer" onClick={()=> handleDelete(category)}></i>
                       </div>
                     </td>
                   </tr>
@@ -101,148 +160,22 @@ const TableCategory = () => {
             "
           >
             <span className="flex items-center col-span-3">
-              Showing 21-30 of 100
-            </span>
-            <span className="col-span-2"></span>
-            {/* Pagination */}
-            <span className="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
-              <nav ariaLabel="Table navigation">
-                <ul className="inline-flex items-center">
-                  <li>
-                    <button
-                      className="
-                        px-3
-                        py-1
-                        rounded-md rounded-l-lg
-                        focus:outline-none focus:shadow-outline-purple
-                      "
-                      ariaLabel="Previous"
-                    >
-                      <svg
-                        ariaHidden="true"
-                        className="w-4 h-4 fill-current"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                          fillRule="evenodd"
-                        ></path>
-                      </svg>
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      className="
-                        px-3
-                        py-1
-                        rounded-md
-                        focus:outline-none focus:shadow-outline-purple
-                      "
-                    >
-                      1
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      className="
-                        px-3
-                        py-1
-                        rounded-md
-                        focus:outline-none focus:shadow-outline-purple
-                      "
-                    >
-                      2
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      className="
-                        px-3
-                        py-1
-                        text-white
-                        dark:text-gray-800
-                        transition-colors
-                        duration-150
-                        bg-blue-600
-                        dark:bg-gray-100
-                        border border-r-0 border-blue-600
-                        dark:border-gray-100
-                        rounded-md
-                        focus:outline-none focus:shadow-outline-purple
-                      "
-                    >
-                      3
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      className="
-                        px-3
-                        py-1
-                        rounded-md
-                        focus:outline-none focus:shadow-outline-purple
-                      "
-                    >
-                      4
-                    </button>
-                  </li>
-                  <li>
-                    <span className="px-3 py-1">...</span>
-                  </li>
-                  <li>
-                    <button
-                      className="
-                        px-3
-                        py-1
-                        rounded-md
-                        focus:outline-none focus:shadow-outline-purple
-                      "
-                    >
-                      8
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      className="
-                        px-3
-                        py-1
-                        rounded-md
-                        focus:outline-none focus:shadow-outline-purple
-                      "
-                    >
-                      9
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      className="
-                        px-3
-                        py-1
-                        rounded-md rounded-r-lg
-                        focus:outline-none focus:shadow-outline-purple
-                      "
-                      ariaLabel="Next"
-                    >
-                      <svg
-                        className="w-4 h-4 fill-current"
-                        ariaHidden="true"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                          clipRule="evenodd"
-                          fillRule="evenodd"
-                        ></path>
-                      </svg>
-                    </button>
-                  </li>
-                </ul>
-              </nav>
+              Showing {data ? data.categories.length : 0} of {data ? data.categories.length : 0}
             </span>
           </div>
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 };

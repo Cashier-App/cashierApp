@@ -253,7 +253,6 @@ const Login = () => {
         draggable
         pauseOnHover
       />
-      <ToastContainer />
     </div>
   );
 };

@@ -297,7 +297,6 @@ const Register = () => {
         draggable
         pauseOnHover
       />
-      <ToastContainer />
     </div>
   );
 };
