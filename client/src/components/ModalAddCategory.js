@@ -31,7 +31,7 @@ const ModalAddCategory = ({ setShowModal }) => {
                     text-gray-400
                   "
                     >
-                      <i class="fas fa-bars text-blue-500"></i>
+                      <i className="fas fa-bars text-blue-500"></i>
                     </div>
 
                     <input
