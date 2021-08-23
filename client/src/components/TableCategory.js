@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import ModalAddCategory from "./ModalAddCategory";
+import { FETCH_CATEGORY } from "../config/categoryQuery";
+import { useQuery } from "@apollo/client";
 
 const TableCategory = () => {
   const [showModal, setShowModal] = useState(false);
-
+  const { data, loading } = useQuery(FETCH_CATEGORY);
+  console.log(data);
   return (
     <div>
       {showModal ? <ModalAddCategory setShowModal={setShowModal} /> : null}
@@ -15,7 +17,7 @@ const TableCategory = () => {
             onClick={() => setShowModal(true)}
             className="bg-blue-500 px-3 py-1 rounded-lg text-white font-medium hover:bg-blue-600"
           >
-            <i class="fas fa-plus mr-2"></i>Add Category
+            <i className="fas fa-plus mr-2"></i>Add Category
           </button>
         </div>
         <div className="w-full overflow-hidden rounded-lg shadow-xs">
@@ -46,81 +48,38 @@ const TableCategory = () => {
                   dark:divide-gray-700 dark:bg-gray-800
                 "
               >
-                <tr
-                  className="
-                    bg-gray-50
-                    dark:bg-gray-800
-                    hover:bg-gray-100
-                    dark:hover:bg-gray-900
-                    text-gray-700
-                    dark:text-gray-400
-                  "
-                >
-                  <td className="px-4 py-3">
-                    <div className="flex items-center text-sm">
-                      <div>
-                        <p className="font-semibold">Foods</p>
+                {loading ? (<h1>Please Wait...</h1>) : (
+                <>
+                  {data.categories.map((category, index) => (
+                  <tr
+                    key={index}
+                    className="
+                      bg-gray-50
+                      dark:bg-gray-800
+                      hover:bg-gray-100
+                      dark:hover:bg-gray-900
+                      text-gray-700
+                      dark:text-gray-400
+                    "
+                  >
+                    <td className="px-4 py-3">
+                      <div className="flex items-center text-sm">
+                        <div>
+                          <p className="font-semibold">{category?.name}</p>
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-sm">
-                    <div className="flex justify-start items-center text-md">
-                      <i class="far fa-edit mr-2 text-blue-500 font-semibold"></i>
-                      <i class="far fa-eye mr-2 text-green-500 font-semibold"></i>
-                      <i class="far fa-trash-alt text-red-500 font-semibold"></i>
-                    </div>
-                  </td>
-                </tr>
-                <tr
-                  className="
-                    bg-gray-50
-                    dark:bg-gray-800
-                    hover:bg-gray-100
-                    dark:hover:bg-gray-900
-                    text-gray-700
-                    dark:text-gray-400
-                  "
-                >
-                  <td className="px-4 py-3">
-                    <div className="flex items-center text-sm">
-                      <div>
-                        <p className="font-semibold">Drinks</p>
+                    </td>
+                    <td className="px-4 py-3 text-sm">
+                      <div className="flex justify-start items-center text-md">
+                        <i className="far fa-edit mr-2 text-blue-500 font-semibold"></i>
+                        <i className="far fa-eye mr-2 text-green-500 font-semibold"></i>
+                        <i className="far fa-trash-alt text-red-500 font-semibold"></i>
                       </div>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-sm">
-                    <div className="flex justify-start items-center text-md">
-                      <i class="far fa-edit mr-2 text-blue-500 font-semibold"></i>
-                      <i class="far fa-eye mr-2 text-green-500 font-semibold"></i>
-                      <i class="far fa-trash-alt text-red-500 font-semibold"></i>
-                    </div>
-                  </td>
-                </tr>
-                <tr
-                  className="
-                    bg-gray-50
-                    dark:bg-gray-800
-                    hover:bg-gray-100
-                    dark:hover:bg-gray-900
-                    text-gray-700
-                    dark:text-gray-400
-                  "
-                >
-                  <td className="px-4 py-3">
-                    <div className="flex items-center text-sm">
-                      <div>
-                        <p className="font-semibold">Others</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-sm">
-                    <div className="flex justify-start items-center text-md">
-                      <i class="far fa-edit mr-2 text-blue-500 font-semibold"></i>
-                      <i class="far fa-eye mr-2 text-green-500 font-semibold"></i>
-                      <i class="far fa-trash-alt text-red-500 font-semibold"></i>
-                    </div>
-                  </td>
-                </tr>
+                    </td>
+                  </tr>
+                  ))}
+                </>
+                )}
               </tbody>
             </table>
           </div>
@@ -147,7 +106,7 @@ const TableCategory = () => {
             <span className="col-span-2"></span>
             {/* Pagination */}
             <span className="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
-              <nav aria-label="Table navigation">
+              <nav ariaLabel="Table navigation">
                 <ul className="inline-flex items-center">
                   <li>
                     <button
@@ -160,14 +119,14 @@ const TableCategory = () => {
                       aria-label="Previous"
                     >
                       <svg
-                        aria-hidden="true"
+                        ariaHidden="true"
                         className="w-4 h-4 fill-current"
                         viewBox="0 0 20 20"
                       >
                         <path
                           d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                          clip-rule="evenodd"
-                          fill-rule="evenodd"
+                          clipRule="evenodd"
+                          fillRule="evenodd"
                         ></path>
                       </svg>
                     </button>
@@ -263,17 +222,17 @@ const TableCategory = () => {
                         rounded-md rounded-r-lg
                         focus:outline-none focus:shadow-outline-purple
                       "
-                      aria-label="Next"
+                      ariaLabel="Next"
                     >
                       <svg
                         className="w-4 h-4 fill-current"
-                        aria-hidden="true"
+                        ariaHidden="true"
                         viewBox="0 0 20 20"
                       >
                         <path
                           d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                          clip-rule="evenodd"
-                          fill-rule="evenodd"
+                          clipRule="evenodd"
+                          fillRule="evenodd"
                         ></path>
                       </svg>
                     </button>
