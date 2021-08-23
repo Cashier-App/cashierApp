@@ -1,7 +1,13 @@
 const { API } = require("./instance");
 const Redis = require("ioredis");
 const redis = new Redis();
-
+const { promisify } = require("util");
+const FormData = require("form-data");
+var fs = require("fs");
+const path = require("path");
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 const getAllCategories = async () => {
   let categories = await redis.get("categories");
   if (categories) return JSON.parse(categories);
@@ -48,6 +54,7 @@ const postAddCategory = async (name) => {
       }
     );
     const { data } = res;
+    console.log("category add success");
     return data;
   } catch (err) {
     throw new Error(err.response.data.message);
@@ -248,68 +255,92 @@ const getStockItem = async (id) => {
   }
 };
 const postAddStockItem = async (
+  file,
   name,
   price,
   category,
-  imageUrl,
   recipes,
   stock
 ) => {
+  console.log(recipes);
+  await redis.del("stockItems");
+  let stockItem = {};
+  const { createReadStream, filename, mimetype, encoding } = await file;
+  const stream = await createReadStream();
+  const out = await require("fs").createWriteStream("local-file-output12.jpg");
+  stream.pipe(out);
+  console.log(2);
+  await sleep(2000);
+  await sleep(1000);
+  var data = new FormData();
+  recipes.forEach((e, index) => {
+    console.log(index, e.ingredient);
+    data.append(`recipes[${index}][ingredient]`, e.ingredient);
+    data.append(`recipes[${index}][qty]`, Number(e.qty));
+  });
+  data.append("name", name);
+  data.append("price", price);
+  data.append("stock", stock);
+  data.append("category", category);
+  const image = fs.createReadStream("./local-file-output12.jpg");
+  data.append("image", image);
+  console.log(data);
   try {
-    await redis.del("stockItems");
-    let res = await API.post(
-      "/StockItems",
-      {
-        name,
-        price,
-        category,
-        imageUrl,
-        recipes,
-        stock,
+    let response = await API.post("/StockItems", data, {
+      headers: {
+        ...data.getHeaders(),
       },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    const { data } = res;
-    return data;
+    });
+    const { data: responseData } = response;
+    stockItem = responseData;
+    return stockItem;
   } catch (err) {
-    throw new Error(err.response.data.message);
+    throw new Error(err);
   }
 };
 const postEditStockItem = async (
   _id,
+  file,
   name,
   price,
   category,
-  imageUrl,
   recipes,
   stock
 ) => {
+  console.log(recipes);
+  await redis.del("stockItems");
+  let stockItem = {};
+  const { createReadStream, filename, mimetype, encoding } = await file;
+  const stream = await createReadStream();
+  const out = await require("fs").createWriteStream("local-file-output12.jpg");
+  stream.pipe(out);
+  console.log(2);
+  await sleep(2000);
+  await sleep(1000);
+  var data = new FormData();
+  recipes.forEach((e, index) => {
+    console.log(index, e.ingredient);
+    data.append(`recipes[${index}][ingredient]`, e.ingredient);
+    data.append(`recipes[${index}][qty]`, Number(e.qty));
+  });
+  data.append("name", name);
+  data.append("price", price);
+  data.append("stock", stock);
+  data.append("category", category);
+  const image = fs.createReadStream("./local-file-output12.jpg");
+  data.append("image", image);
+  console.log(data);
   try {
-    await redis.del("stockItems");
-    let res = await API.put(
-      `/StockItems/${_id}`,
-      {
-        name,
-        price,
-        category,
-        imageUrl,
-        recipes,
-        stock,
+    let response = await API.put(`/StockItems/${_id}`, data, {
+      headers: {
+        ...data.getHeaders(),
       },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    const { data } = res;
-    return data;
+    });
+    const { data: responseData } = response;
+    stockItem = responseData;
+    return stockItem;
   } catch (err) {
-    throw new Error(err.response.data.message);
+    throw new Error(err);
   }
 };
 

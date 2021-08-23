@@ -1,12 +1,6 @@
 const { default: axios } = require("axios");
 const { GraphQLUpload } = require("graphql-upload");
-const { promisify } = require("util");
-const FormData = require("form-data");
-var fs = require("fs");
-const path = require("path");
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+
 const {
   getAllCategories,
   getCategory,
@@ -48,40 +42,8 @@ const resolvers = {
   },
   Mutation: {
     // Categories
-    addStockItem: async (
-      _,
-      { file, name, price, category, recipes, stock }
-    ) => {
-      let stockItem = {};
-      const { createReadStream, filename, mimetype, encoding } = await file;
-      const stream = await createReadStream();
-      const out = await require("fs").createWriteStream(
-        "local-file-output12.jpg"
-      );
-      stream.pipe(out);
-      console.log(2);
-      await sleep(2000);
-      await sleep(1000);
-      var data = new FormData();
-      data.append("name", name);
-      data.append("price", price);
-      data.append("stock", stock);
-      data.append("category", category);
-      const image = fs.createReadStream("./local-file-output12.jpg");
-      data.append("image", image);
-      let response = await axios.post(
-        "http://localhost:4001/StockItems",
-        data,
-        {
-          headers: {
-            ...data.getHeaders(),
-          },
-        }
-      );
-      const { data: responseData } = response;
-      stockItem = responseData;
-      return stockItem;
-    },
+    addStockItem: async (_, { file, name, price, category, recipes, stock }) =>
+      postAddStockItem(file, name, price, category, recipes, stock),
     addCategory: (_, args) => postAddCategory(args.name),
     editCategory: (_, args) => postEditCategory(args._id, args.name),
     deleteCategory: (_, args) => deleteCategory(args._id),
