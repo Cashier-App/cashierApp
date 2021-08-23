@@ -34,7 +34,8 @@ const ModalUpdateCategory = ({ setShowModalUpdate, dataPopulate }) => {
         },
       });
     },
-    onError() {
+    onError(err) {
+      console.log(err);
       toast.error("Edit category error", {
         position: "top-right",
         autoClose: 5000,
@@ -190,7 +191,6 @@ const ModalUpdateCategory = ({ setShowModalUpdate, dataPopulate }) => {
         draggable
         pauseOnHover
       />
-      <ToastContainer />
     </div>
   );
 };
