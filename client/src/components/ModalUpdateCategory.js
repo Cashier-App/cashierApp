@@ -79,7 +79,7 @@ const ModalUpdateCategory = ({ setShowModalUpdate, dataPopulate }) => {
               Edit Category
             </div>
             <div className="mt-4 self-center text-xl sm:text-sm text-gray-800">
-              Please enter your credentials to edit new category
+              Please enter your credentials to edit category
             </div>
 
             <div className="mt-5">
