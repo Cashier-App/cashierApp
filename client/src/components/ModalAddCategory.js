@@ -5,10 +5,10 @@ const ModalAddCategory = ({ setShowModal }) => {
         <div className="relative w-auto my-6 mx-auto max-w-3xl">
           <div className="border-0 p-10 rounded-lg shadow-xl relative flex flex-col w-full bg-white outline-none focus:outline-none">
             <div className="font-medium self-center text-xl sm:text-3xl text-gray-800">
-              Add Item
+              Add Category
             </div>
             <div className="mt-4 self-center text-xl sm:text-sm text-gray-800">
-              Please enter your credentials to add new item
+              Please enter your credentials to add new category
             </div>
 
             <div className="mt-5">
