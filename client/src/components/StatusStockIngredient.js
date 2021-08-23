@@ -1,4 +1,19 @@
-const StatusStockIngredient = () => {
+const StatusStockIngredient = ({ stockIngredients }) => {
+  const totalIngredient = stockIngredients.length;
+  let outStock = 0;
+  let readyStock = 0;
+  let warning = 0;
+
+  stockIngredients.map((stock) => {
+    if (stock.total === 0) {
+      outStock += 1;
+    } else if (stock.total <= 2) {
+      warning += 1;
+    } else {
+      readyStock += 1;
+    }
+  });
+
   return (
     <div
       className="
@@ -36,7 +51,7 @@ const StatusStockIngredient = () => {
                 items-center
                 w-14
                 h-14
-                bg-blue-50
+                bg-blue-100
                 rounded-full
                 transition-all
                 duration-300
@@ -44,89 +59,16 @@ const StatusStockIngredient = () => {
                 group-hover:rotate-12
               "
         >
-          <i class="fas fa-shopping-cart text-blue-500 text-2xl"></i>
+          <i className="fas fa-box text-blue-500 text-2xl"></i>
         </div>
         <div className="text-right text-gray-700">
-          <p className="text-2xl">86</p>
-          <p>Stock Ingredients</p>
+          <p className="text-2xl">{totalIngredient}</p>
+          <p>Total Ingredients</p>
         </div>
       </div>
       <div
         className="
               bg-white
-              shadow-lg
-              rounded-lg
-              flex
-              items-center
-              justify-between
-              p-3
-              text-white
-              font-medium
-              group
-            "
-      >
-        <div
-          className="
-                flex
-                justify-center
-                items-center
-                w-14
-                h-14
-                bg-green-50
-                rounded-full
-                transition-all
-                duration-300
-                transform
-                group-hover:rotate-12
-              "
-        >
-          <i class="fas fa-check text-green-500 text-2xl"></i>
-        </div>
-        <div className="text-right text-gray-600">
-          <p className="text-2xl">557</p>
-          <p>Success</p>
-        </div>
-      </div>
-      <div
-        className="
-              bg-white
-              shadow-lg
-              rounded-lg
-              flex
-              items-center
-              justify-between
-              p-3
-              text-white
-              font-medium
-              group
-            "
-      >
-        <div
-          className="
-                flex
-                justify-center
-                items-center
-                w-14
-                h-14
-                bg-yellow-100
-                rounded-full
-                transition-all
-                duration-300
-                transform
-                group-hover:rotate-12
-              "
-        >
-          <i class="fas fa-history text-yellow-500 text-2xl"></i>
-        </div>
-        <div className="text-right text-gray-600">
-          <p className="text-2xl">117</p>
-          <p>Pending</p>
-        </div>
-      </div>
-      <div
-        className="
-              bg-white
-              dark:bg-gray-800
               shadow-lg
               rounded-lg
               flex
@@ -156,8 +98,81 @@ const StatusStockIngredient = () => {
           <i class="far fa-times-circle text-red-500 text-2xl"></i>
         </div>
         <div className="text-right text-gray-600">
-          <p className="text-2xl">57</p>
-          <p>Denied</p>
+          <p className="text-2xl">{outStock}</p>
+          <p>Out of Stock</p>
+        </div>
+      </div>
+      <div
+        className="
+              bg-white
+              shadow-lg
+              rounded-lg
+              flex
+              items-center
+              justify-between
+              p-3
+              text-white
+              font-medium
+              group
+            "
+      >
+        <div
+          className="
+                flex
+                justify-center
+                items-center
+                w-14
+                h-14
+                bg-green-100
+                rounded-full
+                transition-all
+                duration-300
+                transform
+                group-hover:rotate-12
+              "
+        >
+          <i class="fas fa-check text-green-500 text-2xl"></i>
+        </div>
+        <div className="text-right text-gray-600">
+          <p className="text-2xl">{readyStock}</p>
+          <p>Ready Stock</p>
+        </div>
+      </div>
+      <div
+        className="
+              bg-white
+              dark:bg-gray-800
+              shadow-lg
+              rounded-lg
+              flex
+              items-center
+              justify-between
+              p-3
+              text-white
+              font-medium
+              group
+            "
+      >
+        <div
+          className="
+                flex
+                justify-center
+                items-center
+                w-14
+                h-14
+                bg-yellow-100
+                rounded-full
+                transition-all
+                duration-300
+                transform
+                group-hover:rotate-12
+              "
+        >
+          <i class="fas fa-history text-yellow-500 text-2xl"></i>
+        </div>
+        <div className="text-right text-gray-600">
+          <p className="text-2xl">{warning}</p>
+          <p>Nearly Gone</p>
         </div>
       </div>
     </div>

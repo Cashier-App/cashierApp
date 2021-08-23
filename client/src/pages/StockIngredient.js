@@ -1,15 +1,19 @@
+import { useQuery } from "@apollo/client";
 import {
   Navbar,
   Sidebar,
   StatusStockIngredient,
   TableStockIngredient,
 } from "../components";
+import { FETCH_ALL_INGREDIENTS } from "../config/ingredient";
 
 const StockIngredient = () => {
+  const { data, loading, error } = useQuery(FETCH_ALL_INGREDIENTS);
+
   return (
     <div>
       <div
-        class="
+        className="
               top-14
               min-h-screen
               flex flex-col flex-auto flex-shrink-0
@@ -21,9 +25,13 @@ const StockIngredient = () => {
       >
         <Navbar />
         <Sidebar />
-        <div class="h-full ml-14 mt-14 mb-10 md:ml-56 bg-gray-200">
-          <StatusStockIngredient />
-          <TableStockIngredient />
+        <div className="h-full ml-14 mt-14 mb-10 md:ml-56 bg-gray-200">
+          {!loading && (
+            <StatusStockIngredient stockIngredients={data.stockIngredients} />
+          )}
+          {!loading && (
+            <TableStockIngredient stockIngredients={data.stockIngredients} />
+          )}
         </div>
       </div>
     </div>
