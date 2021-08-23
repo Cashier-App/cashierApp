@@ -175,6 +175,46 @@ const Sidebar = () => {
           </li>
           <li>
             <Link
+              to="/category"
+              className="
+                 relative
+                 flex flex-row
+                 items-center
+                 h-11
+                 md:mx-4
+                 lg:mx-4
+                 xl:mx-4
+                 mx-1
+                 rounded-2xl
+                 focus:outline-none
+                 hover:bg-gray-100
+                 dark:hover:bg-gray-600
+                 text-white-600
+                 hover:text-white-800
+                 dark:hover:border-gray-800
+                 pr-6
+               "
+            >
+              <span className="inline-flex justify-center items-center ml-4">
+                <i className="fas fa-database text-blue-500 text-lg p-1"></i>
+              </span>
+              <span
+                className="
+                   ml-2
+                   text-sm
+                   tracking-wide
+                   truncate
+                   text-blue-500
+                   font-semibold
+                   pl-1
+                 "
+              >
+                Category
+              </span>
+            </Link>
+          </li>
+          <li>
+            <Link
               to="/stock-items"
               className="
                  relative

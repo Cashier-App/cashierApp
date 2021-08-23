@@ -7,6 +7,7 @@ import {
   StockIngredient,
   StockItem,
   Transaction,
+  Category
 } from "./pages";
 import Statistic2 from "./pages/Statistic";
 import Home from "./pages/Home";
@@ -20,6 +21,9 @@ function App() {
         </Route>
         <Route path="/add-item">
           <AddItem />
+        </Route>
+        <Route path="/category">
+          <Category />
         </Route>
         <Route path="/stock-ingredient">
           <StockIngredient />
