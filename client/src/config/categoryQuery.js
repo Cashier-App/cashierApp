@@ -8,3 +8,12 @@ query Query {
   }
 }
 `;
+
+export const ADD_CATEGORY_MUTATION = gql`
+mutation AddCategoryMutation($name: String) {
+  addCategory(name: $name) {
+    _id
+    name
+  }
+}
+`
