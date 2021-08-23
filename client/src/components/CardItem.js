@@ -42,7 +42,7 @@ const CardItem = () => {
                justify-center items-center
              "
           >
-            <i class="fas fa-plus mr-2"></i>ADD TO CART
+            <i className="fas fa-plus mr-2"></i>ADD TO CART
           </a>
         </div>
       </div>
@@ -80,7 +80,7 @@ const CardItem = () => {
                justify-center items-center
              "
           >
-            <i class="fas fa-plus mr-2"></i>ADD TO CART
+            <i className="fas fa-plus mr-2"></i>ADD TO CART
           </a>
         </div>
       </div>
@@ -118,7 +118,7 @@ const CardItem = () => {
                justify-center items-center
              "
           >
-            <i class="fas fa-plus mr-2"></i>ADD TO CART
+            <i className="fas fa-plus mr-2"></i>ADD TO CART
           </a>
         </div>
       </div>
@@ -156,7 +156,7 @@ const CardItem = () => {
                justify-center items-center
              "
           >
-            <i class="fas fa-plus mr-2"></i>ADD TO CART
+            <i className="fas fa-plus mr-2"></i>ADD TO CART
           </a>
         </div>
       </div>
@@ -194,7 +194,7 @@ const CardItem = () => {
                justify-center items-center
              "
           >
-            <i class="fas fa-plus mr-2"></i>ADD TO CART
+            <i className="fas fa-plus mr-2"></i>ADD TO CART
           </a>
         </div>
       </div>
@@ -232,7 +232,7 @@ const CardItem = () => {
                justify-center items-center
              "
           >
-            <i class="fas fa-plus mr-2"></i>ADD TO CART
+            <i className="fas fa-plus mr-2"></i>ADD TO CART
           </a>
         </div>
       </div>

@@ -35,3 +35,34 @@ export const ADD_STOCK_ITEM_MUTATION = gql`
     }
   }
 `;
+
+export const FETCH_ALL_STOCK_ITEM = gql`
+  query FetchStockItems {
+    stockItems {
+      _id
+      name
+      price
+      category {
+        _id
+        name
+      }
+      imageUrl
+      recipes {
+        ingredient {
+          _id
+          name
+          unit
+          total
+        }
+        qty
+      }
+      stock
+    }
+  }
+`;
+
+export const DELETE_STOCK_ITEM = gql`
+  mutation DeleteStockItem($_id: ID) {
+    deleteStockItem(_id: $_id)
+  }
+`;

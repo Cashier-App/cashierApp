@@ -118,13 +118,13 @@ const typeDefs = gql`
     # ): StockItem
     editStockItem(
       _id: ID
+      file: Upload!
       name: String
       price: Float
       category: String
-      imageUrl: String
       recipes: [add_recipe]
       stock: Float
-    ): StockItem
+    ): StockItem!
     deleteStockItem(_id: ID): String
     # mutation sales
     addSales(items: [add_item], payment: String, adminName: String): Sale

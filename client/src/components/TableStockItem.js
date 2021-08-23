@@ -1,21 +1,32 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import ModalAddItem from "./ModalAddItem";
+import { DELETE_STOCK_ITEM } from "../config/StockItem";
+import { FETCH_ALL_STOCK_ITEM } from "../config/StockItem";
+import { useMutation } from "@apollo/client";
+import { toast, ToastContainer } from "react-toastify";
 
-const TableStockItem = () => {
+const TableStockItem = ({ stockItems }) => {
   const [showModal, setShowModal] = useState(false);
-
+  const [deleteStockItem] = useMutation(DELETE_STOCK_ITEM, {
+    refetchQueries: [FETCH_ALL_STOCK_ITEM],
+    onCompleted() {
+      toast.success("Deleted!", {
+        position: "top-right",
+        autoClose: 5000,
+      });
+    },
+  });
   return (
     <div>
       {showModal ? <ModalAddItem setShowModal={setShowModal} /> : null}
-
       <div className="mb-20 mx-4 mt-36">
         <div className="mb-5">
           <button
             onClick={() => setShowModal(true)}
             className="bg-blue-500 px-3 py-1 rounded-lg text-white font-medium hover:bg-blue-600"
           >
-            <i class="fas fa-plus mr-2"></i>Add Item
+            <i className="fas fa-plus mr-2"></i>Add Item
           </button>
         </div>
         <div className="w-full overflow-hidden rounded-lg shadow-xs">
@@ -36,9 +47,8 @@ const TableStockItem = () => {
                   "
                 >
                   <th className="px-4 py-3">Food Item</th>
-                  <th className="px-4 py-3">Amount</th>
-                  <th className="px-4 py-3">Status</th>
-                  <th className="px-4 py-3">Date</th>
+                  <th className="px-4 py-3">Price</th>
+                  <th className="px-4 py-3">Category</th>
                   <th className="px-4 py-3">Actions</th>
                 </tr>
               </thead>
@@ -49,8 +59,11 @@ const TableStockItem = () => {
                   dark:divide-gray-700 dark:bg-gray-800
                 "
               >
-                <tr
-                  className="
+                {stockItems.map((stockItem) => {
+                  return (
+                    <tr
+                      key={stockItem._id}
+                      className="
                     bg-gray-50
                     dark:bg-gray-800
                     hover:bg-gray-100
@@ -58,11 +71,11 @@ const TableStockItem = () => {
                     text-gray-700
                     dark:text-gray-400
                   "
-                >
-                  <td className="px-4 py-3">
-                    <div className="flex items-center text-sm">
-                      <div
-                        className="
+                    >
+                      <td className="px-4 py-3">
+                        <div className="flex items-center text-sm">
+                          <div
+                            className="
                           relative
                           hidden
                           w-8
@@ -71,323 +84,55 @@ const TableStockItem = () => {
                           rounded-full
                           md:block
                         "
-                      >
-                        <img
-                          className="object-cover w-full h-full rounded-full"
-                          src="https://ik.imagekit.io/damario789/bakmipolim/Bakmi-Ayam-Original-Komplit_ESX7TDS3A.jpeg?updatedAt=1627366608044"
-                          alt=""
-                          loading="lazy"
-                        />
-                        <div
-                          className="absolute inset-0 rounded-full shadow-inner"
-                          aria-hidden="true"
-                        ></div>
-                      </div>
-                      <div>
-                        <p className="font-semibold">Bakmi Polim</p>
-                        <p className="text-xs text-gray-600 dark:text-gray-400">
-                          20 Pcs
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-sm">Rp. 85.585,00</td>
-                  <td className="px-4 py-3 text-xs">
-                    <span
-                      className="
-                        px-2
-                        py-1
-                        font-semibold
-                        leading-tight
-                        text-green-700
-                        bg-green-100
-                        rounded-full
-                        dark:bg-green-700 dark:text-green-100
-                      "
-                    >
-                      Success
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-sm">15-01-2021</td>
-                  <td className="px-4 py-3 text-sm">
-                    <div className="flex justify-start items-center text-md">
-                      <i class="far fa-edit mr-2 text-blue-500 font-semibold"></i>
-                      <i class="far fa-eye mr-2 text-green-500 font-semibold"></i>
-                      <i class="far fa-trash-alt text-red-500 font-semibold"></i>
-                    </div>
-                  </td>
-                </tr>
-                <tr
-                  className="
-                    bg-gray-50
-                    dark:bg-gray-800
-                    hover:bg-gray-100
-                    dark:hover:bg-gray-900
-                    text-gray-700
-                    dark:text-gray-400
-                  "
-                >
-                  <td className="px-4 py-3">
-                    <div className="flex items-center text-sm">
-                      <div
-                        className="
-                          relative
-                          hidden
-                          w-8
-                          h-8
-                          mr-3
-                          rounded-full
-                          md:block
-                        "
-                      >
-                        <img
-                          className="object-cover w-full h-full rounded-full"
-                          src="https://ik.imagekit.io/damario789/bakmipolim/Bakmi-Ayam-Original-Komplit_ESX7TDS3A.jpeg?updatedAt=1627366608044"
-                          alt=""
-                          loading="lazy"
-                        />
-                        <div
-                          className="absolute inset-0 rounded-full shadow-inner"
-                          aria-hidden="true"
-                        ></div>
-                      </div>
-                      <div>
-                        <p className="font-semibold">Bakmi Polim</p>
-                        <p className="text-xs text-gray-600 dark:text-gray-400">
-                          26 Pcs
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-sm">Rp. 36.975,00</td>
-                  <td className="px-4 py-3 text-xs">
-                    <span
-                      className="
-                        px-2
-                        py-1
-                        font-semibold
-                        leading-tight
-                        text-yellow-700
-                        bg-yellow-100
-                        rounded-full
-                      "
-                    >
-                      Pending
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-sm">23-03-2021</td>
-                  <td className="px-4 py-3 text-sm">
-                    <div className="flex justify-start items-center text-md">
-                      <i class="far fa-edit mr-2 text-blue-500 font-semibold"></i>
-                      <i class="far fa-eye mr-2 text-green-500 font-semibold"></i>
-                      <i class="far fa-trash-alt text-red-500 font-semibold"></i>
-                    </div>
-                  </td>
-                </tr>
-                <tr
-                  className="
-                    bg-gray-50
-                    dark:bg-gray-800
-                    hover:bg-gray-100
-                    dark:hover:bg-gray-900
-                    text-gray-700
-                    dark:text-gray-400
-                  "
-                >
-                  <td className="px-4 py-3">
-                    <div className="flex items-center text-sm">
-                      <div
-                        className="
-                          relative
-                          hidden
-                          w-8
-                          h-8
-                          mr-3
-                          rounded-full
-                          md:block
-                        "
-                      >
-                        <img
-                          className="object-cover w-full h-full rounded-full"
-                          src="https://ik.imagekit.io/damario789/bakmipolim/Bakmi-Ayam-Original-Komplit_ESX7TDS3A.jpeg?updatedAt=1627366608044"
-                          alt=""
-                          loading="lazy"
-                        />
-                        <div
-                          className="absolute inset-0 rounded-full shadow-inner"
-                          aria-hidden="true"
-                        ></div>
-                      </div>
-                      <div>
-                        <p className="font-semibold">Bakmi Polim</p>
-                        <p className="text-xs text-gray-600 dark:text-gray-400">
-                          10 Pcs
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-sm">Rp. 77.545,00</td>
-                  <td className="px-4 py-3 text-xs">
-                    <span
-                      className="
-                        px-2
-                        py-1
-                        font-semibold
-                        leading-tight
-                        text-gray-700
-                        bg-gray-100
-                        rounded-full
-                        dark:text-gray-100 dark:bg-gray-700
-                      "
-                    >
-                      Expired
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-sm">09-02-2021</td>
-                  <td className="px-4 py-3 text-sm">
-                    <div className="flex justify-start items-center text-md">
-                      <i class="far fa-edit mr-2 text-blue-500 font-semibold"></i>
-                      <i class="far fa-eye mr-2 text-green-500 font-semibold"></i>
-                      <i class="far fa-trash-alt text-red-500 font-semibold"></i>
-                    </div>
-                  </td>
-                </tr>
-                <tr
-                  className="
-                    bg-gray-50
-                    dark:bg-gray-800
-                    hover:bg-gray-100
-                    dark:hover:bg-gray-900
-                    text-gray-700
-                    dark:text-gray-400
-                  "
-                >
-                  <td className="px-4 py-3">
-                    <div className="flex items-center text-sm">
-                      <div
-                        className="
-                          relative
-                          hidden
-                          w-8
-                          h-8
-                          mr-3
-                          rounded-full
-                          md:block
-                        "
-                      >
-                        <img
-                          className="object-cover w-full h-full rounded-full"
-                          src="https://ik.imagekit.io/damario789/bakmipolim/Bakmi-Ayam-Original-Komplit_ESX7TDS3A.jpeg?updatedAt=1627366608044"
-                          alt=""
-                          loading="lazy"
-                        />
-                        <div
-                          className="absolute inset-0 rounded-full shadow-inner"
-                          aria-hidden="true"
-                        ></div>
-                      </div>
-                      <div>
-                        <p className="font-semibold">Bakmi Polim</p>
-                        <p className="text-xs text-gray-600 dark:text-gray-400">
-                          3 Pcs
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-sm">Rp. 70.675,00</td>
-                  <td className="px-4 py-3 text-xs">
-                    <span
-                      className="
-                        px-2
-                        py-1
-                        font-semibold
-                        leading-tight
-                        text-green-700
-                        bg-green-100
-                        rounded-full
-                        dark:bg-green-700 dark:text-green-100
-                      "
-                    >
-                      Success
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-sm">17-04-2021</td>
-                  <td className="px-4 py-3 text-sm">
-                    <div className="flex justify-start items-center text-md">
-                      <i class="far fa-edit mr-2 text-blue-500 font-semibold"></i>
-                      <i class="far fa-eye mr-2 text-green-500 font-semibold"></i>
-                      <i class="far fa-trash-alt text-red-500 font-semibold"></i>
-                    </div>
-                  </td>
-                </tr>
-                <tr
-                  className="
-                    bg-gray-50
-                    dark:bg-gray-800
-                    hover:bg-gray-100
-                    dark:hover:bg-gray-900
-                    text-gray-700
-                    dark:text-gray-400
-                  "
-                >
-                  <td className="px-4 py-3">
-                    <div className="flex items-center text-sm">
-                      <div
-                        className="
-                          relative
-                          hidden
-                          w-8
-                          h-8
-                          mr-3
-                          rounded-full
-                          md:block
-                        "
-                      >
-                        <img
-                          className="object-cover w-full h-full rounded-full"
-                          src="https://ik.imagekit.io/damario789/bakmipolim/Bakmi-Ayam-Original-Komplit_ESX7TDS3A.jpeg?updatedAt=1627366608044"
-                          alt=""
-                          loading="lazy"
-                        />
-                        <div
-                          className="absolute inset-0 rounded-full shadow-inner"
-                          aria-hidden="true"
-                        ></div>
-                      </div>
-                      <div>
-                        <p className="font-semibold">Bakmi Polim</p>
-                        <p className="text-xs text-gray-600 dark:text-gray-400">
-                          10 Pcs
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-sm">Rp. 37.045,00</td>
-                  <td className="px-4 py-3 text-xs">
-                    <span
-                      className="
-                        px-2
-                        py-1
-                        font-semibold
-                        leading-tight
-                        text-red-700
-                        bg-red-100
-                        rounded-full
-                        dark:text-red-100 dark:bg-red-700
-                      "
-                    >
-                      Denied
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-sm">11-01-2021</td>
-                  <td className="px-4 py-3 text-sm">
-                    <div className="flex justify-start items-center text-md">
-                      <i class="far fa-edit mr-2 text-blue-500 font-semibold"></i>
-                      <i class="far fa-eye mr-2 text-green-500 font-semibold"></i>
-                      <i class="far fa-trash-alt text-red-500 font-semibold"></i>
-                    </div>
-                  </td>
-                </tr>
+                          >
+                            <img
+                              className="object-cover w-full h-full rounded-full"
+                              src={stockItem.imageUrl}
+                              alt=""
+                              loading="lazy"
+                            />
+                            <div
+                              className="absolute inset-0 rounded-full shadow-inner"
+                              aria-hidden="true"
+                            ></div>
+                          </div>
+                          <div>
+                            <p className="font-semibold">{stockItem.name}</p>
+                            <p className="text-xs text-gray-600 dark:text-gray-400">
+                              {stockItem.stock} Pcs
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 text-sm">
+                        Rp.{stockItem.price}
+                      </td>
+
+                      <td className="px-4 py-3 text-sm">
+                        {stockItem.category.name}
+                      </td>
+                      <td className="px-4 py-3 text-sm">
+                        <div className="flex justify-start items-center text-md">
+                          <button>
+                            <i className="far fa-edit mr-2 text-blue-500 font-semibold"></i>
+                          </button>
+                          <button>
+                            <i className="far fa-eye mr-2 text-green-500 font-semibold"></i>
+                          </button>
+                          <button
+                            onClick={() =>
+                              deleteStockItem({
+                                variables: { _id: stockItem._id },
+                              })
+                            }
+                          >
+                            <i className="far fa-trash-alt text-red-500 font-semibold"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -433,8 +178,8 @@ const TableStockItem = () => {
                       >
                         <path
                           d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                          clip-rule="evenodd"
-                          fill-rule="evenodd"
+                          clipRule="evenodd"
+                          fillRule="evenodd"
                         ></path>
                       </svg>
                     </button>
@@ -539,8 +284,8 @@ const TableStockItem = () => {
                       >
                         <path
                           d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                          clip-rule="evenodd"
-                          fill-rule="evenodd"
+                          clipRule="evenodd"
+                          fillRule="evenodd"
                         ></path>
                       </svg>
                     </button>
@@ -551,6 +296,18 @@ const TableStockItem = () => {
           </div>
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+      ;
     </div>
   );
 };

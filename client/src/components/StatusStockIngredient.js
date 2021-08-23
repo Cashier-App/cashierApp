@@ -95,7 +95,7 @@ const StatusStockIngredient = ({ stockIngredients }) => {
                 group-hover:rotate-12
               "
         >
-          <i class="far fa-times-circle text-red-500 text-2xl"></i>
+          <i className="far fa-times-circle text-red-500 text-2xl"></i>
         </div>
         <div className="text-right text-gray-600">
           <p className="text-2xl">{outStock}</p>
@@ -131,7 +131,7 @@ const StatusStockIngredient = ({ stockIngredients }) => {
                 group-hover:rotate-12
               "
         >
-          <i class="fas fa-check text-green-500 text-2xl"></i>
+          <i className="fas fa-check text-green-500 text-2xl"></i>
         </div>
         <div className="text-right text-gray-600">
           <p className="text-2xl">{readyStock}</p>
@@ -168,7 +168,7 @@ const StatusStockIngredient = ({ stockIngredients }) => {
                 group-hover:rotate-12
               "
         >
-          <i class="fas fa-history text-yellow-500 text-2xl"></i>
+          <i className="fas fa-history text-yellow-500 text-2xl"></i>
         </div>
         <div className="text-right text-gray-600">
           <p className="text-2xl">{warning}</p>

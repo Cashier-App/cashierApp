@@ -1,8 +1,7 @@
-import React, {useState} from "react";
-import { ADD_CATEGORY_MUTATION, FETCH_CATEGORY } from "../config/categoryQuery"
+import React, { useState } from "react";
+import { ADD_CATEGORY_MUTATION, FETCH_CATEGORY } from "../config/categoryQuery";
 import { ToastContainer, toast } from "react-toastify";
 import { useQuery, useMutation, useApolloClient } from "@apollo/client";
-
 
 const ModalAddCategory = ({ setShowModal }) => {
   const [name, setName] = useState("");
@@ -10,7 +9,7 @@ const ModalAddCategory = ({ setShowModal }) => {
   const { data, loading } = useQuery(FETCH_CATEGORY);
   const [addCategory] = useMutation(ADD_CATEGORY_MUTATION, {
     onCompleted(data) {
-      toast.success('Add category success!', {
+      toast.success("Add category success!", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -39,14 +38,14 @@ const ModalAddCategory = ({ setShowModal }) => {
         draggable: true,
         progress: undefined,
       });
-    }
-  })
+    },
+  });
 
   function handleSubmit(e) {
     e.preventDefault();
     let newCategory = {
-      name
-    }
+      name,
+    };
     if (!name) {
       toast.error("Make sure you insert all data", {
         position: "top-right",
@@ -59,8 +58,8 @@ const ModalAddCategory = ({ setShowModal }) => {
       });
     } else {
       addCategory({
-        variables: newCategory
-      })
+        variables: newCategory,
+      });
     }
   }
 

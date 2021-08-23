@@ -44,7 +44,7 @@ const StatusStockItem = () => {
                 group-hover:rotate-12
               "
         >
-          <i class="fas fa-shopping-cart text-blue-500 text-2xl"></i>
+          <i className="fas fa-shopping-cart text-blue-500 text-2xl"></i>
         </div>
         <div className="text-right text-gray-700">
           <p className="text-2xl">57</p>
@@ -80,7 +80,7 @@ const StatusStockItem = () => {
                 group-hover:rotate-12
               "
         >
-          <i class="fas fa-check text-green-500 text-2xl"></i>
+          <i className="fas fa-check text-green-500 text-2xl"></i>
         </div>
         <div className="text-right text-gray-600">
           <p className="text-2xl">557</p>
@@ -116,7 +116,7 @@ const StatusStockItem = () => {
                 group-hover:rotate-12
               "
         >
-          <i class="fas fa-history text-yellow-500 text-2xl"></i>
+          <i className="fas fa-history text-yellow-500 text-2xl"></i>
         </div>
         <div className="text-right text-gray-600">
           <p className="text-2xl">117</p>
@@ -153,7 +153,7 @@ const StatusStockItem = () => {
                 group-hover:rotate-12
               "
         >
-          <i class="far fa-times-circle text-red-500 text-2xl"></i>
+          <i className="far fa-times-circle text-red-500 text-2xl"></i>
         </div>
         <div className="text-right text-gray-600">
           <p className="text-2xl">57</p>
