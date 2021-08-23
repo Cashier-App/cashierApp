@@ -1,10 +1,24 @@
-import { ADD_STOCK_ITEM_MUTATION } from "../config/addStockItemMutation";
+import { ADD_STOCK_ITEM_MUTATION } from "../config/StockItem";
 import { useMutation, useQuery } from "@apollo/client";
 import { useState } from "react";
 import { FETCH_CATEGORY } from "../config/categoryQuery";
+import { FETCH_ALL_STOCK_ITEM } from "../config/StockItem";
+import { toast, ToastContainer } from "react-toastify";
+import { FETCH_ALL_INGREDIENTS } from "../config/ingredient";
 const ModalAddItem = ({ setShowModal }) => {
-  const [addStockItem] = useMutation(ADD_STOCK_ITEM_MUTATION);
-  const { data, loading, error } = useQuery(FETCH_CATEGORY);
+  const [addStockItem] = useMutation(ADD_STOCK_ITEM_MUTATION, {
+    refetchQueries: [FETCH_ALL_STOCK_ITEM],
+    onCompleted() {
+      toast.success("Added stock item", {
+        position: "top-right",
+      });
+      setShowModal(false);
+    },
+  });
+  const { data, loading } = useQuery(FETCH_CATEGORY);
+  const { data: dataStockIngredients, loading: loadingIngredients } = useQuery(
+    FETCH_ALL_INGREDIENTS
+  );
   const [stockItem, setStockItem] = useState({
     name: "",
     price: "",
@@ -12,43 +26,75 @@ const ModalAddItem = ({ setShowModal }) => {
     stock: 5,
     recipes: [],
   });
+  const [categoryName, setCategoryName] = useState("");
+  const [recipe, setRecipe] = useState({
+    ingredient: "",
+    qty: 0,
+  });
   const [file, setFile] = useState({});
   function handleSubmit(e) {
     e.preventDefault();
-    // console.log(stockItem);
-    console.log(file);
     let { name, price, category, stock, recipes } = stockItem;
-    console.log(name, price, category, stock, recipes);
     price = Number(price);
+    if (categoryName !== "Food") {
+      recipes = [];
+    }
+    console.log(name, price, category, stock, recipes);
     addStockItem({
       variables: { file, name, price, category, recipes, stock },
     });
   }
   function onChange({
     target: {
-      validity,
       files: [file],
     },
   }) {
     setFile(file);
   }
+  function changeCategory(e) {
+    let tempCategory = data.categories.find(
+      (category) => category._id === e.target.value
+    );
+    setCategoryName(tempCategory.name);
+    setStockItem({
+      ...stockItem,
+      category: e.target.value,
+      recipes: [],
+    });
+  }
+  function checkboxElem(e) {
+    let recipes = [...stockItem.recipes];
+    let tempRecipe = Object.assign({}, recipe);
+    tempRecipe.qty = Number(tempRecipe.qty);
+    if (e.target.checked === true) {
+      recipes.push(tempRecipe);
+      setStockItem({ ...stockItem, recipes });
+    } else {
+      recipes = recipes.filter(
+        (recipe) => recipe.ingredient !== e.target.value
+      );
+      setStockItem({ ...stockItem, recipes });
+    }
+    console.log(stockItem);
+  }
   return (
     <div>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-        <div className="relative w-auto my-6 mx-auto max-w-3xl">
+        <div className="relative w-auto my-6 mr-10 max-w-3xl">
           <div className="border-0 p-10 rounded-lg shadow-xl relative flex flex-col w-full bg-white outline-none focus:outline-none">
             <div className="font-medium self-center text-xl sm:text-3xl text-gray-800">
               Add Item
             </div>
-            <div className="mt-5">
-              <form action="#" onSubmit={handleSubmit}>
-                <div className="flex flex-col mb-3">
-                  <label className="mb-1 text-xs tracking-wide text-gray-600">
-                    Name:
-                  </label>
-                  <div className="relative">
-                    <div
-                      className="
+            {!loading && (
+              <div className="mt-5">
+                <form action="#" onSubmit={handleSubmit}>
+                  <div className="flex flex-col mb-3">
+                    <label className="mb-1 text-xs tracking-wide text-gray-600">
+                      Name:
+                    </label>
+                    <div className="relative">
+                      <div
+                        className="
                     inline-flex
                     items-center
                     justify-center
@@ -59,60 +105,14 @@ const ModalAddItem = ({ setShowModal }) => {
                     w-10
                     text-gray-400
                   "
-                    >
-                      <i class="fas fa-box text-blue-500"></i>
-                    </div>
+                      >
+                        <i className="fas fa-box text-blue-500"></i>
+                      </div>
 
-                    <input
-                      value={stockItem.name}
-                      onChange={(e) =>
-                        setStockItem({ ...stockItem, name: e.target.value })
-                      }
-                      className="
-                    text-sm
-                    placeholder-gray-500
-                    pl-10
-                    pr-4
-                    rounded-2xl
-                    border border-gray-400
-                    w-full
-                    py-2
-                    focus:outline-none focus:border-blue-400
-                  "
-                      placeholder="Enter your name item"
-                    />
-                  </div>
-                </div>
-                <div className="flex flex-col mb-3">
-                  <label className="mb-1 text-xs sm:text-sm tracking-wide text-gray-600">
-                    Category:
-                  </label>
-                  <div className="relative">
-                    <div
-                      className="
-                    inline-flex
-                    items-center
-                    justify-center
-                    absolute
-                    left-0
-                    top-0
-                    h-full
-                    w-10
-                    text-gray-400
-                  "
-                    >
-                      <span>
-                        <i class="fas fa-clipboard-list text-blue-500"></i>
-                      </span>
-                    </div>
-
-                    <div className="flex">
-                      <select
+                      <input
+                        value={stockItem.name}
                         onChange={(e) =>
-                          setStockItem({
-                            ...stockItem,
-                            category: e.target.value,
-                          })
+                          setStockItem({ ...stockItem, name: e.target.value })
                         }
                         className="
                     text-sm
@@ -123,33 +123,74 @@ const ModalAddItem = ({ setShowModal }) => {
                     border border-gray-400
                     w-full
                     py-2
-                    "
-                        name="category"
-                        id="category"
+                    focus:outline-none focus:border-blue-400
+                  "
+                        placeholder="Enter your name item"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col mb-3">
+                    <label className="mb-1 text-xs sm:text-sm tracking-wide text-gray-600">
+                      Category:
+                    </label>
+                    <div className="relative">
+                      <div
+                        className="
+                    inline-flex
+                    items-center
+                    justify-center
+                    absolute
+                    left-0
+                    top-0
+                    h-full
+                    w-10
+                    text-gray-400
+                  "
                       >
-                        <option required disabled selected default value="">
-                          Select one
-                        </option>
-                        );
-                        {!loading &&
-                          data.categories.map((category) => {
-                            return (
-                              <option key={category._id} value={category._id}>
-                                {category.name}
-                              </option>
-                            );
-                          })}
-                      </select>
+                        <span>
+                          <i className="fas fa-clipboard-list text-blue-500"></i>
+                        </span>
+                      </div>
+
+                      <div className="flex">
+                        <select
+                          onChange={changeCategory}
+                          className="
+                    text-sm
+                    placeholder-gray-500
+                    pl-10
+                    pr-4
+                    rounded-2xl
+                    border border-gray-400
+                    w-full
+                    py-2
+                    "
+                          name="category"
+                          id="category"
+                        >
+                          <option required disabled selected default value="">
+                            Select one
+                          </option>
+                          );
+                          {!loading &&
+                            data.categories.map((category) => {
+                              return (
+                                <option key={category._id} value={category._id}>
+                                  {category.name}
+                                </option>
+                              );
+                            })}
+                        </select>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="flex flex-col mb-3">
-                  <label className="mb-1 text-xs sm:text-sm tracking-wide text-gray-600">
-                    Price:
-                  </label>
-                  <div className="relative">
-                    <div
-                      className="
+                  <div className="flex flex-col mb-3">
+                    <label className="mb-1 text-xs sm:text-sm tracking-wide text-gray-600">
+                      Price:
+                    </label>
+                    <div className="relative">
+                      <div
+                        className="
                     inline-flex
                     items-center
                     justify-center
@@ -160,23 +201,23 @@ const ModalAddItem = ({ setShowModal }) => {
                     w-10
                     text-gray-400
                   "
-                    >
-                      <span>
-                        <i class="fas fa-clipboard-list text-blue-500"></i>
-                      </span>
-                    </div>
+                      >
+                        <span>
+                          <i className="fas fa-clipboard-list text-blue-500"></i>
+                        </span>
+                      </div>
 
-                    <input
-                      value={stockItem.price}
-                      onChange={(e) =>
-                        setStockItem({
-                          ...stockItem,
-                          price: e.target.value,
-                        })
-                      }
-                      type="number"
-                      name="text"
-                      className="
+                      <input
+                        value={stockItem.price}
+                        onChange={(e) =>
+                          setStockItem({
+                            ...stockItem,
+                            price: Number(e.target.value),
+                          })
+                        }
+                        type="number"
+                        name="text"
+                        className="
                     text-sm
                     placeholder-gray-500
                     pl-10
@@ -187,17 +228,17 @@ const ModalAddItem = ({ setShowModal }) => {
                     py-2
                     focus:outline-none focus:border-blue-400
                   "
-                      placeholder="Enter your price"
-                    />
+                        placeholder="Enter your price"
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className="flex flex-col mb-3">
-                  <label className="mb-1 text-xs sm:text-sm tracking-wide text-gray-600">
-                    Stock:
-                  </label>
-                  <div className="relative">
-                    <div
-                      className="
+                  <div className="flex flex-col mb-3">
+                    <label className="mb-1 text-xs sm:text-sm tracking-wide text-gray-600">
+                      Stock:
+                    </label>
+                    <div className="relative">
+                      <div
+                        className="
                     inline-flex
                     items-center
                     justify-center
@@ -208,24 +249,24 @@ const ModalAddItem = ({ setShowModal }) => {
                     w-10
                     text-gray-400
                   "
-                    >
-                      <span>
-                        <i class="fas fa-boxes text-blue-500"></i>
-                      </span>
-                    </div>
+                      >
+                        <span>
+                          <i className="fas fa-boxes text-blue-500"></i>
+                        </span>
+                      </div>
 
-                    <input
-                      value={stockItem.stock}
-                      onChange={(e) =>
-                        setStockItem({
-                          ...stockItem,
-                          stock: e.target.value,
-                        })
-                      }
-                      id="stock"
-                      type="text"
-                      name="text"
-                      className="
+                      <input
+                        value={stockItem.stock}
+                        onChange={(e) =>
+                          setStockItem({
+                            ...stockItem,
+                            stock: Number(e.target.value),
+                          })
+                        }
+                        id="stock"
+                        type="text"
+                        name="text"
+                        className="
                     text-sm
                     placeholder-gray-500
                     pl-10
@@ -236,23 +277,23 @@ const ModalAddItem = ({ setShowModal }) => {
                     py-2
                     focus:outline-none focus:border-blue-400
                   "
-                      placeholder="Enter your stock item"
-                    />
+                        placeholder="Enter your stock item"
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className="flex flex-col mb-3">
-                  <label className="mb-1 text-xs sm:text-sm tracking-wide text-gray-600">
-                    Image:
-                  </label>
-                  <div className="relative">
-                    <input onChange={onChange} type="file" required />
+                  <div className="flex flex-col mb-3">
+                    <label className="mb-1 text-xs sm:text-sm tracking-wide text-gray-600">
+                      Image:
+                    </label>
+                    <div className="relative">
+                      <input onChange={onChange} type="file" required />
+                    </div>
                   </div>
-                </div>
 
-                <div className="flex w-full">
-                  <button
-                    type="submit"
-                    className="
+                  <div className="flex w-full">
+                    <button
+                      type="submit"
+                      className="
                   flex
                   mt-2
                   items-center
@@ -269,15 +310,15 @@ const ModalAddItem = ({ setShowModal }) => {
                   duration-150
                   ease-in
                 "
-                  >
-                    <span className="mr-2 uppercase">Save</span>
-                  </button>
-                </div>
-                <div className="flex w-full">
-                  <button
-                    type="button"
-                    onClick={() => setShowModal(false)}
-                    className="
+                    >
+                      <span className="mr-2 uppercase">Save</span>
+                    </button>
+                  </div>
+                  <div className="flex w-full">
+                    <button
+                      type="button"
+                      onClick={() => setShowModal(false)}
+                      className="
                   flex
                   mt-2
                   items-center
@@ -294,16 +335,105 @@ const ModalAddItem = ({ setShowModal }) => {
                   duration-150
                   ease-in
                 "
-                  >
-                    <span className="mr-2 uppercase">Close</span>
-                  </button>
-                </div>
-              </form>
-            </div>
+                    >
+                      <span className="mr-2 uppercase">Close</span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
           </div>
         </div>
+        {categoryName === "Food" && !loadingIngredients && (
+          <div className="relative my-2 ">
+            <div className="border-0 p-10 rounded-lg shadow-xl flex flex-col bg-white outline-none focus:outline-none">
+              <div className="flex justify-between items-center">
+                <div>
+                  <p className="text-2xl mb-5 border-b">Stock of Ingredients</p>
+                </div>
+                <div>
+                  <button className="border rounded-lg px-2 bg-gray-400 mb-5">
+                    Add Stock
+                  </button>
+                </div>
+              </div>
+              <table className="min-w-full divide-y divide-gray-200  overflow-y-scroll">
+                <thead>
+                  <th className="py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Name
+                  </th>
+                  <th className="py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Stock
+                  </th>
+                  <th className="py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Unit
+                  </th>
+                  <th className="py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Qty
+                  </th>
+                  <th className="py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Add to recipes
+                  </th>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {dataStockIngredients.stockIngredients.map(
+                    (stockIngredient) => {
+                      return (
+                        <tr key={stockIngredient._id}>
+                          <td className="py-4 whitespace-nowrap">
+                            {stockIngredient.name}
+                          </td>
+                          <td className="py-4 whitespace-nowrap">
+                            <p className="px-10">{stockIngredient.total}</p>
+                          </td>
+                          <td className="py-4 whitespace-nowrap">
+                            <p className="px-10">{stockIngredient.unit}</p>
+                          </td>
+                          <td className="py-4 whitespace-nowrap">
+                            <input
+                              onChange={(e) =>
+                                setRecipe({
+                                  ingredient: stockIngredient._id,
+                                  qty: e.target.value,
+                                })
+                              }
+                              type="number"
+                              className="border rounded-md px-2 w-20 ml-10 text-center"
+                              min="0"
+                            />
+                          </td>
+                          <td className="text-center ">
+                            <input
+                              onChange={checkboxElem}
+                              type="checkbox"
+                              id="vehicle1"
+                              name="vehicle1"
+                              value={stockIngredient._id}
+                            />
+                          </td>
+                        </tr>
+                      );
+                    }
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
       </div>
       <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+      ;
     </div>
   );
 };

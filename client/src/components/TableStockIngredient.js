@@ -50,7 +50,7 @@ const TableStockIngredient = ({ stockIngredients }) => {
             onClick={() => setShowModalAdd(true)}
             className="bg-blue-500 px-3 py-1 rounded-lg text-white font-medium hover:bg-blue-600"
           >
-            <i class="fas fa-plus mr-2"></i>Add Ingredient
+            <i className="fas fa-plus mr-2"></i>Add Ingredient
           </button>
         </div>
         <div className="w-full overflow-hidden rounded-lg shadow-xs">
@@ -114,11 +114,11 @@ const TableStockIngredient = ({ stockIngredients }) => {
                             }}
                             title="Edit Ingredient"
                           >
-                            <i class="far fa-edit mr-2 text-blue-500 font-semibold"></i>
+                            <i className="far fa-edit mr-2 text-blue-500 font-semibold"></i>
                           </button>
-                          <i class="far fa-eye mr-2 text-green-500 font-semibold"></i>
+                          <i className="far fa-eye mr-2 text-green-500 font-semibold"></i>
                           <button onClick={() => handleDelete(ingredient._id)}>
-                            <i class="far fa-trash-alt text-red-500 font-semibold"></i>
+                            <i className="far fa-trash-alt text-red-500 font-semibold"></i>
                           </button>
                         </div>
                       </td>
@@ -169,8 +169,8 @@ const TableStockIngredient = ({ stockIngredients }) => {
                       >
                         <path
                           d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                          clip-rule="evenodd"
-                          fill-rule="evenodd"
+                          clipRule="evenodd"
+                          fillRule="evenodd"
                         ></path>
                       </svg>
                     </button>
@@ -275,8 +275,8 @@ const TableStockIngredient = ({ stockIngredients }) => {
                       >
                         <path
                           d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                          clip-rule="evenodd"
-                          fill-rule="evenodd"
+                          clipRule="evenodd"
+                          fillRule="evenodd"
                         ></path>
                       </svg>
                     </button>

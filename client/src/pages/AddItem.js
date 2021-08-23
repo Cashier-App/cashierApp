@@ -4,7 +4,7 @@ const AddItem = () => {
   return (
     <div>
       <div
-        class="
+        className="
              top-14
              min-h-screen
              flex flex-col flex-auto flex-shrink-0
@@ -16,7 +16,7 @@ const AddItem = () => {
       >
         <Navbar />
         <Sidebar />
-        <div class="h-full ml-14 mt-14 mb-10 md:ml-56 bg-gray-200">
+        <div className="h-full ml-14 mt-14 mb-10 md:ml-56 bg-gray-200">
           Add Item
         </div>
       </div>

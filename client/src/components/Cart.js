@@ -38,7 +38,7 @@ const Cart = () => {
             <div className="mr-2 ml-1 w-full flex flex-col justify-start mt-1">
               <div className="flex items-center justify-between">
                 <h1 className="font-bold text-gray-800">Bakmi Polim</h1>
-                <i class="fas fa-times mr-1 text-red-600"></i>
+                <i className="fas fa-times mr-1 text-red-600"></i>
               </div>
               <div className="flex justify-between w-full text-sm">
                 <div
@@ -69,7 +69,7 @@ const Cart = () => {
             <div className="mr-2 ml-1 w-full flex flex-col justify-start mt-1">
               <div className="flex items-center justify-between">
                 <h1 className="font-bold text-gray-800">Bakmi Polim</h1>
-                <i class="fas fa-times mr-1 text-red-600"></i>
+                <i className="fas fa-times mr-1 text-red-600"></i>
               </div>
               <div className="flex justify-between w-full text-sm">
                 <div
@@ -100,7 +100,7 @@ const Cart = () => {
             <div className="mr-2 ml-1 w-full flex flex-col justify-start mt-1">
               <div className="flex items-center justify-between">
                 <h1 className="font-bold text-gray-800">Bakmi Polim</h1>
-                <i class="fas fa-times mr-1 text-red-600"></i>
+                <i className="fas fa-times mr-1 text-red-600"></i>
               </div>
               <div className="flex justify-between w-full text-sm">
                 <div

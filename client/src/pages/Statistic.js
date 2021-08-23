@@ -5,7 +5,7 @@ const Statistic2 = () => {
   return (
     <div>
       <div
-        class="
+        className="
                min-h-screen
                flex flex-col flex-auto flex-shrink-0
                antialiased
@@ -16,7 +16,7 @@ const Statistic2 = () => {
       >
         <Navbar />
         <Sidebar />
-        <div class="h-full ml-14 mt-14 mb-10 md:ml-52 bg-gray-200 mr-14 md:mr-80">
+        <div className="h-full ml-14 mt-14 mb-10 md:ml-52 bg-gray-200 mr-14 md:mr-80">
           <StatusItem />
           <Statistic />
         </div>
