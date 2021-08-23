@@ -1,11 +1,24 @@
 import React from "react";
 import { gql, useMutation } from "@apollo/client";
 const MUTATION = gql`
-  mutation ($file: Upload!) {
+  mutation addStockItem($file: Upload!) {
     singleUpload(file: $file) {
-      filename
-      mimetype
-      encoding
+      name
+      price
+      category {
+        name
+      }
+      imageUrl
+      recipes {
+        ingredient {
+          _id
+          name
+          unit
+          total
+        }
+        qty
+      }
+      stock
     }
   }
 `;

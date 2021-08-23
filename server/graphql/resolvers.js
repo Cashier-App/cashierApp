@@ -1,9 +1,12 @@
 const { default: axios } = require("axios");
 const { GraphQLUpload } = require("graphql-upload");
-const { finished } = require("stream");
+const { promisify } = require("util");
 const FormData = require("form-data");
 var fs = require("fs");
 const path = require("path");
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 const {
   getAllCategories,
   getCategory,
@@ -45,36 +48,39 @@ const resolvers = {
   },
   Mutation: {
     // Categories
-    singleUpload: async (parent, { file }) => {
+    addStockItem: async (
+      _,
+      { file, name, price, category, recipes, stock }
+    ) => {
+      let stockItem = {};
       const { createReadStream, filename, mimetype, encoding } = await file;
-      const stream = createReadStream();
-      const out = require("fs").createWriteStream("local-file-output12.jpg");
+      const stream = await createReadStream();
+      const out = await require("fs").createWriteStream(
+        "local-file-output12.jpg"
+      );
       stream.pipe(out);
-      finished(out, () => {
-        var data = new FormData();
-        data.append("name", "asdasdasdas123123123123das");
-        data.append("price", "100000");
-        data.append("stock", "2");
-        data.append("category", "61213a782ba034665c9be936");
-        data.append("image", fs.createReadStream("./local-file-output12.jpg"));
-        data.append("recipes[0][ingredient]", "612117d1e690c707e02a22ac");
-        data.append("recipes[0][qty]", "5");
-        axios
-          .post("http://localhost:4001/StockItems", data, {
-            headers: {
-              ...data.getHeaders(),
-            },
-          })
-          .then(({ data }) => {
-            console.log(data);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      });
-
-      // await finished(out);
-      return { filename, mimetype, encoding };
+      console.log(2);
+      await sleep(2000);
+      await sleep(1000);
+      var data = new FormData();
+      data.append("name", name);
+      data.append("price", price);
+      data.append("stock", stock);
+      data.append("category", category);
+      const image = fs.createReadStream("./local-file-output12.jpg");
+      data.append("image", image);
+      let response = await axios.post(
+        "http://localhost:4001/StockItems",
+        data,
+        {
+          headers: {
+            ...data.getHeaders(),
+          },
+        }
+      );
+      const { data: responseData } = response;
+      stockItem = responseData;
+      return stockItem;
     },
     addCategory: (_, args) => postAddCategory(args.name),
     editCategory: (_, args) => postEditCategory(args._id, args.name),
@@ -86,15 +92,15 @@ const resolvers = {
       postEditStockIngredient(args._id, args.name, args.unit, args.total),
     deleteStockIngredient: (_, args) => deleteStockIngredient(args._id),
     // Stock Items
-    addStockItem: (_, args) =>
-      postAddStockItem(
-        args.name,
-        args.price,
-        args.category,
-        args.imageUrl,
-        args.recipes,
-        args.stock
-      ),
+    // addStockItem: (_, args) =>
+    //   postAddStockItem(
+    //     args.name,
+    //     args.price,
+    //     args.category,
+    //     args.imageUrl,
+    //     args.recipes,
+    //     args.stock
+    //   ),
     editStockItem: (_, args) =>
       postEditStockItem(
         args._id,

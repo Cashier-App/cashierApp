@@ -28,6 +28,7 @@ const postImage = (req, res, next) => {
         next();
       })
       .catch((err) => {
+        console.log(err);
         /* istanbul ignore next */
         res.status(500).json({ message: "Internal server error" });
       });

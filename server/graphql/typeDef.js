@@ -79,7 +79,14 @@ const typeDefs = gql`
     qty: Float
   }
   type Mutation {
-    singleUpload(file: Upload!): File!
+    addStockItem(
+      file: Upload!
+      name: String
+      price: Float
+      category: String
+      recipes: [add_recipe]
+      stock: Float
+    ): StockItem!
     # mutation category
     addCategory(name: String): Category
     editCategory(_id: ID, name: String): Category
@@ -101,14 +108,14 @@ const typeDefs = gql`
     loginUser(email: String, password: String): access_token
     registerUser(email: String, password: String, name: String): String
     # mutation stockItems
-    addStockItem(
-      name: String
-      price: Float
-      category: String
-      imageUrl: String
-      recipes: [add_recipe]
-      stock: Float
-    ): StockItem
+    # addStockItem(
+    #   name: String
+    #   price: Float
+    #   category: String
+    #   imageUrl: String
+    #   recipes: [add_recipe]
+    #   stock: Float
+    # ): StockItem
     editStockItem(
       _id: ID
       name: String

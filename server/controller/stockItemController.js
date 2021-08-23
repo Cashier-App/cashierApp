@@ -59,8 +59,10 @@ class Controller {
       let response = await StockItem.findOne({ _id: saveStockItem._id })
         .populate("category")
         .populate("recipes.ingredient");
+      console.log("horeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
       return res.status(201).json(response);
     } catch (error) {
+      console.log(error);
       /* istanbul ignore else*/
       if (error.message !== undefined) {
         return res.status(400).json({ message: error.message });
