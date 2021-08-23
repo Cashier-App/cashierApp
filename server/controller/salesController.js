@@ -58,10 +58,9 @@ class Controller {
         path: "items.item",
         populate: [{ path: "category" }, { path: "recipes.ingredient" }],
       });
-      console.log(responsePopulated);
       return res.status(201).json(responsePopulated);
     } catch (error) {
-      /* istanbul ignore next */
+      /* istanbul ignore else*/
       if (error.message !== undefined) {
         res.status(400).json({ message: error.message });
       } else {

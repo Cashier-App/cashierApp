@@ -2,7 +2,6 @@ const StockIngredient = require("../model/StockIngredient");
 const Category = require("../model/Category");
 
 const getMaxStock = async (category, recipes) => {
-  /* istanbul ignore next */
   let responseCategory = await Category.findOne({ _id: category });
   /* istanbul ignore next */
   if (responseCategory.name === "Food") {

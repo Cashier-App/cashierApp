@@ -35,7 +35,7 @@ class Controller {
       response = await StockIngredient.create(newStockIngredient);
       return res.status(201).json(response);
     } catch (err) {
-      /* istanbul ignore next */
+      /* istanbul ignore else */
       if (err.message !== undefined) {
         return res.status(400).json({ message: err.message });
       } else {
@@ -56,11 +56,7 @@ class Controller {
       }
     } catch (err) {
       /* istanbul ignore next */
-      if (err.message !== undefined) {
-        return res.status(400).json({ message: err.message });
-      } else {
-        return res.status(500).json({ message: "Internal server error" });
-      }
+      return res.status(500).json({ message: "Internal server error" });
     }
   }
   static async update(req, res) {
@@ -78,7 +74,7 @@ class Controller {
       else
         return res.status(404).json({ message: "Stock Ingredient not found" });
     } catch (err) {
-      /* istanbul ignore next */
+      /* istanbul ignore else */
       if (err.message !== undefined) {
         return res.status(400).json({ message: err.message });
       } else {

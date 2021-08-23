@@ -61,7 +61,7 @@ class Controller {
         .populate("recipes.ingredient");
       return res.status(201).json(response);
     } catch (error) {
-      /* istanbul ignore next */
+      /* istanbul ignore else*/
       if (error.message !== undefined) {
         return res.status(400).json({ message: error.message });
       } else {
@@ -72,103 +72,49 @@ class Controller {
 
   static async update(req, res, next) {
     const id = req.params.id;
-    const { stock, category, recipes } = req.body;
-    let responseCategory;
+    let { stock, category, recipes } = req.body;
+    let maxStock;
     try {
       let responseById = await StockItem.findOne({ _id: id });
-      /* istanbul ignore next */
+      /* istanbul ignore next*/
       if (!category) {
-        responseCategory = await Category.findOne({
-          _id: responseById.category._id,
+        category = responseById.category._id;
+      }
+      /* istanbul ignore next*/
+      if (!stock) {
+        stock = responseById.stock;
+      }
+      /* istanbul ignore next*/
+      if (!recipes) {
+        recipes = responseById.recipes;
+      }
+      maxStock = await getMaxStock(category, recipes);
+      if (stock > maxStock) {
+        return res.status(400).json({
+          message: `maximum stock for this item is ${maxStock} based on ingredients stock`,
         });
       } else {
-        responseCategory = await Category.findOne({ _id: category });
-      }
-      /* istanbul ignore next */
-      if (stock && !recipes) {
-        if (responseCategory.name === "Food") {
-          let maxStock;
-          if (!category) {
-            maxStock = await getMaxStock(
-              responseById.category._id,
-              responseById.recipes
-            );
-          } else {
-            maxStock = await getMaxStock(category, responseById.recipes);
+        let response = await StockItem.findOneAndUpdate(
+          { _id: id },
+          req.body,
+          {
+            new: true,
+            runValidators: true,
           }
-          if (stock > maxStock) {
-            return res.status(400).json({
-              message: `maximum stock for this item is ${maxStock} based on ingredients stock`,
-            });
-          }
+          // untuk populate
+        );
+        let responseUpdated = await StockItem.findOne({ _id: id })
+          .populate({ path: "category" })
+          .populate({ path: "recipes.ingredient" });
+        /* istanbul ignore else*/
+        if (response) {
+          return res.status(200).json(responseUpdated);
+        } else {
+          return res.status(404).json({ message: "Stock Item not found" });
         }
-      }
-      /* istanbul ignore next */
-      if (!stock && recipes) {
-        if (responseCategory.name === "Food") {
-          let maxStock;
-          if (!category) {
-            maxStock = await getMaxStock(responseById.category._id, recipes);
-          } else {
-            maxStock = await getMaxStock(category, recipes);
-          }
-          if (responseById.stock > maxStock) {
-            return res.status(400).json({
-              message: `maximum stock for this item is ${maxStock} based on ingredients stock`,
-            });
-          }
-        }
-      }
-      /* istanbul ignore next */
-      if (!stock && !recipes) {
-        if (responseCategory.name === "Food") {
-          let maxStock;
-          if (!category) {
-            maxStock = await getMaxStock(
-              responseById.category._id,
-              responseById.recipes
-            );
-          } else {
-            maxStock = await getMaxStock(category, responseById.recipes);
-          }
-          if (responseById.stock > maxStock) {
-            return res.status(400).json({
-              message: `maximum stock for this item is ${maxStock} based on ingredients stock`,
-            });
-          }
-        }
-      }
-
-      /* istanbul ignore next */
-      if (stock && recipes) {
-        if (responseCategory.name === "Food") {
-          let maxStock;
-          if (!category) {
-            maxStock = await getMaxStock(responseById.category._id, recipes);
-          } else {
-            maxStock = await getMaxStock(category, recipes);
-          }
-          if (stock > maxStock) {
-            return res.status(400).json({
-              message: `maximum stock for this item is ${maxStock} based on ingredients stock`,
-            });
-          }
-        }
-      }
-      let response = await StockItem.findOneAndUpdate({ _id: id }, req.body, {
-        new: true,
-        runValidators: true,
-      });
-      let responseUpdated = await StockItem.findOne({ _id: id })
-        .populate({ path: "category" })
-        .populate({ path: "recipes.ingredient" });
-      if (response) {
-        return res.status(200).json(responseUpdated);
-      } else {
-        return res.status(404).json({ message: "Stock Item not found" });
       }
     } catch (error) {
-      /* istanbul ignore next */
+      /* istanbul ignore else*/
       if (error.message !== undefined) {
         res.status(400).json({ message: error.message });
       } else {
@@ -188,12 +134,8 @@ class Controller {
         return res.status(404).json({ message: "Stock Item not found" });
       }
     } catch (error) {
-      /* istanbul ignore next */
-      if (error.message !== undefined) {
-        res.status(400).json({ message: error.message });
-      } else {
-        res.status(500).json({ message: "Internal server error" });
-      }
+      /* istanbul ignore next*/
+      res.status(500).json({ message: "Internal server error" });
     }
   }
 }
