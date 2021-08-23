@@ -6,3 +6,4 @@ export { default as StockItem } from "./StockItem";
 export { default as Transaction } from "./Transaction";
 export { default as AddItem } from "./AddItem";
 export { default as AddIngredient } from "./AddIngredient";
+export { default as Category } from "./Category";
