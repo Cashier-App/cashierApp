@@ -156,7 +156,7 @@ const Sidebar = () => {
                "
             >
               <span className="inline-flex justify-center items-center ml-4">
-                <i class="fas fa-chart-line text-blue-500 text-lg pl-1"></i>
+                <i className="fas fa-chart-line text-blue-500 text-lg pl-1"></i>
               </span>
               <span
                 className="
@@ -316,7 +316,7 @@ const Sidebar = () => {
                "
             >
               <span className="inline-flex justify-center items-center ml-4 p-1">
-                <i class="fas fa-sign-out-alt text-blue-500 text-lg"></i>
+                <i className="fas fa-sign-out-alt text-blue-500 text-lg"></i>
               </span>
               <span
                 className="

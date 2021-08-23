@@ -48,7 +48,7 @@ const TableCategory = () => {
                   dark:divide-gray-700 dark:bg-gray-800
                 "
               >
-                {loading ? (<h1>Please Wait...</h1>) : (
+                {loading ? (<div>Please Wait...</div>) : (
                 <>
                   {data.categories.map((category, index) => (
                   <tr
@@ -116,7 +116,7 @@ const TableCategory = () => {
                         rounded-md rounded-l-lg
                         focus:outline-none focus:shadow-outline-purple
                       "
-                      aria-label="Previous"
+                      ariaLabel="Previous"
                     >
                       <svg
                         ariaHidden="true"
