@@ -181,7 +181,6 @@ const ModalAddCategory = ({ setShowModal }) => {
         draggable
         pauseOnHover
       />
-      <ToastContainer />
     </div>
   );
 };
