@@ -1,15 +1,75 @@
 import { useState } from "react";
 import ModalAddCategory from "./ModalAddCategory";
-import { FETCH_CATEGORY } from "../config/categoryQuery";
-import { useQuery } from "@apollo/client";
+import ModalUpdateCategory from "./ModalUpdateCategory";
+import { FETCH_CATEGORY, DELETE_CATEGORY_MUTATION } from "../config/categoryQuery";
+import { useQuery, useMutation, useApolloClient } from "@apollo/client";
+import { ToastContainer, toast } from "react-toastify";
 
 const TableCategory = () => {
+  const client = useApolloClient();
   const [showModal, setShowModal] = useState(false);
+  const [showModalUpdate, setShowModalUpdate] = useState(false);
+  const [dataPopulate, setDataPopulate] = useState("");
+  const [dataDelete, setDataDelete] = useState("");
   const { data, loading } = useQuery(FETCH_CATEGORY);
-  console.log(data);
+  const [deleteCategory] = useMutation(DELETE_CATEGORY_MUTATION, {
+    onCompleted() {
+      toast.success('Delete category success!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      const { categories } = client.readQuery({ query: FETCH_CATEGORY });
+
+      let newCategoryList = [...categories]
+
+      newCategoryList.forEach((el, index) => {
+        if (el._id === dataDelete) {
+          newCategoryList.splice(index, 1);
+        }
+      });
+
+      client.writeQuery({
+        query: FETCH_CATEGORY,
+        data: {
+          categories: newCategoryList
+        },
+      });
+    },
+    onError() {
+      toast.error("Edit category error", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  })
+
+
+  
+  function handleUpdate(dataCategory) {
+    setDataPopulate(dataCategory);
+    setShowModalUpdate(true)
+  }
+  function handleDelete(dataCategory) {
+    setDataDelete(dataCategory._id);
+    const _id = dataCategory._id;
+    deleteCategory({
+      variables: { _id },
+    });
+  }
   return (
     <div>
       {showModal ? <ModalAddCategory setShowModal={setShowModal} /> : null}
+      {showModalUpdate ? <ModalUpdateCategory setShowModalUpdate={setShowModalUpdate} dataPopulate={dataPopulate}/> : null}
 
       <div className="mb-20 mx-4 mt-6">
         <div className="mb-5">
@@ -70,10 +130,9 @@ const TableCategory = () => {
                       </div>
                     </td>
                     <td className="px-4 py-3 text-sm">
-                      <div className="flex justify-start items-center text-md">
-                        <i className="far fa-edit mr-2 text-blue-500 font-semibold"></i>
-                        <i className="far fa-eye mr-2 text-green-500 font-semibold"></i>
-                        <i className="far fa-trash-alt text-red-500 font-semibold"></i>
+                      <div className="flex justify-start items-center text-md pl-3">
+                        <i className="far fa-edit mr-2 text-blue-500 font-semibold cursor-pointer" onClick={()=> handleUpdate(category)}></i>
+                        <i className="far fa-trash-alt text-red-500 font-semibold cursor-pointer" onClick={()=> handleDelete(category)}></i>
                       </div>
                     </td>
                   </tr>
@@ -243,6 +302,18 @@ const TableCategory = () => {
           </div>
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+      <ToastContainer />
     </div>
   );
 };
