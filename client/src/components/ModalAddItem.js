@@ -14,6 +14,13 @@ const ModalAddItem = ({ setShowModal }) => {
       });
       setShowModal(false);
     },
+    onError(err) {
+      console.log(err);
+      toast.error(err.message, {
+        position: "top-right",
+      });
+      // setShowModal(false);
+    },
   });
   const { data, loading } = useQuery(FETCH_CATEGORY);
   const { data: dataStockIngredients, loading: loadingIngredients } = useQuery(
