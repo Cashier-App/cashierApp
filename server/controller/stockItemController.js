@@ -137,31 +137,45 @@ class Controller {
   }
 
   static async validate(req, res, next) {
-    try {
-      const response = await StockItem.find({})
-        .populate("category")
-        .populate("recipes.ingredient")
-        .lean();
-      response.forEach(async (currentItem) => {
-        if (currentItem.category.name === "Food") {
-          let maxStock = await getMaxStock(
-            currentItem.category._id,
-            currentItem.recipes
-          );
-          if (maxStock <= response.stock) {
-          } else {
-            await StockItem.findOneAndUpdate(
-              { _id: currentItem._id },
-              { stock: maxStock }
-            );
-          }
+    const updateAllItem = async (cb) => {
+      return new Promise(async (resolve, reject) => {
+        try {
+          let response = await StockItem.find({})
+            .populate("category")
+            .populate("recipes.ingredient")
+            .lean();
+          await response.forEach(async (currentItem) => {
+            if (currentItem.category.name === "Food") {
+              let maxStock = await getMaxStock(
+                currentItem.category._id,
+                currentItem.recipes
+              );
+              if (currentItem.stock > maxStock) {
+                console.log(currentItem.stock, maxStock);
+                response = await StockItem.findOneAndUpdate(
+                  { _id: currentItem._id },
+                  { stock: maxStock },
+                  {
+                    new: true,
+                  }
+                )
+                  .populate("category")
+                  .populate("recipes.ingredient")
+                  .lean();
+                resolve(response);
+              } else {
+                resolve(response);
+              }
+            }
+          });
+        } catch (err) {
+          /* istanbul ignore next*/
+          res.status(500).json({ message: "Internal Server Error" });
         }
       });
-      res.status(200).json(response);
-    } catch (err) {
-      /* istanbul ignore next*/
-      res.status(500).json({ message: "Internal Server Error" });
-    }
+    };
+    let response = await updateAllItem();
+    return res.status(200).json(response);
   }
 }
 
