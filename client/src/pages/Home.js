@@ -1,5 +1,10 @@
+import { useQuery } from "@apollo/client";
 import { CardItem, Cart, Navbar, Sidebar, StatusItem } from "../components";
+import { FETCH_ALL_STOCK_ITEM } from "../config/StockItem";
+
 const Home = () => {
+  const { data, loading, error } = useQuery(FETCH_ALL_STOCK_ITEM);
+
   return (
     <div>
       <div
@@ -16,7 +21,7 @@ const Home = () => {
         <Sidebar />
         <div className="h-full ml-14 mt-14 mb-10 md:ml-56 bg-gray-200 mr-14 md:mr-80">
           <StatusItem />
-          <CardItem />
+          {!loading && <CardItem stockItems={data.stockItems} />}
         </div>
         <Cart />
       </div>

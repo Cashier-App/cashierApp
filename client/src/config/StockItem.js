@@ -66,3 +66,30 @@ export const DELETE_STOCK_ITEM = gql`
     deleteStockItem(_id: $_id)
   }
 `;
+
+// by abdan
+export const FETCH_ONE_STOCK_ITEM = gql`
+  query FetchOneStockItem($stockItemId: String) {
+    stockItem(id: $stockItemId) {
+      _id
+      name
+      price
+      category {
+        _id
+        name
+      }
+      imageUrl
+      recipes {
+        _id
+        ingredient {
+          total
+          _id
+          name
+          unit
+        }
+        qty
+      }
+      stock
+    }
+  }
+`;
