@@ -1,12 +1,19 @@
-import { useReactiveVar } from "@apollo/client";
+import { useMutation, useReactiveVar } from "@apollo/client";
 import Swal from "sweetalert2";
 import { cartVar } from "../config/reactiveVariabel";
-import { FETCH_ONE_STOCK_ITEM } from "../config/StockItem";
+import {
+  EDIT_STOCK_ITEM,
+  FETCH_ALL_STOCK_ITEM,
+  FETCH_ONE_STOCK_ITEM,
+} from "../config/StockItem";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const CardItem = ({ stockItems }) => {
   const cartItems = useReactiveVar(cartVar);
+  const [editStockTotalItem] = useMutation(EDIT_STOCK_ITEM, {
+    refetchQueries: [FETCH_ALL_STOCK_ITEM],
+  });
 
   const handleSubmit = (e, item) => {
     e.preventDefault();
@@ -24,6 +31,12 @@ const CardItem = ({ stockItems }) => {
     } else if (item.stock >= quantity) {
       let newCartItem = [...cartItems, item];
       cartVar(newCartItem);
+      editStockTotalItem({
+        variables: {
+          editStockItemId: item._id,
+          editStockItemStock: item.stock - Number(quantity),
+        },
+      });
     } else {
       Swal.fire({
         icon: "error",

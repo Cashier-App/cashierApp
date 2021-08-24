@@ -160,7 +160,48 @@ describe("Stock Item case", () => {
     expect(response.status).toBe(200);
     expect(response.body.name).toBe("Bakmi Ayam Komplit Mewah");
   });
-
+  it("PUT /StockItems/:id [SUCCESS CASE] should be able to update stock item", async () => {
+    const response = await request(app)
+      .put(`/StockItems/${itemsId}`)
+      .field("name", "Bakmi Ayam Kompasdasdlit")
+      .field("category", categoryId.id)
+      .field("price", "3500")
+      .field("stock", "1")
+      .field("recipes[0][ingredient]", ingredientId)
+      .field("recipes[0][qty]", 0.05)
+      .attach("image", path.resolve(__dirname, "./test_image.jpg"));
+    expect(response.status).toBe(200);
+    expect(response.body.name).toBe("Bakmi Ayam Kompasdasdlit");
+  });
+  it("PUT /StockItems/:id [SUCCESS CASE] should be able to update stock item", async () => {
+    const response = await request(app)
+      .put(`/StockItems/${itemsId}`)
+      .send({
+        name: "Bakmi Ayam Komplit Mewah1",
+        price: 35000,
+        stock: 5,
+        recipes: [{ ingredient: ingredientId, qty: 0.05 }],
+      });
+    expect(response.status).toBe(200);
+    expect(response.body.name).toBe("Bakmi Ayam Komplit Mewah1");
+  });
+  it("PUT /StockItems/:id [SUCCESS CASE] should be able to update stock item", async () => {
+    const response = await request(app).put(`/StockItems/${itemsId}`).send({
+      name: "Bakmi Ayam Komplit Mewah2",
+      price: 35000,
+      stock: 5,
+    });
+    expect(response.status).toBe(200);
+    expect(response.body.name).toBe("Bakmi Ayam Komplit Mewah2");
+  });
+  it("PUT /StockItems/:id [SUCCESS CASE] should be able to update stock item", async () => {
+    const response = await request(app).put(`/StockItems/${itemsId}`).send({
+      name: "Bakmi Ayam Komplit Mewah3",
+      price: 35000,
+    });
+    expect(response.status).toBe(200);
+    expect(response.body.name).toBe("Bakmi Ayam Komplit Mewah3");
+  });
   it("PUT /StockItems/:id [ERROR CASE] should not be able to update stock item, if item not exist", async () => {
     const response = await request(app)
       .put(`/StockItems/611f86749442233e1c67332d`)

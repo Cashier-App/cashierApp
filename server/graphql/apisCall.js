@@ -1,7 +1,8 @@
 const { API } = require("./instance");
 const Redis = require("ioredis");
 const redis = new Redis();
-const { promisify } = require("util");
+const { finished } = require("stream");
+const { UserInputError } = require("apollo-server");
 const FormData = require("form-data");
 var fs = require("fs");
 const path = require("path");
@@ -254,6 +255,18 @@ const getStockItem = async (id) => {
     }
   }
 };
+const finishPromise = (out, cb) => {
+  return new Promise((resolve, reject) => {
+    finished(out, async () => {
+      try {
+        const resolveCB = await cb();
+        resolve(resolveCB);
+      } catch (err) {
+        reject(err);
+      }
+    });
+  });
+};
 const postAddStockItem = async (
   file,
   name,
@@ -262,40 +275,39 @@ const postAddStockItem = async (
   recipes,
   stock
 ) => {
-  console.log(recipes);
   await redis.del("stockItems");
   let stockItem = {};
   const { createReadStream, filename, mimetype, encoding } = await file;
   const stream = await createReadStream();
   const out = await require("fs").createWriteStream("local-file-output12.jpg");
   stream.pipe(out);
-  console.log(2);
-  await sleep(2000);
-  await sleep(1000);
-  var data = new FormData();
-  recipes.forEach((e, index) => {
-    console.log(index, e.ingredient);
-    data.append(`recipes[${index}][ingredient]`, e.ingredient);
-    data.append(`recipes[${index}][qty]`, Number(e.qty));
-  });
-  data.append("name", name);
-  data.append("price", price);
-  data.append("stock", stock);
-  data.append("category", category);
-  const image = fs.createReadStream("./local-file-output12.jpg");
-  data.append("image", image);
-  console.log(data);
   try {
-    let response = await API.post("/StockItems", data, {
-      headers: {
-        ...data.getHeaders(),
-      },
+    return await finishPromise(out, async () => {
+      var data = new FormData();
+      recipes.forEach((e, index) => {
+        console.log(index, e.ingredient);
+        data.append(`recipes[${index}][ingredient]`, e.ingredient);
+        data.append(`recipes[${index}][qty]`, Number(e.qty));
+      });
+      data.append("name", name);
+      data.append("price", price);
+      data.append("stock", stock);
+      data.append("category", category);
+      const image = fs.createReadStream("./local-file-output12.jpg");
+      data.append("image", image);
+      console.log(data);
+      let response = await API.post("/StockItems", data, {
+        headers: {
+          ...data.getHeaders(),
+        },
+      });
+      const { data: responseData } = response;
+      stockItem = responseData;
+      return stockItem;
+      // console.log(err.response.data.message);
     });
-    const { data: responseData } = response;
-    stockItem = responseData;
-    return stockItem;
   } catch (err) {
-    throw new Error(err);
+    throw new UserInputError(err.response.data.message);
   }
 };
 const postEditStockItem = async (
@@ -307,40 +319,74 @@ const postEditStockItem = async (
   recipes,
   stock
 ) => {
-  console.log(recipes);
+  // console.log("masuk", file);
+  console.log(_id, name, price, category, recipes, stock);
   await redis.del("stockItems");
   let stockItem = {};
-  const { createReadStream, filename, mimetype, encoding } = await file;
-  const stream = await createReadStream();
-  const out = await require("fs").createWriteStream("local-file-output12.jpg");
-  stream.pipe(out);
-  console.log(2);
-  await sleep(2000);
-  await sleep(1000);
-  var data = new FormData();
-  recipes.forEach((e, index) => {
-    console.log(index, e.ingredient);
-    data.append(`recipes[${index}][ingredient]`, e.ingredient);
-    data.append(`recipes[${index}][qty]`, Number(e.qty));
-  });
-  data.append("name", name);
-  data.append("price", price);
-  data.append("stock", stock);
-  data.append("category", category);
-  const image = fs.createReadStream("./local-file-output12.jpg");
-  data.append("image", image);
-  console.log(data);
-  try {
-    let response = await API.put(`/StockItems/${_id}`, data, {
-      headers: {
-        ...data.getHeaders(),
-      },
-    });
-    const { data: responseData } = response;
-    stockItem = responseData;
-    return stockItem;
-  } catch (err) {
-    throw new Error(err);
+  console.log(file);
+  if (file) {
+    const { createReadStream, filename, mimetype, encoding } = await file;
+    const stream = createReadStream();
+    const out = await require("fs").createWriteStream(
+      "local-file-output12.jpg"
+    );
+    stream.pipe(out);
+    try {
+      return await finishPromise(out, async () => {
+        var data = new FormData();
+        if (recipes) {
+          recipes.forEach((e, index) => {
+            console.log(index, e.ingredient);
+            data.append(`recipes[${index}][ingredient]`, e.ingredient);
+            data.append(`recipes[${index}][qty]`, Number(e.qty));
+          });
+        }
+        if (name) data.append("name", name);
+        if (price) data.append("price", price);
+        if (stock) data.append("stock", stock);
+        if (category) data.append("category", category);
+        const image = fs.createReadStream("./local-file-output12.jpg");
+        data.append("image", image);
+        console.log(data);
+        let response = await API.put(`/StockItems/${_id}`, data, {
+          headers: {
+            ...data.getHeaders(),
+          },
+        });
+        const { data: responseData } = response;
+        stockItem = responseData;
+        return stockItem;
+      });
+    } catch (err) {
+      throw new UserInputError(err.response.data.message);
+    }
+  } else {
+    console.log("kesini");
+    console.log(_id, file, name, price, category, recipes, stock);
+    var data = new FormData();
+    if (recipes) {
+      recipes.forEach((e, index) => {
+        console.log(index, e.ingredient);
+        data.append(`recipes[${index}][ingredient]`, e.ingredient);
+        data.append(`recipes[${index}][qty]`, Number(e.qty));
+      });
+    }
+    if (name) data.append("name", name);
+    if (price) data.append("price", price);
+    if (stock) data.append("stock", stock);
+    if (category) data.append("category", category);
+    try {
+      let response = await API.put(`/StockItems/${_id}`, data, {
+        headers: {
+          ...data.getHeaders(),
+        },
+      });
+      const { data: responseData } = response;
+      stockItem = responseData;
+      return stockItem;
+    } catch (err) {
+      throw new UserInputError(err.response.data.message);
+    }
   }
 };
 

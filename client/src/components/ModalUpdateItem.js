@@ -1,4 +1,4 @@
-import { ADD_STOCK_ITEM_MUTATION } from "../config/StockItem";
+import { UPDATE_STOCK_ITEM_MUTATION } from "../config/StockItem";
 import { useMutation, useQuery } from "@apollo/client";
 import { useState } from "react";
 import { FETCH_CATEGORY } from "../config/categoryQuery";
@@ -6,18 +6,18 @@ import { FETCH_ALL_STOCK_ITEM } from "../config/StockItem";
 import { toast, ToastContainer } from "react-toastify";
 import { FETCH_ALL_INGREDIENTS } from "../config/ingredient";
 
-const ModalAddItem = ({ setShowModal }) => {
-  const [addStockItem] = useMutation(ADD_STOCK_ITEM_MUTATION, {
+const ModalUpdateItem = ({ setShowModalUpdate, fetch }) => {
+  const [editStockItem] = useMutation(UPDATE_STOCK_ITEM_MUTATION, {
     refetchQueries: [FETCH_ALL_STOCK_ITEM],
     onCompleted() {
-      toast.success("Added stock item", {
+      toast.success("Stock item updated", {
         position: "top-right",
       });
-      setShowModal(false);
+      setShowModalUpdate(false);
     },
     onError(err) {
       console.log(err);
-      toast.error("Add item error", {
+      toast.error(err.message, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -26,20 +26,22 @@ const ModalAddItem = ({ setShowModal }) => {
         draggable: true,
         progress: undefined,
       });
-    },
+    }
   });
   const { data, loading } = useQuery(FETCH_CATEGORY);
   const { data: dataStockIngredients, loading: loadingIngredients } = useQuery(
     FETCH_ALL_INGREDIENTS
   );
+  console.log(fetch);
+  const [categoryName, setCategoryName] = useState(fetch.category.name);
   const [stockItem, setStockItem] = useState({
-    name: "",
-    price: "",
-    category: "",
-    stock: 0,
-    recipes: [],
+    name: fetch.name,
+    price: fetch.price,
+    category: fetch.category._id,
+    stock: fetch.stock,
+    recipes: []
+    // recipes: [{ingredient: fetch.recipes.ingredient._id, total: fetch.recipes.ingredient.total, qty: fetch.recipes.qty}],
   });
-  const [categoryName, setCategoryName] = useState("");
   const [recipe, setRecipe] = useState({
     ingredient: "",
     total: 0,
@@ -50,66 +52,23 @@ const ModalAddItem = ({ setShowModal }) => {
   function handleSubmit(e) {
     e.preventDefault();
     let { name, price, category, stock, recipes } = stockItem;
+    recipes.forEach(rcp => {
+      delete rcp.total
+    })
     price = Number(price);
     if (categoryName !== "Food") {
       recipes = [];
     }
     console.log(name, price, category, stock, recipes);
-    let maxStock = [];
-    recipes.forEach((el) => {
-      maxStock.push(el.total / el.qty);
-    });
-    maxStock = Math.floor(maxStock.sort((a, b) => a - b)[0]);
-    console.log(maxStock, "ini min stock");
-    if (!name || !price || !category || !stock) {
-      if (!name) {
-        toast.error(`Please insert name!`, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      }
-      if (!price) {
-        toast.error(`Please insert price!`, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      }
-      if (!category) {
-        toast.error(`Please insert category!`, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      }
-      if (!stock) {
-        toast.error(`Please insert stock!`, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      }
-    } else {
-      if (categoryName !== "Food") {
-        addStockItem({
-          variables: { file, name, price, category, recipes, stock },
+    let maxStock = []
+    recipes.forEach(el => {
+      maxStock.push(el.total / el.qty)
+    })
+    maxStock = Math.floor(maxStock.sort((a, b) => a - b)[0])
+    console.log(maxStock, 'ini max stock');
+      if(categoryName !== "Food") {
+        editStockItem({
+          variables: { _id: fetch._id, file, name, price, category, recipes, stock },
         });
       } else {
         if (stock > maxStock) {
@@ -123,12 +82,11 @@ const ModalAddItem = ({ setShowModal }) => {
             progress: undefined,
           });
         } else {
-          addStockItem({
-            variables: { file, name, price, category, recipes, stock },
+          editStockItem({
+            variables: { _id: fetch._id, file, name, price, category, recipes, stock },
           });
         }
       }
-    }
   }
   function onChange({
     target: {
@@ -169,7 +127,7 @@ const ModalAddItem = ({ setShowModal }) => {
         <div className="relative w-auto my-6 mr-10 max-w-3xl">
           <div className="border-0 p-10 rounded-lg shadow-xl relative flex flex-col w-full bg-white outline-none focus:outline-none">
             <div className="font-medium self-center text-xl sm:text-3xl text-gray-800">
-              Add Item
+              Edit Item
             </div>
             {!loading && (
               <div className="mt-5">
@@ -254,14 +212,11 @@ const ModalAddItem = ({ setShowModal }) => {
                           name="category"
                           id="category"
                         >
-                          <option required disabled selected default value="">
-                            Select one
-                          </option>
                           );
                           {!loading &&
                             data.categories.map((category) => {
                               return (
-                                <option key={category._id} value={category._id}>
+                                <option key={category._id} value={category._id} selected={category._id === fetch.category}>
                                   {category.name}
                                 </option>
                               );
@@ -372,7 +327,7 @@ const ModalAddItem = ({ setShowModal }) => {
                       Image:
                     </label>
                     <div className="relative">
-                      <input onChange={onChange} type="file" required />
+                      <input onChange={onChange} type="file" required/>
                     </div>
                   </div>
 
@@ -403,7 +358,7 @@ const ModalAddItem = ({ setShowModal }) => {
                   <div className="flex w-full">
                     <button
                       type="button"
-                      onClick={() => setShowModal(false)}
+                      onClick={() => setShowModalUpdate(false)}
                       className="
                   flex
                   mt-2
@@ -489,14 +444,13 @@ const ModalAddItem = ({ setShowModal }) => {
                                     progress: undefined,
                                   });
                                 } else {
-                                  setRecipe({
-                                    ingredient: stockIngredient._id,
-                                    total: stockIngredient.total,
-                                    qty: e.target.value,
-                                  })
-                                }
+                                setRecipe({
+                                  ingredient: stockIngredient._id,
+                                  total: stockIngredient.total,
+                                  qty: e.target.value,
+                                })
                               }
-                              }
+                            }}
                               type="number"
                               className="border rounded-md px-2 w-20 ml-10 text-center"
                               min="0"
@@ -537,4 +491,4 @@ const ModalAddItem = ({ setShowModal }) => {
   );
 };
 
-export default ModalAddItem;
+export default ModalUpdateItem;
