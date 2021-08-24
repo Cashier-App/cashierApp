@@ -477,12 +477,25 @@ const ModalAddItem = ({ setShowModal }) => {
                           </td>
                           <td className="py-4 whitespace-nowrap">
                             <input
-                              onChange={(e) =>
-                                setRecipe({
-                                  ingredient: stockIngredient._id,
-                                  total: stockIngredient.total,
-                                  qty: e.target.value,
-                                })
+                              onChange={(e) => {
+                                if (+e.target.value > stockIngredient.total) {
+                                  toast.error("Quantity cannot be greater than stock", {
+                                    position: "top-right",
+                                    autoClose: 5000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                  });
+                                } else {
+                                  setRecipe({
+                                    ingredient: stockIngredient._id,
+                                    total: stockIngredient.total,
+                                    qty: e.target.value,
+                                  })
+                                }
+                              }
                               }
                               type="number"
                               className="border rounded-md px-2 w-20 ml-10 text-center"
