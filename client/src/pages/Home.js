@@ -21,7 +21,9 @@ const Home = () => {
         <Sidebar />
         <div className="h-full ml-14 mt-14 mb-10 md:ml-56 bg-gray-200 mr-14 md:mr-80">
           <StatusItem />
-          {!loading && <CardItem stockItems={data.stockItems} />}
+          {!loading && !error && (
+            <CardItem stockItems={data.updatedStockItems} />
+          )}
         </div>
         <Cart />
       </div>
