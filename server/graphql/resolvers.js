@@ -44,8 +44,8 @@ const resolvers = {
     // Categories
     addStockItem: async (_, { file, name, price, category, recipes, stock }) =>
       postAddStockItem(file, name, price, category, recipes, stock),
-    editStockItem: (_, { file, name, price, category, recipes, stock }) =>
-      postEditStockItem(file, name, price, category, recipes, stock),
+    editStockItem: (_, { _id, file, name, price, category, recipes, stock }) =>
+      postEditStockItem(_id, file, name, price, category, recipes, stock),
     addCategory: (_, args) => postAddCategory(args.name),
     editCategory: (_, args) => postEditCategory(args._id, args.name),
     deleteCategory: (_, args) => deleteCategory(args._id),
@@ -56,15 +56,6 @@ const resolvers = {
       postEditStockIngredient(args._id, args.name, args.unit, args.total),
     deleteStockIngredient: (_, args) => deleteStockIngredient(args._id),
     // Stock Items
-    // addStockItem: (_, args) =>
-    //   postAddStockItem(
-    //     args.name,
-    //     args.price,
-    //     args.category,
-    //     args.imageUrl,
-    //     args.recipes,
-    //     args.stock
-    //   ),
 
     deleteStockItem: (_, args) => deleteStockItem(args._id),
     // User

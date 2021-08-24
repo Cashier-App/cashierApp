@@ -26,7 +26,7 @@ const ModalAddItem = ({ setShowModal }) => {
         draggable: true,
         progress: undefined,
       });
-    }
+    },
   });
   const { data, loading } = useQuery(FETCH_CATEGORY);
   const { data: dataStockIngredients, loading: loadingIngredients } = useQuery(
@@ -55,12 +55,12 @@ const ModalAddItem = ({ setShowModal }) => {
       recipes = [];
     }
     console.log(name, price, category, stock, recipes);
-    let maxStock = []
-    recipes.forEach(el => {
-      maxStock.push(el.total / el.qty)
-    })
-    maxStock = Math.floor(maxStock.sort((a, b) => a - b)[0])
-    console.log(maxStock, 'ini min stock');
+    let maxStock = [];
+    recipes.forEach((el) => {
+      maxStock.push(el.total / el.qty);
+    });
+    maxStock = Math.floor(maxStock.sort((a, b) => a - b)[0]);
+    console.log(maxStock, "ini min stock");
     if (!name || !price || !category || !stock) {
       if (!name) {
         toast.error(`Please insert name!`, {
@@ -107,7 +107,7 @@ const ModalAddItem = ({ setShowModal }) => {
         });
       }
     } else {
-      if(categoryName !== "Food") {
+      if (categoryName !== "Food") {
         addStockItem({
           variables: { file, name, price, category, recipes, stock },
         });
