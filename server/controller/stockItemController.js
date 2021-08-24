@@ -23,7 +23,6 @@ class Controller {
             .populate("category")
             .populate("recipes.ingredient")
             .lean();
-          console.log(response, "<<<<<<<<");
           if (response.length === 0) {
             return resolve(response);
           }
@@ -49,10 +48,13 @@ class Controller {
               } else {
                 return resolve(response);
               }
+            } else {
+              return resolve(response);
             }
           });
         } catch (err) {
           /* istanbul ignore next*/
+          console.log(err);
           res.status(500).json({ message: "Internal Server Error" });
         }
       });
