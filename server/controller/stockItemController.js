@@ -60,7 +60,6 @@ class Controller {
       });
     };
     let response = await updateAllItem();
-    console.log(response);
     return res.status(200).json(response);
   }
   static async findById(req, res, next) {

@@ -7,12 +7,6 @@ import { FETCH_ALL_STOCK_ITEM } from "../config/StockItem";
 const Home = () => {
   const stockItems = useReactiveVar(itemVar);
   const { data, loading, error } = useQuery(FETCH_ALL_STOCK_ITEM);
-  if (!loading) {
-    itemVar(data.stockItems);
-  }
-
-  useEffect(() => {}, [stockItems]);
-  // console.log("Home", stockItems);
 
   return (
     <div>
