@@ -164,6 +164,16 @@ class Controller {
                   .lean();
                 resolve(response);
               } else {
+                response = await StockItem.findOneAndUpdate(
+                  { _id: currentItem._id },
+                  { stock: currentItem.stock },
+                  {
+                    new: true,
+                  }
+                )
+                  .populate("category")
+                  .populate("recipes.ingredient")
+                  .lean();
                 resolve(response);
               }
             }
