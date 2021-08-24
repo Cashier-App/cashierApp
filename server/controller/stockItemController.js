@@ -23,6 +23,10 @@ class Controller {
             .populate("category")
             .populate("recipes.ingredient")
             .lean();
+          console.log(response, "<<<<<<<<");
+          if (response.length === 0) {
+            return resolve(response);
+          }
           await response.forEach(async (currentItem) => {
             if (currentItem.category.name === "Food") {
               let maxStock = await getMaxStock(
