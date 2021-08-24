@@ -1,4 +1,4 @@
-import { ADD_STOCK_ITEM_MUTATION } from "../config/StockItem";
+import { UPDATE_STOCK_ITEM_MUTATION } from "../config/StockItem";
 import { useMutation, useQuery } from "@apollo/client";
 import { useState } from "react";
 import { FETCH_CATEGORY } from "../config/categoryQuery";
@@ -6,18 +6,18 @@ import { FETCH_ALL_STOCK_ITEM } from "../config/StockItem";
 import { toast, ToastContainer } from "react-toastify";
 import { FETCH_ALL_INGREDIENTS } from "../config/ingredient";
 
-const ModalAddItem = ({ setShowModal }) => {
-  const [addStockItem] = useMutation(ADD_STOCK_ITEM_MUTATION, {
+const ModalUpdateItem = ({ setShowModalUpdate, fetch }) => {
+  const [editStockItem] = useMutation(UPDATE_STOCK_ITEM_MUTATION, {
     refetchQueries: [FETCH_ALL_STOCK_ITEM],
     onCompleted() {
-      toast.success("Added stock item", {
+      toast.success("Stock item updated", {
         position: "top-right",
       });
-      setShowModal(false);
+      setShowModalUpdate(false);
     },
     onError(err) {
       console.log(err);
-      toast.error("Add item error", {
+      toast.error("Update item error", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -33,11 +33,11 @@ const ModalAddItem = ({ setShowModal }) => {
     FETCH_ALL_INGREDIENTS
   );
   const [stockItem, setStockItem] = useState({
-    name: "",
-    price: "",
-    category: "",
-    stock: 0,
-    recipes: [],
+    name: fetch.name,
+    price: fetch.price,
+    category: fetch.category,
+    stock: fetch.stock,
+    recipes: fetch.recipes,
   });
   const [categoryName, setCategoryName] = useState("");
   const [recipe, setRecipe] = useState({
@@ -57,10 +57,10 @@ const ModalAddItem = ({ setShowModal }) => {
     console.log(name, price, category, stock, recipes);
     let maxStock = []
     recipes.forEach(el => {
-      maxStock.push(el.total / el.qty)
+      maxStock.push(el.stockIngredientQty / el.qty)
     })
     maxStock = Math.floor(maxStock.sort((a, b) => a - b)[0])
-    console.log(maxStock, 'ini min stock');
+    console.log(maxStock, 'ini max stock');
     if (!name || !price || !category || !stock) {
       if (!name) {
         toast.error(`Please insert name!`, {
@@ -108,8 +108,8 @@ const ModalAddItem = ({ setShowModal }) => {
       }
     } else {
       if(categoryName !== "Food") {
-        addStockItem({
-          variables: { file, name, price, category, recipes, stock },
+        editStockItem({
+          variables: { _id: fetch._id, file, name, price, category, recipes, stock },
         });
       } else {
         if (stock > maxStock) {
@@ -123,7 +123,7 @@ const ModalAddItem = ({ setShowModal }) => {
             progress: undefined,
           });
         } else {
-          addStockItem({
+          editStockItem({
             variables: { file, name, price, category, recipes, stock },
           });
         }
@@ -169,7 +169,7 @@ const ModalAddItem = ({ setShowModal }) => {
         <div className="relative w-auto my-6 mr-10 max-w-3xl">
           <div className="border-0 p-10 rounded-lg shadow-xl relative flex flex-col w-full bg-white outline-none focus:outline-none">
             <div className="font-medium self-center text-xl sm:text-3xl text-gray-800">
-              Add Item
+              Edit Item
             </div>
             {!loading && (
               <div className="mt-5">
@@ -403,7 +403,7 @@ const ModalAddItem = ({ setShowModal }) => {
                   <div className="flex w-full">
                     <button
                       type="button"
-                      onClick={() => setShowModal(false)}
+                      onClick={() => setShowModalUpdate(false)}
                       className="
                   flex
                   mt-2
@@ -480,7 +480,7 @@ const ModalAddItem = ({ setShowModal }) => {
                               onChange={(e) =>
                                 setRecipe({
                                   ingredient: stockIngredient._id,
-                                  total: stockIngredient.total,
+                                  stockIngredientQty: stockIngredient.total,
                                   qty: e.target.value,
                                 })
                               }
@@ -524,4 +524,4 @@ const ModalAddItem = ({ setShowModal }) => {
   );
 };
 
-export default ModalAddItem;
+export default ModalUpdateItem;
