@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import ModalAddItem from "./ModalAddItem";
+import ModalUpdateItem from "./ModalUpdateItem";
 import { DELETE_STOCK_ITEM } from "../config/StockItem";
 import { FETCH_ALL_STOCK_ITEM } from "../config/StockItem";
 import { useMutation } from "@apollo/client";
@@ -8,6 +9,8 @@ import { toast, ToastContainer } from "react-toastify";
 
 const TableStockItem = ({ stockItems }) => {
   const [showModal, setShowModal] = useState(false);
+  const [showModalUpdate, setShowModalUpdate] = useState(false);
+  const [dataPopulate, setDataPopulate] = useState("");
   const [deleteStockItem] = useMutation(DELETE_STOCK_ITEM, {
     refetchQueries: [FETCH_ALL_STOCK_ITEM],
     onCompleted() {
@@ -17,9 +20,16 @@ const TableStockItem = ({ stockItems }) => {
       });
     },
   });
+
+  function handleUpdate(data) {
+    setDataPopulate(data);
+    setShowModalUpdate(true);
+  }
+
   return (
     <div>
       {showModal ? <ModalAddItem setShowModal={setShowModal} /> : null}
+      {showModalUpdate ? <ModalUpdateItem setShowModalUpdate={setShowModalUpdate} fetch={dataPopulate}/> : null}
       <div className="mb-20 mx-4 mt-36">
         <div className="mb-5">
           <button
@@ -113,7 +123,7 @@ const TableStockItem = ({ stockItems }) => {
                       </td>
                       <td className="px-4 py-3 text-sm">
                         <div className="flex justify-start items-center text-md">
-                          <button>
+                          <button onClick={() => handleUpdate(stockItem)}>
                             <i className="far fa-edit mr-2 text-blue-500 font-semibold"></i>
                           </button>
                           <button>
@@ -307,7 +317,6 @@ const TableStockItem = ({ stockItems }) => {
         draggable
         pauseOnHover
       />
-      ;
     </div>
   );
 };
