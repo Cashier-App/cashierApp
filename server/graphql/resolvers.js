@@ -19,6 +19,7 @@ const {
   postAddStockItem,
   postEditStockItem,
   deleteStockItem,
+  getUpdatedItems,
   getSales,
   getSale,
   postAddSale,
@@ -36,6 +37,7 @@ const resolvers = {
     // Stock Items
     stockItems: () => getStockItems(),
     stockItem: (_, args) => getStockItem(args.id),
+    updatedStockItems: () => getUpdatedItems(),
     // sales
     sales: () => getSales(),
     sale: (_, args) => getSale(args.id),
