@@ -319,7 +319,8 @@ const postEditStockItem = async (
   recipes,
   stock
 ) => {
-  console.log("masuk");
+  // console.log("masuk", file);
+  console.log(_id, name, price, category, recipes, stock);
   await redis.del("stockItems");
   let stockItem = {};
   console.log(file);

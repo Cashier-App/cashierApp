@@ -37,7 +37,7 @@ const ModalUpdateItem = ({ setShowModalUpdate, fetch }) => {
   const [stockItem, setStockItem] = useState({
     name: fetch.name,
     price: fetch.price,
-    category: fetch.category,
+    category: fetch.category._id,
     stock: fetch.stock,
     recipes: []
     // recipes: [{ingredient: fetch.recipes.ingredient._id, total: fetch.recipes.ingredient.total, qty: fetch.recipes.qty}],
@@ -52,6 +52,9 @@ const ModalUpdateItem = ({ setShowModalUpdate, fetch }) => {
   function handleSubmit(e) {
     e.preventDefault();
     let { name, price, category, stock, recipes } = stockItem;
+    recipes.forEach(rcp => {
+      delete rcp.total
+    })
     price = Number(price);
     if (categoryName !== "Food") {
       recipes = [];
@@ -63,52 +66,6 @@ const ModalUpdateItem = ({ setShowModalUpdate, fetch }) => {
     })
     maxStock = Math.floor(maxStock.sort((a, b) => a - b)[0])
     console.log(maxStock, 'ini max stock');
-    if (!name || !price || !category || !stock) {
-      if (!name) {
-        toast.error(`Please insert name!`, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      }
-      if (!price) {
-        toast.error(`Please insert price!`, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      }
-      if (!category) {
-        toast.error(`Please insert category!`, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      }
-      if (!stock) {
-        toast.error(`Please insert stock!`, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      }
-    } else {
       if(categoryName !== "Food") {
         editStockItem({
           variables: { _id: fetch._id, file, name, price, category, recipes, stock },
@@ -126,11 +83,10 @@ const ModalUpdateItem = ({ setShowModalUpdate, fetch }) => {
           });
         } else {
           editStockItem({
-            variables: { file, name, price, category, recipes, stock },
+            variables: { _id: fetch._id, file, name, price, category, recipes, stock },
           });
         }
       }
-    }
   }
   function onChange({
     target: {
@@ -371,7 +327,7 @@ const ModalUpdateItem = ({ setShowModalUpdate, fetch }) => {
                       Image:
                     </label>
                     <div className="relative">
-                      <input onChange={onChange} type="file" required />
+                      <input onChange={onChange} type="file" required/>
                     </div>
                   </div>
 
