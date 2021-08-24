@@ -17,7 +17,6 @@ const Statistic2 = () => {
         <Navbar />
         <Sidebar />
         <div className="h-full ml-14 mt-14 mb-10 md:ml-52 bg-gray-200 mr-14 md:mr-80">
-          <StatusItem />
           <Statistic />
         </div>
       </div>
