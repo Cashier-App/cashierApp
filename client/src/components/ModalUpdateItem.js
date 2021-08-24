@@ -32,15 +32,23 @@ const ModalUpdateItem = ({ setShowModalUpdate, fetch }) => {
   const { data: dataStockIngredients, loading: loadingIngredients } = useQuery(
     FETCH_ALL_INGREDIENTS
   );
-  console.log(fetch);
+  console.log(fetch.recipes, 'fetch recipes');
   const [categoryName, setCategoryName] = useState(fetch.category.name);
+  let populateRecipes = []
+  let populateIngredientId = []
+  fetch.recipes.forEach(rcp => {
+    populateRecipes.push({ingredient: rcp.ingredient._id, qty: rcp.qty})
+    populateIngredientId.push(rcp.ingredient._id)
+  })
+  console.log(populateRecipes);
+  console.log(populateIngredientId);
   const [stockItem, setStockItem] = useState({
     name: fetch.name,
     price: fetch.price,
     category: fetch.category._id,
     stock: fetch.stock,
-    recipes: []
-    // recipes: [{ingredient: fetch.recipes.ingredient._id, total: fetch.recipes.ingredient.total, qty: fetch.recipes.qty}],
+    // recipes: []
+    recipes: populateRecipes,
   });
   const [recipe, setRecipe] = useState({
     ingredient: "",
@@ -463,6 +471,7 @@ const ModalUpdateItem = ({ setShowModalUpdate, fetch }) => {
                               id="vehicle1"
                               name="vehicle1"
                               value={stockIngredient._id}
+                              checked={populateIngredientId.includes(stockIngredient._id)}
                             />
                           </td>
                         </tr>
