@@ -1,24 +1,25 @@
 import { useMutation, useReactiveVar } from "@apollo/client";
 import Swal from "sweetalert2";
-import { cartVar } from "../config/reactiveVariabel";
-import {
-  EDIT_STOCK_ITEM,
-  FETCH_ALL_STOCK_ITEM,
-  FETCH_ONE_STOCK_ITEM,
-} from "../config/StockItem";
+import { cartVar, totalVar, itemVar } from "../config/reactiveVariabel";
+import { EDIT_STOCK_ITEM, FETCH_ALL_STOCK_ITEM } from "../config/StockItem";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useEffect } from "react";
 
-const CardItem = ({ stockItems }) => {
+const CardItem = () => {
   const cartItems = useReactiveVar(cartVar);
+  const stockItems = useReactiveVar(itemVar);
+  const totalCarts = useReactiveVar(totalVar);
   const [editStockTotalItem] = useMutation(EDIT_STOCK_ITEM, {
     refetchQueries: [FETCH_ALL_STOCK_ITEM],
   });
 
+  console.log("CART", cartItems);
+
   const handleSubmit = (e, item) => {
     e.preventDefault();
     const quantity = e.target[0].value;
-    if (!quantity) {
+    if (!quantity || quantity == 0) {
       toast.error("Make sure you insert quantity stock", {
         position: "top-right",
         autoClose: 5000,
@@ -29,14 +30,24 @@ const CardItem = ({ stockItems }) => {
         progress: undefined,
       });
     } else if (item.stock >= quantity) {
-      let newCartItem = [...cartItems, item];
-      cartVar(newCartItem);
-      editStockTotalItem({
-        variables: {
-          editStockItemId: item._id,
-          editStockItemStock: item.stock - Number(quantity),
-        },
+      let newCartItem = [];
+      let newStockItem = [];
+      stockItems.forEach((el) => {
+        if (el._id === item._id) {
+          console.log(el._id);
+          console.log(item._id);
+          console.log("Masuk 9090");
+          const newElementStock = { ...el };
+          newElementStock.stock = newElementStock.stock - Number(quantity);
+          newStockItem = [...newStockItem, newElementStock];
+        } else {
+          console.log("Masuk 3");
+          newCartItem = [...cartItems, item];
+          newStockItem = [...newStockItem, el];
+        }
       });
+      cartVar(newCartItem);
+      itemVar(newStockItem);
     } else {
       Swal.fire({
         icon: "error",
@@ -45,6 +56,8 @@ const CardItem = ({ stockItems }) => {
       });
     }
   };
+
+  useEffect(() => {}, [cartItems]);
 
   return (
     <div
