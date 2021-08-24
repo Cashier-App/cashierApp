@@ -118,7 +118,7 @@ const typeDefs = gql`
     # ): StockItem
     editStockItem(
       _id: ID
-      file: Upload!
+      file: Upload
       name: String
       price: Float
       category: String

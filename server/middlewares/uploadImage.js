@@ -3,6 +3,7 @@ const FormData = require("form-data");
 const fs = require("fs");
 
 const postImage = (req, res, next) => {
+  /* istanbul ignore next */
   if (req.file) {
     const file = req.file.buffer.toString("base64");
     const filename = Date.now() + "--" + req.file.originalname;
@@ -28,7 +29,6 @@ const postImage = (req, res, next) => {
         next();
       })
       .catch((err) => {
-        console.log(err);
         /* istanbul ignore next */
         res.status(500).json({ message: "Internal server error" });
       });
