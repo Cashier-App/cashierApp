@@ -238,6 +238,20 @@ const getStockItems = async () => {
     }
   }
 };
+const getUpdatedItems = async () => {
+  let stockItems = await redis.get("stockItems");
+  if (stockItems) return JSON.parse(stockItems);
+  else {
+    try {
+      let response = await API.get("/StockItems/validate-stock");
+      const { data: dataCategories } = response;
+      await redis.set("stockItems", JSON.stringify(dataCategories));
+      return dataCategories;
+    } catch (err) {
+      throw new Error(err.response.data.message);
+    }
+  }
+};
 const getStockItem = async (id) => {
   let stockItems = await redis.get("stockItems");
   if (stockItems) {
@@ -473,6 +487,7 @@ module.exports = {
   postRegisterUser,
   // stock Items
   getStockItems,
+  getUpdatedItems,
   getStockItem,
   postAddStockItem,
   postEditStockItem,

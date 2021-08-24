@@ -9,6 +9,7 @@ const typeDefs = gql`
     stockIngredients: [StockIngredient]
     stockIngredient(id: String): StockIngredient
     stockItems: [StockItem]
+    updatedStockItems: [StockItem]
     stockItem(id: String): StockItem
     ingredient(id: String): StockIngredient
   }
