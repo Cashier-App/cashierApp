@@ -1,9 +1,18 @@
-import { useQuery } from "@apollo/client";
+import { useQuery, useReactiveVar } from "@apollo/client";
+import { useEffect } from "react";
 import { CardItem, Cart, Navbar, Sidebar, StatusItem } from "../components";
+import { itemVar } from "../config/reactiveVariabel";
 import { FETCH_ALL_STOCK_ITEM } from "../config/StockItem";
 
 const Home = () => {
+  const stockItems = useReactiveVar(itemVar);
   const { data, loading, error } = useQuery(FETCH_ALL_STOCK_ITEM);
+  if (!loading) {
+    itemVar(data.stockItems);
+  }
+
+  useEffect(() => {}, [stockItems]);
+  // console.log("Home", stockItems);
 
   return (
     <div>
