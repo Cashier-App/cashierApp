@@ -134,8 +134,14 @@ describe("Stock Item case", () => {
     );
   });
 
-  it("GET '/StockItems' [SUCCESS CASE] should be able to object of one item", async () => {
+  it("GET '/StockItems' [SUCCESS CASE] should be able to get object of one item", async () => {
     const response = await request(app).get(`/StockItems/${itemsId}`).send();
+    expect(response.status).toBe(200);
+  });
+  it("GET '/StockItems' [SUCCESS CASE] should be able to get updated stockItems", async () => {
+    const response = await request(app)
+      .get(`/StockItems/validate-stock`)
+      .send();
     expect(response.status).toBe(200);
   });
 

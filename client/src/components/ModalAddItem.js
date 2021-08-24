@@ -51,16 +51,15 @@ const ModalAddItem = ({ setShowModal }) => {
     e.preventDefault();
     let { name, price, category, stock, recipes } = stockItem;
     price = Number(price);
+
     if (categoryName !== "Food") {
       recipes = [];
     }
-    console.log(name, price, category, stock, recipes);
     let maxStock = [];
     recipes.forEach((el) => {
       maxStock.push(el.total / el.qty);
     });
     maxStock = Math.floor(maxStock.sort((a, b) => a - b)[0]);
-    console.log(maxStock, "ini min stock");
     if (!name || !price || !category || !stock) {
       if (!name) {
         toast.error(`Please insert name!`, {
@@ -123,6 +122,7 @@ const ModalAddItem = ({ setShowModal }) => {
             progress: undefined,
           });
         } else {
+          recipes.forEach((recipe) => delete recipe.total);
           addStockItem({
             variables: { file, name, price, category, recipes, stock },
           });
@@ -161,7 +161,6 @@ const ModalAddItem = ({ setShowModal }) => {
       );
       setStockItem({ ...stockItem, recipes });
     }
-    console.log(stockItem);
   }
   return (
     <div>
@@ -479,24 +478,26 @@ const ModalAddItem = ({ setShowModal }) => {
                             <input
                               onChange={(e) => {
                                 if (+e.target.value > stockIngredient.total) {
-                                  toast.error("Quantity cannot be greater than stock", {
-                                    position: "top-right",
-                                    autoClose: 5000,
-                                    hideProgressBar: false,
-                                    closeOnClick: true,
-                                    pauseOnHover: true,
-                                    draggable: true,
-                                    progress: undefined,
-                                  });
+                                  toast.error(
+                                    "Quantity cannot be greater than stock",
+                                    {
+                                      position: "top-right",
+                                      autoClose: 5000,
+                                      hideProgressBar: false,
+                                      closeOnClick: true,
+                                      pauseOnHover: true,
+                                      draggable: true,
+                                      progress: undefined,
+                                    }
+                                  );
                                 } else {
                                   setRecipe({
                                     ingredient: stockIngredient._id,
                                     total: stockIngredient.total,
                                     qty: e.target.value,
-                                  })
+                                  });
                                 }
-                              }
-                              }
+                              }}
                               type="number"
                               className="border rounded-md px-2 w-20 ml-10 text-center"
                               min="0"

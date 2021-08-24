@@ -284,6 +284,7 @@ const postAddStockItem = async (
   try {
     return await finishPromise(out, async () => {
       var data = new FormData();
+      console.log(recipes);
       recipes.forEach((e, index) => {
         console.log(index, e.ingredient);
         data.append(`recipes[${index}][ingredient]`, e.ingredient);
@@ -295,7 +296,6 @@ const postAddStockItem = async (
       data.append("category", category);
       const image = fs.createReadStream("./local-file-output12.jpg");
       data.append("image", image);
-      console.log(data);
       let response = await API.post("/StockItems", data, {
         headers: {
           ...data.getHeaders(),
@@ -304,7 +304,6 @@ const postAddStockItem = async (
       const { data: responseData } = response;
       stockItem = responseData;
       return stockItem;
-      // console.log(err.response.data.message);
     });
   } catch (err) {
     throw new UserInputError(err.response.data.message);
