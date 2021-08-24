@@ -17,7 +17,7 @@ const ModalUpdateItem = ({ setShowModalUpdate, fetch }) => {
     },
     onError(err) {
       console.log(err);
-      toast.error("Update item error", {
+      toast.error(err.message, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -32,14 +32,16 @@ const ModalUpdateItem = ({ setShowModalUpdate, fetch }) => {
   const { data: dataStockIngredients, loading: loadingIngredients } = useQuery(
     FETCH_ALL_INGREDIENTS
   );
+  console.log(fetch);
+  const [categoryName, setCategoryName] = useState(fetch.category.name);
   const [stockItem, setStockItem] = useState({
     name: fetch.name,
     price: fetch.price,
     category: fetch.category,
     stock: fetch.stock,
-    recipes: fetch.recipes,
+    recipes: []
+    // recipes: [{ingredient: fetch.recipes.ingredient._id, total: fetch.recipes.ingredient.total, qty: fetch.recipes.qty}],
   });
-  const [categoryName, setCategoryName] = useState("");
   const [recipe, setRecipe] = useState({
     ingredient: "",
     total: 0,
@@ -57,7 +59,7 @@ const ModalUpdateItem = ({ setShowModalUpdate, fetch }) => {
     console.log(name, price, category, stock, recipes);
     let maxStock = []
     recipes.forEach(el => {
-      maxStock.push(el.stockIngredientQty / el.qty)
+      maxStock.push(el.total / el.qty)
     })
     maxStock = Math.floor(maxStock.sort((a, b) => a - b)[0])
     console.log(maxStock, 'ini max stock');
@@ -254,14 +256,11 @@ const ModalUpdateItem = ({ setShowModalUpdate, fetch }) => {
                           name="category"
                           id="category"
                         >
-                          <option required disabled selected default value="">
-                            Select one
-                          </option>
                           );
                           {!loading &&
                             data.categories.map((category) => {
                               return (
-                                <option key={category._id} value={category._id}>
+                                <option key={category._id} value={category._id} selected={category._id === fetch.category}>
                                   {category.name}
                                 </option>
                               );
@@ -477,13 +476,25 @@ const ModalUpdateItem = ({ setShowModalUpdate, fetch }) => {
                           </td>
                           <td className="py-4 whitespace-nowrap">
                             <input
-                              onChange={(e) =>
+                              onChange={(e) => {
+                                if (+e.target.value > stockIngredient.total) {
+                                  toast.error("Quantity cannot be greater than stock", {
+                                    position: "top-right",
+                                    autoClose: 5000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                  });
+                                } else {
                                 setRecipe({
                                   ingredient: stockIngredient._id,
-                                  stockIngredientQty: stockIngredient.total,
+                                  total: stockIngredient.total,
                                   qty: e.target.value,
                                 })
                               }
+                            }}
                               type="number"
                               className="border rounded-md px-2 w-20 ml-10 text-center"
                               min="0"

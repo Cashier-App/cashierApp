@@ -1,4 +1,14 @@
 import { gql } from "@apollo/client";
+
+export const FETCH_CATEGORY_ID = gql`
+query Query($id: String) {
+  category(id: $id) {
+    _id
+    name
+  }
+}
+`
+
 export const ADD_STOCK_ITEM_MUTATION = gql`
   mutation AddStockItem(
     $file: Upload!
