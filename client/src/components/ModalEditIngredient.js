@@ -15,7 +15,10 @@ const ModalEditIngredient = ({ setShowModalEdit, ingredient }) => {
   const [editIngredient, { data, loading, error }] = useMutation(
     EDIT_INGREDIENT,
     {
-      refetchQueries: [FETCH_ALL_INGREDIENTS, FETCH_ALL_STOCK_ITEM],
+      refetchQueries: [
+        { query: FETCH_ALL_INGREDIENTS },
+        { query: FETCH_ALL_STOCK_ITEM },
+      ],
     }
   );
 
