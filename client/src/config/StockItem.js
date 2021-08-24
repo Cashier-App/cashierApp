@@ -90,7 +90,7 @@ export const UPDATE_STOCK_ITEM_MUTATION = gql`
 
 export const FETCH_ALL_STOCK_ITEM = gql`
   query FetchStockItems {
-    stockItems {
+    updatedStockItems {
       _id
       name
       price

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { EDIT_INGREDIENT, FETCH_ALL_INGREDIENTS } from "../config/ingredient";
+import { FETCH_ALL_STOCK_ITEM } from "../config/StockItem";
 import Swal from "sweetalert2";
 
 const ModalEditIngredient = ({ setShowModalEdit, ingredient }) => {
@@ -14,7 +15,10 @@ const ModalEditIngredient = ({ setShowModalEdit, ingredient }) => {
   const [editIngredient, { data, loading, error }] = useMutation(
     EDIT_INGREDIENT,
     {
-      refetchQueries: [FETCH_ALL_INGREDIENTS],
+      refetchQueries: [
+        { query: FETCH_ALL_INGREDIENTS },
+        { query: FETCH_ALL_STOCK_ITEM },
+      ],
     }
   );
 

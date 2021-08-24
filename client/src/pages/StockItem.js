@@ -25,7 +25,10 @@ const StockItem = () => {
         <Sidebar />
         <div className="h-full ml-14 mt-14 mb-10 md:ml-56 bg-gray-200">
           <StatusStockItem />
-          {!loading && <TableStockItem stockItems={data.stockItems} />}
+          {console.log(error, data, loading)}
+          {!loading && !error && (
+            <TableStockItem stockItems={data.updatedStockItems} />
+          )}
         </div>
       </div>
     </div>

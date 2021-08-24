@@ -225,6 +225,7 @@ const postRegisterUser = async (email, password, name) => {
 };
 // Stock Items
 const getStockItems = async () => {
+  await redis.del("stockItems");
   let stockItems = await redis.get("stockItems");
   if (stockItems) return JSON.parse(stockItems);
   else {
@@ -239,6 +240,7 @@ const getStockItems = async () => {
   }
 };
 const getUpdatedItems = async () => {
+  await redis.del("stockItems");
   let stockItems = await redis.get("stockItems");
   if (stockItems) return JSON.parse(stockItems);
   else {
@@ -253,6 +255,7 @@ const getUpdatedItems = async () => {
   }
 };
 const getStockItem = async (id) => {
+  await redis.del("stockItems");
   let stockItems = await redis.get("stockItems");
   if (stockItems) {
     stockItem = JSON.parse(stockItems).find(
