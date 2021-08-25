@@ -1,7 +1,7 @@
 import { useMutation } from "@apollo/client";
 import { useState } from "react";
 import { ADD_INGREDIENT, FETCH_ALL_INGREDIENTS } from "../config/ingredient";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
 
@@ -10,12 +10,9 @@ const ModalAddIngredient = ({ setShowModalAdd }) => {
   const [unit, setUnit] = useState("");
   const [total, setTotal] = useState(0);
 
-  const [addIngredient, { data, loading, error }] = useMutation(
-    ADD_INGREDIENT,
-    {
-      refetchQueries: [FETCH_ALL_INGREDIENTS],
-    }
-  );
+  const [addIngredient, { data, _, error }] = useMutation(ADD_INGREDIENT, {
+    refetchQueries: [FETCH_ALL_INGREDIENTS],
+  });
 
   if (data) {
     setShowModalAdd(false);
@@ -245,18 +242,6 @@ const ModalAddIngredient = ({ setShowModalAdd }) => {
         </div>
       </div>
       <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-      <ToastContainer />
     </div>
   );
 };

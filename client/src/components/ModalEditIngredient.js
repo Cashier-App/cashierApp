@@ -1,6 +1,6 @@
 import { useMutation, useApolloClient } from "@apollo/client";
 import { useEffect, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { EDIT_INGREDIENT, FETCH_ALL_INGREDIENTS } from "../config/ingredient";
 import { FETCH_ALL_STOCK_ITEM } from "../config/StockItem";
@@ -11,16 +11,12 @@ const ModalEditIngredient = ({ setShowModalEdit, ingredient }) => {
   const [name, setName] = useState("");
   const [unit, setUnit] = useState("");
   const [total, setTotal] = useState(0);
-  const client = useApolloClient();
-  const [editIngredient, { data, loading, error }] = useMutation(
-    EDIT_INGREDIENT,
-    {
-      refetchQueries: [
-        { query: FETCH_ALL_INGREDIENTS },
-        { query: FETCH_ALL_STOCK_ITEM },
-      ],
-    }
-  );
+  const [editIngredient, { data, _, error }] = useMutation(EDIT_INGREDIENT, {
+    refetchQueries: [
+      { query: FETCH_ALL_INGREDIENTS },
+      { query: FETCH_ALL_STOCK_ITEM },
+    ],
+  });
 
   if (data) {
     setShowModalEdit(false);
@@ -265,18 +261,6 @@ const ModalEditIngredient = ({ setShowModalEdit, ingredient }) => {
           <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
         </div>
       )}
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-      <ToastContainer />
     </div>
   );
 };
