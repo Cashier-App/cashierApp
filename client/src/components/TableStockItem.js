@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import ModalAddItem from "./ModalAddItem";
 import ModalUpdateItem from "./ModalUpdateItem";
 import { DELETE_STOCK_ITEM } from "../config/StockItem";
@@ -25,6 +24,9 @@ const TableStockItem = ({ stockItems }) => {
     setDataPopulate(data);
     setShowModalUpdate(true);
   }
+
+  // disini
+  useEffect(() => {}, [stockItems]);
 
   return (
     <div>
