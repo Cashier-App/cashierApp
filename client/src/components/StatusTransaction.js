@@ -1,4 +1,4 @@
-const StatusTransaction = () => {
+const StatusTransaction = ({ totalSale }) => {
   return (
     <div
       className="
@@ -47,117 +47,8 @@ const StatusTransaction = () => {
           <i className="fas fa-shopping-cart text-blue-500 text-2xl"></i>
         </div>
         <div className="text-right text-gray-700">
-          <p className="text-2xl">1,257</p>
+          <p className="text-2xl">{totalSale}</p>
           <p>Total Sales</p>
-        </div>
-      </div>
-      <div
-        className="
-           bg-white
-           shadow-lg
-           rounded-lg
-           flex
-           items-center
-           justify-between
-           p-3
-           text-white
-           font-medium
-           group
-         "
-      >
-        <div
-          className="
-             flex
-             justify-center
-             items-center
-             w-14
-             h-14
-             bg-green-50
-             rounded-full
-             transition-all
-             duration-300
-             transform
-             group-hover:rotate-12
-           "
-        >
-          <i className="fas fa-check text-green-500 text-2xl"></i>
-        </div>
-        <div className="text-right text-gray-600">
-          <p className="text-2xl">557</p>
-          <p>Success</p>
-        </div>
-      </div>
-      <div
-        className="
-           bg-white
-           shadow-lg
-           rounded-lg
-           flex
-           items-center
-           justify-between
-           p-3
-           text-white
-           font-medium
-           group
-         "
-      >
-        <div
-          className="
-             flex
-             justify-center
-             items-center
-             w-14
-             h-14
-             bg-yellow-100
-             rounded-full
-             transition-all
-             duration-300
-             transform
-             group-hover:rotate-12
-           "
-        >
-          <i className="fas fa-history text-yellow-500 text-2xl"></i>
-        </div>
-        <div className="text-right text-gray-600">
-          <p className="text-2xl">117</p>
-          <p>Pending</p>
-        </div>
-      </div>
-      <div
-        className="
-           bg-white
-           dark:bg-gray-800
-           shadow-lg
-           rounded-lg
-           flex
-           items-center
-           justify-between
-           p-3
-           text-white
-           font-medium
-           group
-         "
-      >
-        <div
-          className="
-             flex
-             justify-center
-             items-center
-             w-14
-             h-14
-             bg-red-100
-             rounded-full
-             transition-all
-             duration-300
-             transform
-             group-hover:rotate-12
-           "
-        >
-          <i className="far fa-times-circle text-red-500 text-2xl"></i>
-        </div>
-        <div className="text-right text-gray-600">
-          <p className="text-2xl">57</p>
-          <p>Denied</p>
         </div>
       </div>
     </div>

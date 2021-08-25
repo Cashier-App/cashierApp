@@ -26,9 +26,12 @@ const Transaction = () => {
           <Navbar />
           <Sidebar />
           <div className="h-full ml-14 mt-14 mb-10 md:ml-56 bg-gray-200">
-            <StatusTransaction />
-            <TableTransaction sales={data.sales} />
-            {/* <CardItem /> */}
+            {!loading && !error && (
+              <>
+                <StatusTransaction totalSale={data.sales.length} />
+                <TableTransaction sales={data.sales} />
+              </>
+            )}
           </div>
         </div>
       ) : (

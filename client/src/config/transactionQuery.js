@@ -11,10 +11,10 @@ export const FETCH_SALES = gql`
           name
           price
           category {
+            _id
             name
           }
           imageUrl
-          stock
         }
         qty
       }
