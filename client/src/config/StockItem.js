@@ -47,7 +47,7 @@ export const ADD_STOCK_ITEM_MUTATION = gql`
 `;
 
 export const UPDATE_STOCK_ITEM_MUTATION = gql`
-  mutation AddStockItemMutation(
+  mutation editStockWithImage(
     $_id: ID
     $file: Upload
     $name: String
@@ -59,6 +59,45 @@ export const UPDATE_STOCK_ITEM_MUTATION = gql`
     editStockItem(
       _id: $_id
       file: $file
+      name: $name
+      price: $price
+      category: $category
+      recipes: $recipes
+      stock: $stock
+    ) {
+      _id
+      name
+      price
+      category {
+        _id
+        name
+      }
+      imageUrl
+      recipes {
+        _id
+        ingredient {
+          _id
+          name
+          unit
+          total
+        }
+        qty
+      }
+      stock
+    }
+  }
+`;
+export const UPDATE_STOCK_ITEM_MUTATION_1 = gql`
+  mutation editStockWithNoImage(
+    $_id: ID
+    $name: String
+    $price: Float
+    $category: String
+    $recipes: [add_recipe]
+    $stock: Float
+  ) {
+    editStockItem(
+      _id: $_id
       name: $name
       price: $price
       category: $category
