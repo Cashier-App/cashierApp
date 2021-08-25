@@ -1,4 +1,4 @@
-const StatusTransaction = ({ totalSale, totalProductSold }) => {
+const StatusTransaction = ({ totalSale, totalProductSold, totalAllSales }) => {
   return (
     <div
       className="
@@ -47,7 +47,7 @@ const StatusTransaction = ({ totalSale, totalProductSold }) => {
           <i className="fas fa-shopping-cart text-blue-500 text-2xl"></i>
         </div>
         <div className="text-right text-gray-700">
-          <p className="text-2xl">{totalSale}</p>
+          <p className="text-2xl">{totalSale} sales</p>
           <p>Total Sales</p>
         </div>
       </div>
@@ -83,7 +83,7 @@ const StatusTransaction = ({ totalSale, totalProductSold }) => {
           <i className="fas fa-shopping-cart text-blue-500 text-2xl"></i>
         </div>
         <div className="text-right text-gray-700">
-          <p className="text-2xl">{totalProductSold}</p>
+          <p className="text-2xl">{totalProductSold} unit</p>
           <p>Total Product Sold</p>
         </div>
       </div>
@@ -119,8 +119,8 @@ const StatusTransaction = ({ totalSale, totalProductSold }) => {
           <i className="fas fa-shopping-cart text-blue-500 text-2xl"></i>
         </div>
         <div className="text-right text-gray-700">
-          <p className="text-2xl">{totalSale}</p>
-          <p>TBD</p>
+          <p className="text-2xl">Rp. {totalAllSales.toLocaleString()}</p>
+          <p>Total Purchased</p>
         </div>
       </div>
     </div>

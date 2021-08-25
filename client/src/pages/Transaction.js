@@ -21,7 +21,6 @@ const Transaction = () => {
           allProductSold += el2.qty;
         });
       });
-      console.log(allProductSold);
       setProductSold(allProductSold);
       setTotalSales(totalAllSales);
     }
@@ -48,6 +47,7 @@ const Transaction = () => {
                 <StatusTransaction
                   totalSale={data.sales.length}
                   totalProductSold={productSold}
+                  totalAllSales={totalSales}
                 />
                 <TableTransaction sales={data.sales} />
               </>
