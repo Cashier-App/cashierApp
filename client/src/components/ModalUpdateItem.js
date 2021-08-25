@@ -1,4 +1,7 @@
-import { UPDATE_STOCK_ITEM_MUTATION } from "../config/StockItem";
+import {
+  UPDATE_STOCK_ITEM_MUTATION,
+  UPDATE_STOCK_ITEM_MUTATION_1,
+} from "../config/StockItem";
 import { useMutation, useQuery } from "@apollo/client";
 import { useState } from "react";
 import { FETCH_CATEGORY } from "../config/categoryQuery";
@@ -8,6 +11,27 @@ import { FETCH_ALL_INGREDIENTS } from "../config/ingredient";
 
 const ModalUpdateItem = ({ setShowModalUpdate, fetch }) => {
   const [editStockItem] = useMutation(UPDATE_STOCK_ITEM_MUTATION, {
+    refetchQueries: [FETCH_ALL_STOCK_ITEM],
+    onCompleted() {
+      toast.success("Stock item updated", {
+        position: "top-right",
+      });
+      setShowModalUpdate(false);
+    },
+    onError(err) {
+      console.log(err);
+      toast.error(err.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    },
+  });
+  const [editStockItemNoImage] = useMutation(UPDATE_STOCK_ITEM_MUTATION_1, {
     refetchQueries: [FETCH_ALL_STOCK_ITEM],
     onCompleted() {
       toast.success("Stock item updated", {
@@ -47,26 +71,13 @@ const ModalUpdateItem = ({ setShowModalUpdate, fetch }) => {
     total: 0,
     qty: 0,
   });
-  const [file, setFile] = useState({});
+  const [file, setFile] = useState("");
 
   function handleSubmit(e) {
     e.preventDefault();
     let { name, price, category, stock, recipes } = stockItem;
-    recipes.forEach((rcp) => {
-      delete rcp.total;
-    });
-    price = Number(price);
-    if (categoryName !== "Food") {
-      recipes = [];
-    }
-    console.log(name, price, category, stock, recipes);
-    let maxStock = [];
-    recipes.forEach((el) => {
-      maxStock.push(el.total / el.qty);
-    });
-    maxStock = Math.floor(maxStock.sort((a, b) => a - b)[0]);
-    console.log(maxStock, "ini max stock");
-    if (categoryName !== "Food") {
+
+    if (file) {
       editStockItem({
         variables: {
           _id: fetch._id,
@@ -79,29 +90,16 @@ const ModalUpdateItem = ({ setShowModalUpdate, fetch }) => {
         },
       });
     } else {
-      if (stock > maxStock) {
-        toast.error(`Maximum stock is ${maxStock}`, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      } else {
-        editStockItem({
-          variables: {
-            _id: fetch._id,
-            file,
-            name,
-            price,
-            category,
-            recipes,
-            stock,
-          },
-        });
-      }
+      editStockItemNoImage({
+        variables: {
+          _id: fetch._id,
+          name,
+          price,
+          category,
+          recipes,
+          stock,
+        },
+      });
     }
   }
   function onChange({
@@ -347,7 +345,7 @@ const ModalUpdateItem = ({ setShowModalUpdate, fetch }) => {
                       Image:
                     </label>
                     <div className="relative">
-                      <input onChange={onChange} type="file" required />
+                      <input onChange={onChange} type="file" />
                     </div>
                   </div>
 
