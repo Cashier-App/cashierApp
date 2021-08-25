@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Bar } from "react-chartjs-2";
 
-function Stats7days({ totalRevenue, loading, error }) {
+function Stats7days({ totalRevenue, loading, error, sales }) {
+  const [productSold, setProductSold] = useState(0);
+  const [totalSales, setTotalSales] = useState(0);
   const dates = [...Array(7)].map((_, i) => {
     const d = new Date();
     d.setDate(d.getDate() - i);
@@ -40,9 +42,20 @@ function Stats7days({ totalRevenue, loading, error }) {
     },
   };
   React.useEffect(() => {
+    let allProductSold = 0;
+    let totalAllSales = 0;
     if (!loading) {
+      sales.sales.forEach((el) => {
+        totalAllSales += el.total;
+        el.items.forEach((el2) => {
+          allProductSold += el2.qty;
+        });
+      });
+      console.log(allProductSold);
+      setProductSold(allProductSold);
+      setTotalSales(totalAllSales);
     }
-  }, [totalRevenue]);
+  }, [sales]);
 
   return (
     <>
