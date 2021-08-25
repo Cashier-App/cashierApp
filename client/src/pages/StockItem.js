@@ -24,10 +24,12 @@ const StockItem = () => {
         <Navbar />
         <Sidebar />
         <div className="h-full ml-14 mt-14 mb-10 md:ml-56 bg-gray-200">
-          <StatusStockItem />
-          {console.log(error, data, loading)}
           {!loading && !error && (
-            <TableStockItem stockItems={data.updatedStockItems} />
+            <StatusStockItem total={data.stockItems.length} />
+          )}
+
+          {!loading && !error && (
+            <TableStockItem stockItems={data.stockItems} />
           )}
         </div>
       </div>
