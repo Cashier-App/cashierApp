@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const FETCH_SALES = gql`
-query Query {
+  query fetchSales {
     sales {
       _id
       items {
@@ -15,16 +15,6 @@ query Query {
             name
           }
           imageUrl
-          recipes {
-            _id
-            ingredient {
-              _id
-              name
-              unit
-              total
-            }
-            qty
-          }
           stock
         }
         qty

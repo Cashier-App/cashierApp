@@ -1,25 +1,20 @@
-import { cartVar } from "../config/reactiveVariabel";
-import { useMutation, useReactiveVar } from "@apollo/client";
-import { useEffect, useState } from "react";
+import { useMutation, useQuery } from "@apollo/client";
+import { useState } from "react";
 import ModalAddSale from "./ModalAddSale";
 import { ADD_SALE } from "../config/saleMutation";
-import { FETCH_SALES } from "../config/statistic";
+import { FETCH_SALES } from "../config/transactionQuery";
 
 const Cart = ({ cartItem, setCardItem }) => {
   const [showModal, setShowModal] = useState(false);
-  const [addSale] = useMutation(ADD_SALE, {
+  const { data, loading, error } = useQuery(FETCH_SALES);
+  const [addSales] = useMutation(ADD_SALE, {
     refetchQueries: [FETCH_SALES],
   });
 
   const deletItem = (id) => {
-    // console.log("ID", id);
     const newCartItem = cartItem.filter((el) => {
-      console.log("IDDDD ITem", id);
-      console.log("EL ID", el.id);
-      console.log(el.id !== id);
       return el.id !== id;
     });
-    console.log(newCartItem);
     setCardItem(newCartItem);
   };
 
@@ -33,39 +28,14 @@ const Cart = ({ cartItem, setCardItem }) => {
       console.log(el);
       dataSale.items.push({ item: el.items._id, qty: el.qty });
     });
-    console.log("Data Sale", dataSale);
-    addSale({
+    addSales({
       variables: {
-        addSalesItems: dataSale.items,
-        addSalesAdminName: dataSale.adminName,
-        addSalesPayment: dataSale.payment,
+        items: dataSale.items,
+        payment: dataSale.adminName,
+        adminName: dataSale.payment,
       },
     });
   };
-
-  // const cartItems = useReactiveVar(cartVar);
-  // const [cart, setCart] = useState(cartItems);
-  // const [reload, setReload] = useState(false);
-  // // console.log("cartItems", cartItems);
-
-  // const deletItem = (id) => {
-  //   setReload(true);
-  //   let newItem = [];
-  //   cartItems.map((el) => {
-  //     if (el.id !== id) {
-  //       newItem = [...newItem, el];
-  //     }
-  //   });
-  //   cartVar(newItem);
-  // };
-
-  // useEffect(() => {
-  //   setCart(cartItems);
-  //   // setReload(false);
-  // }, [cartItems]);
-
-  // console.log("Cart ini", cart);
-  // // console.log("Cart", cartItems);
 
   return (
     <div>

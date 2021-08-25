@@ -1,4 +1,4 @@
-const StatusTransaction = ({ totalSale }) => {
+const StatusTransaction = ({ totalSale, totalProductSold }) => {
   return (
     <div
       className="
@@ -49,6 +49,78 @@ const StatusTransaction = ({ totalSale }) => {
         <div className="text-right text-gray-700">
           <p className="text-2xl">{totalSale}</p>
           <p>Total Sales</p>
+        </div>
+      </div>
+      <div
+        className="
+           bg-white
+           shadow-lg
+           rounded-lg
+           flex
+           items-center
+           justify-between
+           p-3
+           text-white
+           font-medium
+           group
+         "
+      >
+        <div
+          className="
+             flex
+             justify-center
+             items-center
+             w-14
+             h-14
+             bg-blue-50
+             rounded-full
+             transition-all
+             duration-300
+             transform
+             group-hover:rotate-12
+           "
+        >
+          <i className="fas fa-shopping-cart text-blue-500 text-2xl"></i>
+        </div>
+        <div className="text-right text-gray-700">
+          <p className="text-2xl">{totalProductSold}</p>
+          <p>Total Product Sold</p>
+        </div>
+      </div>
+      <div
+        className="
+           bg-white
+           shadow-lg
+           rounded-lg
+           flex
+           items-center
+           justify-between
+           p-3
+           text-white
+           font-medium
+           group
+         "
+      >
+        <div
+          className="
+             flex
+             justify-center
+             items-center
+             w-14
+             h-14
+             bg-blue-50
+             rounded-full
+             transition-all
+             duration-300
+             transform
+             group-hover:rotate-12
+           "
+        >
+          <i className="fas fa-shopping-cart text-blue-500 text-2xl"></i>
+        </div>
+        <div className="text-right text-gray-700">
+          <p className="text-2xl">{totalSale}</p>
+          <p>TBD</p>
         </div>
       </div>
     </div>

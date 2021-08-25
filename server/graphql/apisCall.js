@@ -419,6 +419,7 @@ const deleteStockItem = async (_id) => {
 
 // sales
 const getSales = async () => {
+  console.log("masuk123123");
   let sales = await redis.get("sales");
   if (sales) return JSON.parse(sales);
   else {

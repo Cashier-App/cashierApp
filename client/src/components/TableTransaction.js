@@ -1,5 +1,22 @@
+import { useState } from "react";
 const TableTransaction = (props) => {
   const { sales } = props;
+
+  /* Pagination */
+  const [pageNumber, setPageNumber] = useState(1);
+  const [postNumber] = useState(7);
+  const currentPageNumber = pageNumber * postNumber - postNumber;
+  let copySales = Array.from(sales);
+  copySales = copySales.reverse();
+  const paginatedPosts = copySales.splice(currentPageNumber, postNumber);
+  const handlePrev = () => {
+    if (pageNumber === 1) return;
+    setPageNumber(pageNumber - 1);
+  };
+  const handleNext = () => {
+    setPageNumber(pageNumber + 1);
+  };
+  /* Pagination */
   return (
     <div className="mb-20 mx-4 mt-36">
       <div className="w-full overflow-hidden rounded-lg shadow-xs">
@@ -33,7 +50,8 @@ const TableTransaction = (props) => {
                dark:divide-gray-700 dark:bg-gray-800
              "
             >
-              {sales.map((items) => {
+              {/* Pagination */}
+              {paginatedPosts.map((items) => {
                 return items.items.map((item) => {
                   return (
                     <tr
@@ -89,14 +107,33 @@ const TableTransaction = (props) => {
                         Rp. {items.total.toLocaleString()}
                       </td>
                       <td className="px-4 py-3 text-sm">
-                        {new Date(items.date).toLocaleDateString()}
+                        {new Date(items.date).toISOString().split("T")[0]}
                       </td>
                     </tr>
                   );
                 });
               })}
+              {/* Pagination */}
             </tbody>
           </table>
+          {/* Pagination */}
+          <div className="mt-3 bg-white flex">
+            <div className="px-2 border rounded py-2 w-full text-center">
+              <button
+                className="px-4 py-1 mr-3 bg-gray-400 rounded-xl"
+                onClick={handlePrev}
+              >
+                prev
+              </button>
+              Page {pageNumber}
+              <button
+                className="px-4 py-1 ml-3 bg-gray-400 rounded-xl"
+                onClick={handleNext}
+              >
+                next
+              </button>
+            </div>
+          </div>
         </div>
         <div
           className="
