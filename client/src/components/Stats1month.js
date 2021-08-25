@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { Bar } from "react-chartjs-2";
 
-function Stats7days({ totalRevenue, loading, error }) {
+function Stats1month({ totalRevenue, loading, error }) {
   const [productSold, setProductSold] = useState(0);
   const [totalSales, setTotalSales] = useState(0);
-  const dates = [...Array(7)].map((_, i) => {
+  const dates = [...Array(30)].map((_, i) => {
     const d = new Date();
     d.setDate(d.getDate() - i);
     return d.toLocaleDateString();
   });
-  const datesSales = [...Array(7)].map((_, i) => {
+  const datesSales = [...Array(30)].map((_, i) => {
     const d = new Date();
     d.setDate(d.getDate() - i);
     return d.toISOString();
@@ -42,7 +42,10 @@ function Stats7days({ totalRevenue, loading, error }) {
   React.useEffect(() => {
     let allProductSold = 0;
     let totalAllSales = 0;
-    let totalDay = [0, 0, 0, 0, 0, 0, 0];
+    let totalDay = [];
+    for (let i = 0; i < 30; i++) {
+      totalDay.push(0);
+    }
     if (!loading) {
       totalRevenue.sales.forEach((el) => {
         totalAllSales += el.total;
@@ -70,11 +73,11 @@ function Stats7days({ totalRevenue, loading, error }) {
   return (
     <>
       <div className="box-statistic p-2">
-        <h1 className="hidden md:block font-bold uppercase ml-4 mt-6 lg:text-xl text-md text-blue-600">Last 7 Days</h1>
+        <h1 className="hidden md:block font-bold uppercase ml-4 mt-6 lg:text-xl text-md text-blue-600">Last 30 Days</h1>
         <Bar data={data} options={options} />
       </div>
     </>
   );
 }
 
-export default Stats7days;
+export default Stats1month;

@@ -5,6 +5,7 @@ import { useQuery } from "@apollo/client";
 import { FETCH_SALES } from "../config/statistic";
 import { sales } from "../config/dummyData";
 import StatsCategory from "../components/StatsCategory";
+import Stats1month from "../components/Stats1month";
 
 const Statistic2 = () => {
   const { data: totalRevenue, loading, error } = useQuery(FETCH_SALES);
@@ -24,9 +25,13 @@ const Statistic2 = () => {
         <Sidebar />
         <div className="h-full ml-14 mt-14 mb-10 md:ml-52 bg-white">
           <Statistic totalRevenue={totalRevenue} loading={loading} error={error} sales={sales} />
-          <div className="mini-box grid grid-cols-1 grid-rows-2 gap-4 mt-6 text-2xl relative p-8">
+          <div
+            className="mini-box grid grid-cols-1 md:grid-cols-2
+    lg:grid-cols-2 grid-rows-2 gap-4 mt-6 text-2xl relative p-8"
+          >
             <Stats7days totalRevenue={totalRevenue} loading={loading} error={error} />
-            <StatsCategory totalRevenue={totalRevenue} loading={loading} error={error} />
+            <Stats1month totalRevenue={totalRevenue} loading={loading} error={error} />
+            {/* <StatsCategory totalRevenue={totalRevenue} loading={loading} error={error} /> */}
           </div>
         </div>
       </div>

@@ -264,6 +264,7 @@ const Statistic = ({ totalRevenue, loading, error }) => {
         <div>
           <div className="box-statistic p-2">
             <div>
+              <h1 className="hidden md:block font-bold uppercase ml-4 mt-6 lg:text-xl text-md text-blue-600">Annual</h1>
               <Line
                 data={data}
                 options={{
