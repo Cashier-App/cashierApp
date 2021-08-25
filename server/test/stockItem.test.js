@@ -61,22 +61,22 @@ describe("Stock Item case", () => {
     itemsId = response.body._id;
   });
 
-  it("POST /StockItems [ERROR CASE] should be able to create an item, if stock > maxStock ", async () => {
-    const response = await request(app)
-      .post("/StockItems")
-      .field("name", "Bakmi Ayam Komplit 2")
-      .field("category", categoryId.id)
-      .field("price", "350000")
-      .field("stock", "10000")
-      .field("recipes[0][ingredient]", ingredientId)
-      .field("recipes[0][qty]", 0.05)
-      .attach("image", path.resolve(__dirname, "./test_image.jpg"));
-    expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty(
-      "message",
-      "maximum stock for this item is 40 based on ingredients stock"
-    );
-  });
+  // it("POST /StockItems [ERROR CASE] should be able to create an item, if stock > maxStock ", async () => {
+  //   const response = await request(app)
+  //     .post("/StockItems")
+  //     .field("name", "Bakmi Ayam Komplit 2")
+  //     .field("category", categoryId.id)
+  //     .field("price", "350000")
+  //     .field("stock", "10000")
+  //     .field("recipes[0][ingredient]", ingredientId)
+  //     .field("recipes[0][qty]", 0.05)
+  //     .attach("image", path.resolve(__dirname, "./test_image.jpg"));
+  //   expect(response.status).toBe(400);
+  //   expect(response.body).toHaveProperty(
+  //     "message",
+  //     "maximum stock for this item is 40 based on ingredients stock"
+  //   );
+  // });
   it("POST /StockItems [ERROR CASE] should be able to create an item, if image type is invalid ", async () => {
     const response = await request(app)
       .post("/StockItems")
@@ -138,13 +138,6 @@ describe("Stock Item case", () => {
     const response = await request(app).get(`/StockItems/${itemsId}`).send();
     expect(response.status).toBe(200);
   });
-  it("GET '/StockItems' [SUCCESS CASE] should be able to get updated stockItems", async () => {
-    const response = await request(app)
-      .get(`/StockItems/validate-stock`)
-      .send();
-    expect(response.status).toBe(200);
-  });
-
   it("GET '/StockItems' [ERROR CASE] should be able to error message, if item not exist", async () => {
     const response = await request(app)
       .get("/StockItems/611f86749442233e1c67332d")

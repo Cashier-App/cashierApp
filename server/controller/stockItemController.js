@@ -15,55 +15,6 @@ class Controller {
       res.status(500).json({ message: "Internal server error" });
     }
   }
-  static async validate(req, res, next) {
-    const updateAllItem = async (cb) => {
-      return new Promise(async (resolve, reject) => {
-        try {
-          let response = await StockItem.find({})
-            .populate("category")
-            .populate("recipes.ingredient")
-            .lean();
-          /* istanbul ignore next */
-          if (response.length === 0) {
-            return resolve(response);
-          }
-          await response.forEach(async (currentItem) => {
-            if (currentItem.category.name === "Food") {
-              let maxStock = await getMaxStock(
-                currentItem.category._id,
-                currentItem.recipes
-              );
-              /* istanbul ignore next */
-              if (currentItem.stock > maxStock) {
-                console.log(currentItem.stock, maxStock);
-                response = await StockItem.findOneAndUpdate(
-                  { _id: currentItem._id },
-                  { stock: maxStock },
-                  {
-                    new: true,
-                  }
-                )
-                  .populate("category")
-                  .populate("recipes.ingredient")
-                  .lean();
-                return resolve(response);
-              } else {
-                return resolve(response);
-              }
-            } else {
-              return resolve(response);
-            }
-          });
-        } catch (err) {
-          /* istanbul ignore next*/
-          console.log(err);
-          res.status(500).json({ message: "Internal Server Error" });
-        }
-      });
-    };
-    let response = await updateAllItem();
-    return res.status(200).json(response);
-  }
   static async findById(req, res, next) {
     const id = req.params.id;
     try {
