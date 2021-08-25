@@ -91,7 +91,7 @@ const Register = () => {
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col mb-5">
               <label
-                for="email"
+                htmlFor="email"
                 className="mb-1 text-xs tracking-wide text-gray-600"
               >
                 Name:
@@ -135,7 +135,7 @@ const Register = () => {
             </div>
             <div className="flex flex-col mb-5">
               <label
-                for="email"
+                htmlFor="email"
                 className="mb-1 text-xs tracking-wide text-gray-600"
               >
                 E-Mail Address:
@@ -179,7 +179,7 @@ const Register = () => {
             </div>
             <div className="flex flex-col mb-6">
               <label
-                for="password"
+                htmlFor="password"
                 className="mb-1 text-xs sm:text-sm tracking-wide text-gray-600"
               >
                 Password:

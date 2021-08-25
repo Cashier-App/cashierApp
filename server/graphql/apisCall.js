@@ -55,7 +55,6 @@ const postAddCategory = async (name) => {
       }
     );
     const { data } = res;
-    console.log("category add success");
     return data;
   } catch (err) {
     throw new Error(err.response.data.message);
@@ -105,7 +104,6 @@ const getStockIngredients = async () => {
       await redis.set("stockIngredients", JSON.stringify(dataCategories));
       return dataCategories;
     } catch (err) {
-      console.log(err);
       throw new Error(err.response.data.message);
     }
   }
@@ -301,9 +299,7 @@ const postAddStockItem = async (
   try {
     return await finishPromise(out, async () => {
       var data = new FormData();
-      console.log(recipes);
       recipes.forEach((e, index) => {
-        console.log(index, e.ingredient);
         data.append(`recipes[${index}][ingredient]`, e.ingredient);
         data.append(`recipes[${index}][qty]`, Number(e.qty));
       });
@@ -339,7 +335,6 @@ const postEditStockItem = async (
   console.log(_id, name, price, category, recipes, stock);
   await redis.del("stockItems");
   let stockItem = {};
-  console.log(file);
   if (file) {
     const { createReadStream, filename, mimetype, encoding } = await file;
     const stream = createReadStream();
@@ -357,9 +352,10 @@ const postEditStockItem = async (
             data.append(`recipes[${index}][qty]`, Number(e.qty));
           });
         }
+        console.log(stock !== undefined);
         if (name) data.append("name", name);
         if (price) data.append("price", price);
-        if (stock) data.append("stock", stock);
+        if (stock !== undefined) data.append("stock", stock);
         if (category) data.append("category", category);
         const image = fs.createReadStream("./local-file-output12.jpg");
         data.append("image", image);
@@ -382,14 +378,13 @@ const postEditStockItem = async (
     var data = new FormData();
     if (recipes) {
       recipes.forEach((e, index) => {
-        console.log(index, e.ingredient);
         data.append(`recipes[${index}][ingredient]`, e.ingredient);
         data.append(`recipes[${index}][qty]`, Number(e.qty));
       });
     }
     if (name) data.append("name", name);
     if (price) data.append("price", price);
-    if (stock) data.append("stock", stock);
+    if (stock !== undefined) data.append("stock", stock);
     if (category) data.append("category", category);
     try {
       let response = await API.put(`/StockItems/${_id}`, data, {
@@ -419,7 +414,6 @@ const deleteStockItem = async (_id) => {
 
 // sales
 const getSales = async () => {
-  console.log("masuk123123");
   let sales = await redis.get("sales");
   if (sales) return JSON.parse(sales);
   else {
@@ -443,7 +437,6 @@ const getSale = async (id) => {
     try {
       let res = await API.get(`/Sales/${id}`);
       const { data } = res;
-      console.log(data);
       return data;
     } catch (err) {
       throw new Error(err.response.data.message);

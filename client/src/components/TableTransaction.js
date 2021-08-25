@@ -4,7 +4,7 @@ const TableTransaction = (props) => {
 
   /* Pagination */
   const [pageNumber, setPageNumber] = useState(1);
-  const [postNumber] = useState(7);
+  const [postNumber] = useState(5);
   const currentPageNumber = pageNumber * postNumber - postNumber;
   let copySales = Array.from(sales);
   copySales = copySales.reverse();
@@ -53,17 +53,30 @@ const TableTransaction = (props) => {
               {/* Pagination */}
               {paginatedPosts.map((items) => {
                 return items.items.map((item) => {
+                  {
+                    console.log(items.items.length);
+                  }
                   return (
                     <tr
                       key={item._id}
-                      className="
-                     bg-gray-50
+                      className={
+                        items.items.length > 1
+                          ? `
+                     bg-gray-200
                      dark:bg-gray-800
                      hover:bg-gray-100
                      dark:hover:bg-gray-900
                      text-gray-700
                      dark:text-gray-400
-                   "
+                     
+                   `
+                          : `bg-gray-50
+                     dark:bg-gray-800
+                     hover:bg-gray-100
+                     dark:hover:bg-gray-900
+                     text-gray-700
+                     dark:text-gray-400`
+                      }
                     >
                       <td className="px-4 py-3">
                         <div className="flex items-center text-sm">

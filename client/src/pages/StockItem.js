@@ -26,7 +26,10 @@ const StockItem = () => {
         <Sidebar />
         <div className="h-full ml-14 mt-14 mb-10 md:ml-56 bg-gray-200">
           {!loading && !error && (
-            <StatusStockItem total={data.stockItems.length} />
+            <StatusStockItem
+              total={data.stockItems.length}
+              stockItems={data.stockItems}
+            />
           )}
 
           {!loading && !error && (

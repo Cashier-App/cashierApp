@@ -1,4 +1,3 @@
-const { default: axios } = require("axios");
 const { GraphQLUpload } = require("graphql-upload");
 
 const {

@@ -1,22 +1,58 @@
+import Swal from "sweetalert2";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const CardItem = ({ stockItems, setCardItem, cartItem }) => {
+const CardItem = ({
+  stockItems,
+  setStockItems,
+  setCardItem,
+  cartItem,
+  setTotalSale,
+  totalSale,
+}) => {
   const handleSubmit = (e, item) => {
     e.preventDefault();
-    // console.log("ITemmmmm", item);
     const quantity = e.target[0].value;
-    const newItem = Object.assign({}, item);
-    newItem.index = cartItem.length + 1;
-    console.log(quantity);
-    const cardItemAdd = {
-      id: cartItem.length + 1,
-      name: newItem.name,
-      items: newItem,
-      qty: Number(quantity),
-      total: Number(quantity) * newItem.price,
-    };
-    console.log("cardItem", cardItemAdd);
-    setCardItem([...cartItem, cardItemAdd]);
+    if (Number(quantity) === 0) {
+      toast.error("Make sure you insert stock quantity", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } else if (item.stock < Number(quantity)) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Not enough stock items!",
+      });
+    } else {
+      const newItem = Object.assign({}, item);
+      newItem.index = cartItem.length + 1;
+      const cardItemAdd = {
+        id: cartItem.length + 1,
+        name: newItem.name,
+        items: newItem,
+        qty: Number(quantity),
+        total: Number(quantity) * newItem.price,
+      };
+      setCardItem([...cartItem, cardItemAdd]);
+      setTotalSale(totalSale + Number(cardItemAdd.total));
+      let newStockItem = [];
+      stockItems.map((el) => {
+        if (el._id == item._id) {
+          let itemChange = { ...el };
+          itemChange.stock = itemChange.stock - Number(quantity);
+          newStockItem.push(itemChange);
+        } else {
+          newStockItem.push(el);
+        }
+        setStockItems(newStockItem);
+      });
+    }
   };
 
   return (
@@ -75,7 +111,6 @@ const CardItem = ({ stockItems, setCardItem, cartItem }) => {
                 placeholder="Quantity item"
               />
               <button
-                // onClick={() => addToCart(item)}
                 type="submit"
                 className="
                mt-2

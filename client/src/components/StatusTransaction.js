@@ -1,4 +1,9 @@
-const StatusTransaction = ({ totalSale, totalProductSold, totalAllSales }) => {
+const StatusTransaction = ({
+  totalSale,
+  totalProductSold,
+  totalAllSales,
+  totalCategories,
+}) => {
   return (
     <div
       className="
@@ -12,7 +17,7 @@ const StatusTransaction = ({ totalSale, totalProductSold, totalAllSales }) => {
          p-4
          gap-4
          pb-5
-         bg-white
+         bg-gray-200
        "
     >
       <div
@@ -121,6 +126,42 @@ const StatusTransaction = ({ totalSale, totalProductSold, totalAllSales }) => {
         <div className="text-right text-gray-700">
           <p className="text-2xl">Rp. {totalAllSales.toLocaleString()}</p>
           <p>Total Purchased</p>
+        </div>
+      </div>
+      <div
+        className="
+           bg-white
+           shadow-lg
+           rounded-lg
+           flex
+           items-center
+           justify-between
+           p-3
+           text-white
+           font-medium
+           group
+         "
+      >
+        <div
+          className="
+             flex
+             justify-center
+             items-center
+             w-14
+             h-14
+             bg-blue-50
+             rounded-full
+             transition-all
+             duration-300
+             transform
+             group-hover:rotate-12
+           "
+        >
+          <i className="fas fa-shopping-cart text-blue-500 text-2xl"></i>
+        </div>
+        <div className="text-right text-gray-700">
+          <p className="text-2xl">{totalCategories}</p>
+          <p>Total Categories</p>
         </div>
       </div>
     </div>
