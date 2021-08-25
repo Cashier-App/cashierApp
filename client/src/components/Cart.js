@@ -1,5 +1,5 @@
 import { cartVar } from "../config/reactiveVariabel";
-import { useMutation, useReactiveVar } from "@apollo/client";
+import { useMutation, useReactiveVar, useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import ModalAddSale from "./ModalAddSale";
 import { ADD_SALE } from "../config/saleMutation";
@@ -7,6 +7,7 @@ import { FETCH_SALES } from "../config/statistic";
 
 const Cart = ({ cartItem, setCardItem }) => {
   const [showModal, setShowModal] = useState(false);
+  const { data, loading, error } = useQuery(FETCH_SALES);
   const [addSale] = useMutation(ADD_SALE, {
     refetchQueries: [FETCH_SALES],
   });
