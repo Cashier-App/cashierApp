@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import ModalAddItem from "./ModalAddItem";
 import ModalUpdateItem from "./ModalUpdateItem";
 import { DELETE_STOCK_ITEM } from "../config/StockItem";
@@ -26,10 +25,18 @@ const TableStockItem = ({ stockItems }) => {
     setShowModalUpdate(true);
   }
 
+  // disini
+  useEffect(() => {}, [stockItems]);
+
   return (
     <div>
       {showModal ? <ModalAddItem setShowModal={setShowModal} /> : null}
-      {showModalUpdate ? <ModalUpdateItem setShowModalUpdate={setShowModalUpdate} fetch={dataPopulate}/> : null}
+      {showModalUpdate ? (
+        <ModalUpdateItem
+          setShowModalUpdate={setShowModalUpdate}
+          fetch={dataPopulate}
+        />
+      ) : null}
       <div className="mb-20 mx-4 mt-36">
         <div className="mb-5">
           <button
@@ -115,7 +122,7 @@ const TableStockItem = ({ stockItems }) => {
                         </div>
                       </td>
                       <td className="px-4 py-3 text-sm">
-                        Rp.{stockItem.price}
+                        Rp.{stockItem.price.toLocaleString()}
                       </td>
 
                       <td className="px-4 py-3 text-sm">

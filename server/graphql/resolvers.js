@@ -58,7 +58,6 @@ const resolvers = {
       postEditStockIngredient(args._id, args.name, args.unit, args.total),
     deleteStockIngredient: (_, args) => deleteStockIngredient(args._id),
     // Stock Items
-
     deleteStockItem: (_, args) => deleteStockItem(args._id),
     // User
     loginUser: (_, args) => postLoginUser(args.email, args.password),

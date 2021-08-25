@@ -8,6 +8,7 @@ import { useQuery } from "@apollo/client";
 import { FETCH_SALES } from "../config/transactionQuery";
 const Transaction = () => {
   const { data, loading, error } = useQuery(FETCH_SALES);
+  console.log(data);
   return (
     <div>
       {!loading ? (

@@ -405,7 +405,7 @@ const ModalUpdateItem = ({ setShowModalUpdate, fetch }) => {
             )}
           </div>
         </div>
-        {categoryName === "Food" && !loadingIngredients && (
+        {categoryName === "---" && !loadingIngredients && (
           <div className="relative my-2 ">
             <div className="border-0 p-10 rounded-lg shadow-xl flex flex-col bg-white outline-none focus:outline-none">
               <div className="flex justify-between items-center">
