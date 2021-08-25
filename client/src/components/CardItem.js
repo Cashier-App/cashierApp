@@ -1,109 +1,59 @@
-import { useMutation, useReactiveVar } from "@apollo/client";
 import Swal from "sweetalert2";
-import { cartVar, totalVar, itemVar } from "../config/reactiveVariabel";
-import { EDIT_STOCK_ITEM, FETCH_ALL_STOCK_ITEM } from "../config/StockItem";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useEffect, useState } from "react";
 
-const CardItem = ({ stockItems, setCardItem, cartItem }) => {
+const CardItem = ({
+  stockItems,
+  setStockItems,
+  setCardItem,
+  cartItem,
+  setTotalSale,
+  totalSale,
+}) => {
   const handleSubmit = (e, item) => {
     e.preventDefault();
-    // console.log("ITemmmmm", item);
     const quantity = e.target[0].value;
-    const newItem = Object.assign({}, item);
-    newItem.index = cartItem.length + 1;
-    console.log(quantity);
-    const cardItemAdd = {
-      id: cartItem.length + 1,
-      name: newItem.name,
-      items: newItem,
-      qty: Number(quantity),
-      total: Number(quantity) * newItem.price,
-    };
-    console.log("cardItem", cardItemAdd);
-    setCardItem([...cartItem, cardItemAdd]);
+    if (Number(quantity) === 0) {
+      toast.error("Make sure you insert stock quantity", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } else if (item.stock < Number(quantity)) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Not enough stock items!",
+      });
+    } else {
+      const newItem = Object.assign({}, item);
+      newItem.index = cartItem.length + 1;
+      const cardItemAdd = {
+        id: cartItem.length + 1,
+        name: newItem.name,
+        items: newItem,
+        qty: Number(quantity),
+        total: Number(quantity) * newItem.price,
+      };
+      setCardItem([...cartItem, cardItemAdd]);
+      setTotalSale(totalSale + Number(cardItemAdd.total));
+      let newStockItem = [];
+      stockItems.map((el) => {
+        if (el._id == item._id) {
+          let itemChange = { ...el };
+          itemChange.stock = itemChange.stock - Number(quantity);
+          newStockItem.push(itemChange);
+        } else {
+          newStockItem.push(el);
+        }
+        setStockItems(newStockItem);
+      });
+    }
   };
-  // const cartItems = useReactiveVar(cartVar);
-  // const stockItems = useReactiveVar(itemVar);
-  // const totalCarts = useReactiveVar(totalVar);
-  // const [editStockTotalItem] = useMutation(EDIT_STOCK_ITEM, {
-  //   refetchQueries: [FETCH_ALL_STOCK_ITEM],
-  // });
-
-  // console.log("CART", cartItems);
-
-  // const handleSubmit = (e, item) => {
-  //   e.preventDefault();
-  //   const quantity = e.target[0].value;
-  //   if (!quantity || quantity == 0) {
-  //     toast.error("Make sure you insert quantity stock", {
-  //       position: "top-right",
-  //       autoClose: 5000,
-  //       hideProgressBar: false,
-  //       closeOnClick: true,
-  //       pauseOnHover: true,
-  //       draggable: true,
-  //       progress: undefined,
-  //     });
-  //   } else if (item.stock >= quantity) {
-  //     // let newCartItem = [];
-  //     if (cartItems.length === 0) {
-  //       cartVar([
-  //         ...cartItems,
-  //         {
-  //           id: item._id,
-  //           name: item.name,
-  //           items: [item],
-  //           qty: Number(quantity),
-  //           total: Number(quantity) * item.price,
-  //         },
-  //       ]);
-  //     } else {
-  //       cartItems.map((el) => {
-  //         if (el.id == item._id) {
-  //           el.items = [...el.items, item];
-  //           el.qty = el.qty + Number(quantity);
-  //           el.total = el.total + Number(quantity) * item.price;
-  //         } else {
-  //           cartVar([
-  //             ...cartItems,
-  //             {
-  //               id: item._id,
-  //               name: item.name,
-  //               items: [item],
-  //               qty: Number(quantity),
-  //               total: Number(quantity) * item.price,
-  //             },
-  //           ]);
-  //         }
-  //       });
-  //       // console.log(cartItems);
-  //     }
-  //     let newStockItem = [];
-  //     stockItems.map((el) => {
-  //       if (el._id === item._id) {
-  //         let item = { ...el };
-  //         item.stock = item.stock - Number(quantity);
-  //         // console.log("EL", item);
-  //         newStockItem = [...newStockItem, item];
-  //       } else {
-  //         newStockItem = [...newStockItem, el];
-  //       }
-  //     });
-  //     itemVar(newStockItem);
-  //     console.log("Masuk 3333", stockItems);
-  //     console.log("Masuk 1111", newStockItem);
-  //   } else {
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Oops...",
-  //       text: "Not enough stock!",
-  //     });
-  //   }
-  // };
-
-  // useEffect(() => {}, [stockItems, cartItems]);
 
   return (
     <div
@@ -157,7 +107,6 @@ const CardItem = ({ stockItems, setCardItem, cartItem }) => {
                 placeholder="Quantity item"
               />
               <button
-                // onClick={() => addToCart(item)}
                 type="submit"
                 className="
                mt-2

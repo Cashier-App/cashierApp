@@ -1,39 +1,72 @@
-import { cartVar } from "../config/reactiveVariabel";
-import { useMutation, useReactiveVar } from "@apollo/client";
-import { useEffect, useState } from "react";
+import { useMutation, useQuery } from "@apollo/client";
+import { useState } from "react";
 import ModalAddSale from "./ModalAddSale";
 import { ADD_SALE } from "../config/saleMutation";
 import { FETCH_SALES } from "../config/statistic";
+import Swal from "sweetalert2";
+import { EDIT_STOCK_ITEM, FETCH_ALL_STOCK_ITEM } from "../config/StockItem";
 
-const Cart = ({ cartItem, setCardItem }) => {
+const Cart = ({
+  cartItem,
+  setCardItem,
+  totalSale,
+  setTotalSale,
+  stockItems,
+  setStockItems,
+}) => {
   const [showModal, setShowModal] = useState(false);
+  const [methodPayment, setMethodPayment] = useState("Cash");
+  const { data, loading, error } = useQuery(FETCH_SALES);
   const [addSale] = useMutation(ADD_SALE, {
     refetchQueries: [FETCH_SALES],
   });
+  const { data: dataStock } = useQuery(FETCH_ALL_STOCK_ITEM);
+  const [editStock] = useMutation(EDIT_STOCK_ITEM, {
+    refetchQueries: [FETCH_ALL_STOCK_ITEM],
+  });
+
+  console.log("METHOD PAYMENT", methodPayment);
 
   const deletItem = (id) => {
-    // console.log("ID", id);
+    let deleteCartItem = {};
     const newCartItem = cartItem.filter((el) => {
-      console.log("IDDDD ITem", id);
-      console.log("EL ID", el.id);
-      console.log(el.id !== id);
+      // console.log("ELLLL", el);
+      if (el.id == id) {
+        deleteCartItem = { id: el.items._id, qty: el.qty };
+        setTotalSale(totalSale - Number(el.total));
+      }
       return el.id !== id;
     });
-    console.log(newCartItem);
+    let newStockItem = [];
+    stockItems.map((el) => {
+      if (el._id === deleteCartItem.id) {
+        let itemChange = { ...el };
+        itemChange.stock = itemChange.stock + deleteCartItem.qty;
+        newStockItem.push(itemChange);
+      } else {
+        newStockItem.push(el);
+      }
+      setStockItems(newStockItem);
+    });
     setCardItem(newCartItem);
   };
 
   const postSale = () => {
     const dataSale = {
       items: [],
-      payment: "Cash",
+      payment: methodPayment,
       adminName: "Admin",
     };
     cartItem.forEach((el) => {
-      console.log(el);
+      const newStock = el.items.stock - el.qty;
+      editStock({
+        variables: {
+          editStockItemId: el.items._id,
+          editStockItemStock: newStock,
+        },
+      });
       dataSale.items.push({ item: el.items._id, qty: el.qty });
     });
-    console.log("Data Sale", dataSale);
     addSale({
       variables: {
         addSalesItems: dataSale.items,
@@ -43,33 +76,28 @@ const Cart = ({ cartItem, setCardItem }) => {
     });
   };
 
-  // const cartItems = useReactiveVar(cartVar);
-  // const [cart, setCart] = useState(cartItems);
-  // const [reload, setReload] = useState(false);
-  // // console.log("cartItems", cartItems);
-
-  // const deletItem = (id) => {
-  //   setReload(true);
-  //   let newItem = [];
-  //   cartItems.map((el) => {
-  //     if (el.id !== id) {
-  //       newItem = [...newItem, el];
-  //     }
-  //   });
-  //   cartVar(newItem);
-  // };
-
-  // useEffect(() => {
-  //   setCart(cartItems);
-  //   // setReload(false);
-  // }, [cartItems]);
-
-  // console.log("Cart ini", cart);
-  // // console.log("Cart", cartItems);
+  const checkoutNow = () => {
+    if (cartItem.length === 0) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Your cart is still empty!",
+      });
+    } else {
+      setShowModal(true);
+    }
+  };
 
   return (
     <div>
-      {showModal ? <ModalAddSale setShowModal={setShowModal} /> : null}
+      {showModal ? (
+        <ModalAddSale
+          setShowModal={setShowModal}
+          totalSale={totalSale}
+          postSale={postSale}
+          setMethodPayment={setMethodPayment}
+        />
+      ) : null}
       <div
         className="
          fixed
@@ -95,17 +123,28 @@ const Cart = ({ cartItem, setCardItem }) => {
        "
       >
         <div className="h-full rounded-xl w-auto m-4 bg-gray-200">
-          <h1 className="ml-3 mt-3 font-bold text-lg text-gray-800">Detail Order:</h1>
+          <h1 className="ml-3 mt-3 font-bold text-lg text-gray-800">
+            Detail Order:
+          </h1>
           <div className="my-3 mx-3">
             {/* Card Item Food Order */}
             {cartItem &&
               cartItem.map((item, index) => (
-                <div key={index} className="flex w-full bg-white rounded-xl shadow-lg mt-2">
-                  <img className="rounded-xl w-12 m-1" src="https://ik.imagekit.io/damario789/bakmipolim/Bakmi-Ayam-Original-Komplit_ESX7TDS3A.jpeg?updatedAt=1627366608044" />
+                <div
+                  key={index}
+                  className="flex w-full bg-white rounded-xl shadow-lg mt-2"
+                >
+                  <img
+                    className="rounded-xl w-12 m-1"
+                    src="https://ik.imagekit.io/damario789/bakmipolim/Bakmi-Ayam-Original-Komplit_ESX7TDS3A.jpeg?updatedAt=1627366608044"
+                  />
                   <div className="mr-2 ml-1 w-full flex flex-col justify-start mt-1">
                     <div className="flex items-center justify-between">
                       <h1 className="font-bold text-gray-800">{item.name}</h1>
-                      <button onClick={() => deletItem(item.items.index)} title="Delete item">
+                      <button
+                        onClick={() => deletItem(item.items.index)}
+                        title="Delete item"
+                      >
                         <i className="fas fa-times mr-1 text-red-600"></i>
                       </button>
                     </div>
@@ -135,9 +174,15 @@ const Cart = ({ cartItem, setCardItem }) => {
             {/* Card Item Food Order End */}
           </div>
         </div>
+        <div className="h-20 rounded-xl w-auto mx-4 mb-4 bg-gray-200 text-white">
+          <div className="flex justify-between text-center text-3xl font-bold text-gray-900 mx-3 py-3">
+            <div>Rp.</div>
+            <div>{totalSale}</div>
+          </div>
+        </div>
         <button
-          // onClick={() => setShowModal(true)}
-          onClick={postSale}
+          onClick={checkoutNow}
+          // onClick={postSale}
           className="
            bg-yellow-500
            mb-3
@@ -153,6 +198,7 @@ const Cart = ({ cartItem, setCardItem }) => {
         >
           CHECKOUT
         </button>
+
         <div className="h-auto w-auto m-4 bg-white text-white">@</div>
       </div>
     </div>
