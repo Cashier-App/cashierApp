@@ -3,7 +3,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { useState } from "react";
 import { FETCH_CATEGORY } from "../config/categoryQuery";
 import { FETCH_ALL_STOCK_ITEM } from "../config/StockItem";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { FETCH_ALL_INGREDIENTS } from "../config/ingredient";
 
 const ModalAddItem = ({ setShowModal }) => {
@@ -52,15 +52,7 @@ const ModalAddItem = ({ setShowModal }) => {
     let { name, price, category, stock, recipes } = stockItem;
     price = Number(price);
     recipes = [];
-    console.log(name, price, category, stock, recipes);
-    // if (categoryName !== "Food") {
-    //   recipes = [];
-    // }
-    // let maxStock = [];
-    // recipes.forEach((el) => {
-    //   maxStock.push(el.total / el.qty);
-    // });
-    // maxStock = Math.floor(maxStock.sort((a, b) => a - b)[0]);
+
     if (!name || !price || !category || !stock) {
       if (!name) {
         toast.error(`Please insert name!`, {
@@ -107,31 +99,6 @@ const ModalAddItem = ({ setShowModal }) => {
         });
       }
     } else {
-      // if (categoryName !== "Food") {
-      //   addStockItem({
-      //     variables: { file, name, price, category, recipes, stock },
-      //   });
-      // } else {
-      //   if (stock > maxStock) {
-      //     toast.error(`Maximum stock is ${maxStock}`, {
-      //       position: "top-right",
-      //       autoClose: 5000,
-      //       hideProgressBar: false,
-      //       closeOnClick: true,
-      //       pauseOnHover: true,
-      //       draggable: true,
-      //       progress: undefined,
-      //     });
-      //   } else {
-      //     recipes.forEach((recipe) => delete recipe.total);
-      //     addStockItem({
-      //       variables: { file, name, price, category, recipes, stock },
-      //     });
-      //   }
-      //   addStockItem({
-      //     variables: { file, name, price, category, recipes, stock },
-      //   });
-      // }
       addStockItem({
         variables: { file, name, price, category, recipes, stock },
       });
@@ -530,17 +497,6 @@ const ModalAddItem = ({ setShowModal }) => {
         )}
       </div>
       <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
     </div>
   );
 };

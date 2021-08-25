@@ -1,16 +1,18 @@
-import React, {useState} from "react";
-import { UPDATE_CATEGORY_MUTATION, FETCH_CATEGORY } from "../config/categoryQuery"
-import { ToastContainer, toast } from "react-toastify";
+import React, { useState } from "react";
+import {
+  UPDATE_CATEGORY_MUTATION,
+  FETCH_CATEGORY,
+} from "../config/categoryQuery";
+import { toast } from "react-toastify";
 import { useQuery, useMutation, useApolloClient } from "@apollo/client";
-
 
 const ModalUpdateCategory = ({ setShowModalUpdate, dataPopulate }) => {
   const [name, setName] = useState("");
   const client = useApolloClient();
-  const { data, loading } = useQuery(FETCH_CATEGORY);
+  const { data } = useQuery(FETCH_CATEGORY);
   const [editCategory] = useMutation(UPDATE_CATEGORY_MUTATION, {
     onCompleted(data) {
-      toast.success('Edit category success!', {
+      toast.success("Edit category success!", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -45,15 +47,15 @@ const ModalUpdateCategory = ({ setShowModalUpdate, dataPopulate }) => {
         draggable: true,
         progress: undefined,
       });
-    }
-  })
+    },
+  });
 
   function handleSubmit(e) {
     e.preventDefault();
     let editedCategory = {
       _id: dataPopulate._id,
-      name
-    }
+      name,
+    };
     if (!name) {
       toast.error("Make sure you insert all data", {
         position: "top-right",
@@ -66,8 +68,8 @@ const ModalUpdateCategory = ({ setShowModalUpdate, dataPopulate }) => {
       });
     } else {
       editCategory({
-        variables: editedCategory
-      })
+        variables: editedCategory,
+      });
     }
   }
 
@@ -122,7 +124,8 @@ const ModalUpdateCategory = ({ setShowModalUpdate, dataPopulate }) => {
                       placeholder="Enter your category name"
                       onChange={(e) => {
                         console.log(e.target.value);
-                        setName(e.target.value)}}
+                        setName(e.target.value);
+                      }}
                     />
                   </div>
                 </div>
@@ -180,17 +183,6 @@ const ModalUpdateCategory = ({ setShowModalUpdate, dataPopulate }) => {
         </div>
       </div>
       <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
     </div>
   );
 };

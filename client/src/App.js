@@ -7,11 +7,11 @@ import {
   StockIngredient,
   StockItem,
   Transaction,
-  Category
+  Category,
 } from "./pages";
 import Statistic2 from "./pages/Statistic";
 import Home from "./pages/Home";
-
+import { ToastContainer } from "react-toastify";
 function App() {
   return (
     <Router>
@@ -47,6 +47,18 @@ function App() {
           <Home />
         </Route>
       </Switch>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+      <ToastContainer />
     </Router>
   );
 }

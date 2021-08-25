@@ -4,7 +4,7 @@ import ModalUpdateItem from "./ModalUpdateItem";
 import { DELETE_STOCK_ITEM } from "../config/StockItem";
 import { FETCH_ALL_STOCK_ITEM } from "../config/StockItem";
 import { useMutation } from "@apollo/client";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 
 const TableStockItem = ({ stockItems }) => {
   const [showModal, setShowModal] = useState(false);
@@ -313,17 +313,6 @@ const TableStockItem = ({ stockItems }) => {
           </div>
         </div>
       </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
     </div>
   );
 };

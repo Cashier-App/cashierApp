@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { ADD_CATEGORY_MUTATION, FETCH_CATEGORY } from "../config/categoryQuery";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { useQuery, useMutation, useApolloClient } from "@apollo/client";
 
 const ModalAddCategory = ({ setShowModal }) => {
   const [name, setName] = useState("");
   const client = useApolloClient();
-  const { data, loading } = useQuery(FETCH_CATEGORY);
+  const { data } = useQuery(FETCH_CATEGORY);
   const [addCategory] = useMutation(ADD_CATEGORY_MUTATION, {
     onCompleted(data) {
       setShowModal(false);
@@ -170,17 +170,6 @@ const ModalAddCategory = ({ setShowModal }) => {
         </div>
       </div>
       <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
     </div>
   );
 };

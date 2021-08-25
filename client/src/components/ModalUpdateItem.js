@@ -3,7 +3,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { useState } from "react";
 import { FETCH_CATEGORY } from "../config/categoryQuery";
 import { FETCH_ALL_STOCK_ITEM } from "../config/StockItem";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { FETCH_ALL_INGREDIENTS } from "../config/ingredient";
 
 const ModalUpdateItem = ({ setShowModalUpdate, fetch }) => {
@@ -499,17 +499,6 @@ const ModalUpdateItem = ({ setShowModalUpdate, fetch }) => {
         )}
       </div>
       <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
     </div>
   );
 };

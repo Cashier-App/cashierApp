@@ -1,10 +1,4 @@
-import { useMutation, useReactiveVar } from "@apollo/client";
-import Swal from "sweetalert2";
-import { cartVar, totalVar, itemVar } from "../config/reactiveVariabel";
-import { EDIT_STOCK_ITEM, FETCH_ALL_STOCK_ITEM } from "../config/StockItem";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useEffect, useState } from "react";
 
 const CardItem = ({ stockItems, setCardItem, cartItem }) => {
   const handleSubmit = (e, item) => {
@@ -24,86 +18,6 @@ const CardItem = ({ stockItems, setCardItem, cartItem }) => {
     console.log("cardItem", cardItemAdd);
     setCardItem([...cartItem, cardItemAdd]);
   };
-  // const cartItems = useReactiveVar(cartVar);
-  // const stockItems = useReactiveVar(itemVar);
-  // const totalCarts = useReactiveVar(totalVar);
-  // const [editStockTotalItem] = useMutation(EDIT_STOCK_ITEM, {
-  //   refetchQueries: [FETCH_ALL_STOCK_ITEM],
-  // });
-
-  // console.log("CART", cartItems);
-
-  // const handleSubmit = (e, item) => {
-  //   e.preventDefault();
-  //   const quantity = e.target[0].value;
-  //   if (!quantity || quantity == 0) {
-  //     toast.error("Make sure you insert quantity stock", {
-  //       position: "top-right",
-  //       autoClose: 5000,
-  //       hideProgressBar: false,
-  //       closeOnClick: true,
-  //       pauseOnHover: true,
-  //       draggable: true,
-  //       progress: undefined,
-  //     });
-  //   } else if (item.stock >= quantity) {
-  //     // let newCartItem = [];
-  //     if (cartItems.length === 0) {
-  //       cartVar([
-  //         ...cartItems,
-  //         {
-  //           id: item._id,
-  //           name: item.name,
-  //           items: [item],
-  //           qty: Number(quantity),
-  //           total: Number(quantity) * item.price,
-  //         },
-  //       ]);
-  //     } else {
-  //       cartItems.map((el) => {
-  //         if (el.id == item._id) {
-  //           el.items = [...el.items, item];
-  //           el.qty = el.qty + Number(quantity);
-  //           el.total = el.total + Number(quantity) * item.price;
-  //         } else {
-  //           cartVar([
-  //             ...cartItems,
-  //             {
-  //               id: item._id,
-  //               name: item.name,
-  //               items: [item],
-  //               qty: Number(quantity),
-  //               total: Number(quantity) * item.price,
-  //             },
-  //           ]);
-  //         }
-  //       });
-  //       // console.log(cartItems);
-  //     }
-  //     let newStockItem = [];
-  //     stockItems.map((el) => {
-  //       if (el._id === item._id) {
-  //         let item = { ...el };
-  //         item.stock = item.stock - Number(quantity);
-  //         // console.log("EL", item);
-  //         newStockItem = [...newStockItem, item];
-  //       } else {
-  //         newStockItem = [...newStockItem, el];
-  //       }
-  //     });
-  //     itemVar(newStockItem);
-  //     console.log("Masuk 3333", stockItems);
-  //     console.log("Masuk 1111", newStockItem);
-  //   } else {
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Oops...",
-  //       text: "Not enough stock!",
-  //     });
-  //   }
-  // };
-
-  // useEffect(() => {}, [stockItems, cartItems]);
 
   return (
     <div
@@ -126,7 +40,11 @@ const CardItem = ({ stockItems, setCardItem, cartItem }) => {
          "
         >
           <div className="w-50 h-30">
-            <img className=" rounded-xl w-full p-2" src={item.imageUrl} />
+            <img
+              className=" rounded-xl w-full p-2"
+              src={item.imageUrl}
+              alt="a"
+            />
           </div>
           <div className="mx-3">
             <div className="text-gray-800 font-bold">{item.name}</div>
@@ -180,18 +98,6 @@ const CardItem = ({ stockItems, setCardItem, cartItem }) => {
         </div>
       ))}
       {/* Card End */}
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-      <ToastContainer />
     </div>
   );
 };
