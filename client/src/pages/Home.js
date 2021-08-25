@@ -36,7 +36,7 @@ const Home = () => {
           <StatusItem />
           {!loading && !error && (
             <CardItem
-              stockItems={data.updatedStockItems}
+              stockItems={data.stockItems}
               setCardItem={setCardItem}
               cartItem={cartItem}
             />

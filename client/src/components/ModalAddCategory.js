@@ -9,6 +9,7 @@ const ModalAddCategory = ({ setShowModal }) => {
   const { data, loading } = useQuery(FETCH_CATEGORY);
   const [addCategory] = useMutation(ADD_CATEGORY_MUTATION, {
     onCompleted(data) {
+      setShowModal(false);
       toast.success("Add category success!", {
         position: "top-right",
         autoClose: 5000,
