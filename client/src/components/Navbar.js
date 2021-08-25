@@ -1,7 +1,7 @@
 import Logo from "../assets/logo.png";
 import Avatar from "../assets/adminlogo.jpg";
 import { useEffect } from "react";
-import jwt from "jsonwebtoken";
+// import jwt from "jsonwebtoken";
 const Navbar = () => {
   // useEffect(() => {
   //   console.log(localStorage.access_token);
@@ -33,10 +33,7 @@ const Navbar = () => {
            border-none
          "
       >
-        <img
-          className="w-7 h-7 md:w-10 md:h-10 mr-2 rounded-md overflow-hidden"
-          src={Logo}
-        />
+        <img className="w-7 h-7 md:w-10 md:h-10 mr-2 rounded-md overflow-hidden" src={Logo} />
         <span className="hidden md:block font-bold uppercase">Hacktiv POS</span>
       </div>
       <div
@@ -97,17 +94,10 @@ const Navbar = () => {
             <li>
               <div className="flex items-center mr-4 hover:text-blue-100">
                 <div className="flex justify-start items-center mr-1">
-                  <img
-                    src={Avatar}
-                    className="w-9 h-9 rounded-full mr-2 border-2"
-                  />
+                  <img src={Avatar} className="w-9 h-9 rounded-full mr-2 border-2" />
                   <div>
-                    <div className="text-md font-semibold">
-                      {localStorage.getItem("email")}
-                    </div>
-                    <div className="text-xs -mt-1 text-gray-200 font-normal">
-                      Admin
-                    </div>
+                    <div className="text-md font-semibold">{localStorage.getItem("email")}</div>
+                    <div className="text-xs -mt-1 text-gray-200 font-normal">Admin</div>
                   </div>
                 </div>
               </div>

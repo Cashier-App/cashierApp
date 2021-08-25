@@ -3,10 +3,13 @@ import { useMutation, useReactiveVar } from "@apollo/client";
 import { useEffect, useState } from "react";
 import ModalAddSale from "./ModalAddSale";
 import { ADD_SALE } from "../config/saleMutation";
+import { FETCH_SALES } from "../config/statistic";
 
 const Cart = ({ cartItem, setCardItem }) => {
   const [showModal, setShowModal] = useState(false);
-  const [addSale] = useMutation(ADD_SALE);
+  const [addSale] = useMutation(ADD_SALE, {
+    refetchQueries: [FETCH_SALES],
+  });
 
   const deletItem = (id) => {
     // console.log("ID", id);
@@ -92,28 +95,17 @@ const Cart = ({ cartItem, setCardItem }) => {
        "
       >
         <div className="h-full rounded-xl w-auto m-4 bg-gray-200">
-          <h1 className="ml-3 mt-3 font-bold text-lg text-gray-800">
-            Detail Order:
-          </h1>
+          <h1 className="ml-3 mt-3 font-bold text-lg text-gray-800">Detail Order:</h1>
           <div className="my-3 mx-3">
             {/* Card Item Food Order */}
             {cartItem &&
               cartItem.map((item, index) => (
-                <div
-                  key={index}
-                  className="flex w-full bg-white rounded-xl shadow-lg mt-2"
-                >
-                  <img
-                    className="rounded-xl w-12 m-1"
-                    src="https://ik.imagekit.io/damario789/bakmipolim/Bakmi-Ayam-Original-Komplit_ESX7TDS3A.jpeg?updatedAt=1627366608044"
-                  />
+                <div key={index} className="flex w-full bg-white rounded-xl shadow-lg mt-2">
+                  <img className="rounded-xl w-12 m-1" src="https://ik.imagekit.io/damario789/bakmipolim/Bakmi-Ayam-Original-Komplit_ESX7TDS3A.jpeg?updatedAt=1627366608044" />
                   <div className="mr-2 ml-1 w-full flex flex-col justify-start mt-1">
                     <div className="flex items-center justify-between">
                       <h1 className="font-bold text-gray-800">{item.name}</h1>
-                      <button
-                        onClick={() => deletItem(item.items.index)}
-                        title="Delete item"
-                      >
+                      <button onClick={() => deletItem(item.items.index)} title="Delete item">
                         <i className="fas fa-times mr-1 text-red-600"></i>
                       </button>
                     </div>
