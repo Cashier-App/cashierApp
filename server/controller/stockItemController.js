@@ -23,6 +23,7 @@ class Controller {
             .populate("category")
             .populate("recipes.ingredient")
             .lean();
+          /* istanbul ignore next */
           if (response.length === 0) {
             return resolve(response);
           }
@@ -32,6 +33,7 @@ class Controller {
                 currentItem.category._id,
                 currentItem.recipes
               );
+              /* istanbul ignore next */
               if (currentItem.stock > maxStock) {
                 console.log(currentItem.stock, maxStock);
                 response = await StockItem.findOneAndUpdate(
@@ -83,15 +85,15 @@ class Controller {
     let { name, category, price, stock, imageUrl, recipes } = req.body;
     try {
       let responseCategory = await Category.findOne({ _id: category });
-      /* istanbul ignore next */
-      if (responseCategory.name === "Food") {
-        let maxStock = await getMaxStock(category, recipes);
-        if (stock > maxStock) {
-          return res.status(400).json({
-            message: `maximum stock for this item is ${maxStock} based on ingredients stock`,
-          });
-        }
-      }
+      // /* istanbul ignore next */
+      // if (responseCategory.name === "Food") {
+      //   let maxStock = await getMaxStock(category, recipes);
+      //   if (stock > maxStock) {
+      //     return res.status(400).json({
+      //       message: `maximum stock for this item is ${maxStock} based on ingredients stock`,
+      //     });
+      //   }
+      // }
       let newStockItem = new StockItem({
         name,
         category,
@@ -111,6 +113,7 @@ class Controller {
       if (error.message !== undefined) {
         return res.status(400).json({ message: error.message });
       } else {
+        console.log(error);
         return res.status(500).json({ message: "Internal server error" });
       }
     }

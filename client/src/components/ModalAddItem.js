@@ -51,15 +51,16 @@ const ModalAddItem = ({ setShowModal }) => {
     e.preventDefault();
     let { name, price, category, stock, recipes } = stockItem;
     price = Number(price);
-
-    if (categoryName !== "Food") {
-      recipes = [];
-    }
-    let maxStock = [];
-    recipes.forEach((el) => {
-      maxStock.push(el.total / el.qty);
-    });
-    maxStock = Math.floor(maxStock.sort((a, b) => a - b)[0]);
+    recipes = [];
+    console.log(name, price, category, stock, recipes);
+    // if (categoryName !== "Food") {
+    //   recipes = [];
+    // }
+    // let maxStock = [];
+    // recipes.forEach((el) => {
+    //   maxStock.push(el.total / el.qty);
+    // });
+    // maxStock = Math.floor(maxStock.sort((a, b) => a - b)[0]);
     if (!name || !price || !category || !stock) {
       if (!name) {
         toast.error(`Please insert name!`, {
@@ -106,28 +107,34 @@ const ModalAddItem = ({ setShowModal }) => {
         });
       }
     } else {
-      if (categoryName !== "Food") {
-        addStockItem({
-          variables: { file, name, price, category, recipes, stock },
-        });
-      } else {
-        if (stock > maxStock) {
-          toast.error(`Maximum stock is ${maxStock}`, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
-        } else {
-          recipes.forEach((recipe) => delete recipe.total);
-          addStockItem({
-            variables: { file, name, price, category, recipes, stock },
-          });
-        }
-      }
+      // if (categoryName !== "Food") {
+      //   addStockItem({
+      //     variables: { file, name, price, category, recipes, stock },
+      //   });
+      // } else {
+      //   if (stock > maxStock) {
+      //     toast.error(`Maximum stock is ${maxStock}`, {
+      //       position: "top-right",
+      //       autoClose: 5000,
+      //       hideProgressBar: false,
+      //       closeOnClick: true,
+      //       pauseOnHover: true,
+      //       draggable: true,
+      //       progress: undefined,
+      //     });
+      //   } else {
+      //     recipes.forEach((recipe) => delete recipe.total);
+      //     addStockItem({
+      //       variables: { file, name, price, category, recipes, stock },
+      //     });
+      //   }
+      //   addStockItem({
+      //     variables: { file, name, price, category, recipes, stock },
+      //   });
+      // }
+      addStockItem({
+        variables: { file, name, price, category, recipes, stock },
+      });
     }
   }
   function onChange({
@@ -429,7 +436,7 @@ const ModalAddItem = ({ setShowModal }) => {
             )}
           </div>
         </div>
-        {categoryName === "Food" && !loadingIngredients && (
+        {categoryName === "---" && !loadingIngredients && (
           <div className="relative my-2 ">
             <div className="border-0 p-10 rounded-lg shadow-xl flex flex-col bg-white outline-none focus:outline-none">
               <div className="flex justify-between items-center">

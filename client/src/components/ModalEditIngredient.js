@@ -1,4 +1,4 @@
-import { useMutation } from "@apollo/client";
+import { useMutation, useApolloClient } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -11,7 +11,7 @@ const ModalEditIngredient = ({ setShowModalEdit, ingredient }) => {
   const [name, setName] = useState("");
   const [unit, setUnit] = useState("");
   const [total, setTotal] = useState(0);
-
+  const client = useApolloClient();
   const [editIngredient, { data, loading, error }] = useMutation(
     EDIT_INGREDIENT,
     {
