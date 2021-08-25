@@ -39,29 +39,12 @@ const Statistic = ({ totalRevenue, loading, error }) => {
   }, [totalRevenue]);
 
   const data = {
-    labels: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ],
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
     datasets: [
       {
         label: "Total Sales",
         data: months,
-        backgroundColor: [
-          "rgba(245, 229, 27, 1)",
-          "rgba(245, 229, 27, 1)",
-          "rgba(245, 229, 27, 1)",
-        ],
+        backgroundColor: ["rgba(245, 229, 27, 1)", "rgba(245, 229, 27, 1)", "rgba(245, 229, 27, 1)"],
       },
     ],
   };
@@ -69,12 +52,10 @@ const Statistic = ({ totalRevenue, loading, error }) => {
   return (
     <div className="mt-6">
       <div>
-        <h1 className="hidden md:block font-bold uppercase ml-14 mt-6 text-3xl text-blue-600">
-          Statistic
-        </h1>
+        <h1 className="hidden md:block font-bold uppercase ml-14 mt-6 text-3xl text-blue-600">Statistic</h1>
       </div>
       <div
-        className="fixed rounded-b-2xl
+        className="rounded-b-2xl
     top-36
     right-0
     left-56
@@ -122,21 +103,14 @@ const Statistic = ({ totalRevenue, loading, error }) => {
                ease-in-out
              "
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                ></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
               </svg>
             </div>
             <div className="flex flex-col">
               <h1 className="text-center text-gray-200">Status</h1>
             </div>
             <div>
-              <h1 className="text-center font-bold text-4xl text-white">
-                Open
-              </h1>
+              <h1 className="text-center font-bold text-4xl text-white">Open</h1>
             </div>
           </div>
           <div className="input-box mx-1 my-1 flex flex-col input-box items-center justify-center relative">
@@ -187,9 +161,7 @@ const Statistic = ({ totalRevenue, loading, error }) => {
               <h1 className="text-center">Total Sales</h1>
             </div>
             <div>
-              <h1 className="text-center font-bold text-3xl">
-                Rp. {totalSales.toLocaleString()}
-              </h1>
+              <h1 className="text-center font-bold text-3xl">Rp. {totalSales.toLocaleString()}</h1>
             </div>
           </div>
           <div className="input-box mx-1 my-1 flex flex-col input-box items-center justify-center relative">
@@ -228,12 +200,7 @@ const Statistic = ({ totalRevenue, loading, error }) => {
                ease-in-out
              "
                 >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                  ></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                 </svg>
               </div>
             </div>
@@ -280,12 +247,7 @@ const Statistic = ({ totalRevenue, loading, error }) => {
                ease-in-out
              "
                 >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                  ></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                 </svg>
               </div>
             </div>
@@ -293,9 +255,7 @@ const Statistic = ({ totalRevenue, loading, error }) => {
               <h1 className="text-center">Sales Today</h1>
             </div>
             <div>
-              <h1 className="text-center font-bold text-3xl">
-                Rp. {todaySales.toLocaleString()}
-              </h1>
+              <h1 className="text-center font-bold text-3xl">Rp. {todaySales.toLocaleString()}</h1>
             </div>
           </div>
         </div>
