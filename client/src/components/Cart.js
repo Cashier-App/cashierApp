@@ -2,18 +2,52 @@ import { useMutation, useQuery } from "@apollo/client";
 import { useState } from "react";
 import ModalAddSale from "./ModalAddSale";
 import { ADD_SALE } from "../config/saleMutation";
-import { FETCH_SALES } from "../config/transactionQuery";
+import { FETCH_SALES } from "../config/statistic";
+import Swal from "sweetalert2";
+import { toast } from "react-toastify";
+import { EDIT_STOCK_ITEM, FETCH_ALL_STOCK_ITEM } from "../config/StockItem";
 
-const Cart = ({ cartItem, setCardItem }) => {
+const Cart = ({
+  cartItem,
+  setCardItem,
+  totalSale,
+  setTotalSale,
+  stockItems,
+  setStockItems,
+}) => {
   const [showModal, setShowModal] = useState(false);
-  const { data } = useQuery(FETCH_SALES);
-  const [addSales] = useMutation(ADD_SALE, {
+  const [methodPayment, setMethodPayment] = useState("Cash");
+  const { data, loading, error } = useQuery(FETCH_SALES);
+  const [addSale] = useMutation(ADD_SALE, {
     refetchQueries: [FETCH_SALES],
   });
+  const { data: dataStock } = useQuery(FETCH_ALL_STOCK_ITEM);
+  const [editStock] = useMutation(EDIT_STOCK_ITEM, {
+    refetchQueries: [FETCH_ALL_STOCK_ITEM],
+  });
+
+  console.log("METHOD PAYMENT", methodPayment);
 
   const deletItem = (id) => {
+    let deleteCartItem = {};
     const newCartItem = cartItem.filter((el) => {
+      // console.log("ELLLL", el);
+      if (el.id == id) {
+        deleteCartItem = { id: el.items._id, qty: el.qty };
+        setTotalSale(totalSale - Number(el.total));
+      }
       return el.id !== id;
+    });
+    let newStockItem = [];
+    stockItems.map((el) => {
+      if (el._id === deleteCartItem.id) {
+        let itemChange = { ...el };
+        itemChange.stock = itemChange.stock + deleteCartItem.qty;
+        newStockItem.push(itemChange);
+      } else {
+        newStockItem.push(el);
+      }
+      setStockItems(newStockItem);
     });
     setCardItem(newCartItem);
   };
@@ -21,14 +55,20 @@ const Cart = ({ cartItem, setCardItem }) => {
   const postSale = () => {
     const dataSale = {
       items: [],
-      payment: "Cash",
+      payment: methodPayment,
       adminName: "Admin",
     };
     cartItem.forEach((el) => {
-      console.log(el);
+      const newStock = el.items.stock - el.qty;
+      editStock({
+        variables: {
+          editStockItemId: el.items._id,
+          editStockItemStock: newStock,
+        },
+      });
       dataSale.items.push({ item: el.items._id, qty: el.qty });
     });
-    addSales({
+    addSale({
       variables: {
         items: dataSale.items,
         payment: dataSale.adminName,
@@ -37,9 +77,29 @@ const Cart = ({ cartItem, setCardItem }) => {
     });
   };
 
+  const checkoutNow = () => {
+    if (cartItem.length === 0) {
+      // Swal.fire({
+      //   icon: "error",
+      //   title: "Oops...",
+      //   text: "Your cart is still empty!",
+      // });
+      toast.error("Your cart is still empty", { position: "top-right" });
+    } else {
+      setShowModal(true);
+    }
+  };
+
   return (
     <div>
-      {showModal ? <ModalAddSale setShowModal={setShowModal} /> : null}
+      {showModal ? (
+        <ModalAddSale
+          setShowModal={setShowModal}
+          totalSale={totalSale}
+          postSale={postSale}
+          setMethodPayment={setMethodPayment}
+        />
+      ) : null}
       <div
         className="
          fixed
@@ -117,9 +177,15 @@ const Cart = ({ cartItem, setCardItem }) => {
             {/* Card Item Food Order End */}
           </div>
         </div>
+        <div className="h-20 rounded-xl w-auto mx-4 mb-4 bg-gray-200 text-white">
+          <div className="flex justify-between text-center text-3xl font-bold text-gray-900 mx-3 py-3">
+            <div>Rp.</div>
+            <div>{totalSale}</div>
+          </div>
+        </div>
         <button
-          // onClick={() => setShowModal(true)}
-          onClick={postSale}
+          onClick={checkoutNow}
+          // onClick={postSale}
           className="
            bg-yellow-500
            mb-3
@@ -135,6 +201,7 @@ const Cart = ({ cartItem, setCardItem }) => {
         >
           CHECKOUT
         </button>
+
         <div className="h-auto w-auto m-4 bg-white text-white">@</div>
       </div>
     </div>

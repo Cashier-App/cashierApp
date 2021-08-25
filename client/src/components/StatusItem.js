@@ -1,4 +1,4 @@
-const StatusItem = () => {
+const StatusItem = ({ stockItems }) => {
   return (
     <div
       className="
@@ -47,8 +47,8 @@ const StatusItem = () => {
           <i className="fas fa-utensils text-blue-500 text-2xl"></i>
         </div>
         <div className="text-right text-gray-700">
-          <p className="text-2xl">1,257</p>
-          <p>Foods</p>
+          <p className="text-2xl">{stockItems.length}</p>
+          <p>Food Items</p>
         </div>
       </div>
       <div
