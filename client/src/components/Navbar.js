@@ -33,7 +33,7 @@ const Navbar = () => {
           className="w-7 h-7 md:w-10 md:h-10 mr-2 rounded-md overflow-hidden"
           src={Logo}
         />
-        <span className="hidden md:block font-bold uppercase">Bakmi Polim</span>
+        <span className="hidden md:block font-bold uppercase">Hacktiv POS</span>
       </div>
       <div
         className="
@@ -97,7 +97,9 @@ const Navbar = () => {
                   className="w-9 h-9 rounded-full mr-2 border-2"
                 />
                 <div>
-                  <div className="text-md font-semibold">Abdan Zam Zam R</div>
+                  <div className="text-md font-semibold">
+                    {localStorage.getItem("email")}
+                  </div>
                   <div className="text-xs -mt-1 text-gray-200 font-normal">
                     Admin
                   </div>
