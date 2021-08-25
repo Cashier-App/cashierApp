@@ -12,3 +12,4 @@ export { default as StatusStockItem } from "./StatusStockItem";
 export { default as StatusStockIngredient } from "./StatusStockIngredient";
 export { default as ModalAddItem } from "./ModalAddItem";
 export { default as ModalAddCategory } from "./ModalAddCategory";
+export { default as ModalAddSale } from "./ModalAddSale";

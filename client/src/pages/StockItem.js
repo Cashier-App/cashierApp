@@ -8,6 +8,7 @@ import { FETCH_ALL_STOCK_ITEM } from "../config/StockItem";
 import { useQuery } from "@apollo/client";
 const StockItem = () => {
   const { data, loading, error } = useQuery(FETCH_ALL_STOCK_ITEM);
+
   return (
     <div>
       <div
