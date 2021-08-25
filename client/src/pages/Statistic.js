@@ -1,7 +1,9 @@
 import { Navbar, Sidebar, StatusItem } from "../components";
 import Statistic from "./Stats";
-
+import { useQuery } from "@apollo/client";
+import { FETCH_SALES } from "../config/statistic";
 const Statistic2 = () => {
+  const { data: totalRevenue, loading, error } = useQuery(FETCH_SALES);
   return (
     <div>
       <div
@@ -17,7 +19,11 @@ const Statistic2 = () => {
         <Navbar />
         <Sidebar />
         <div className="h-full ml-14 mt-14 mb-10 md:ml-52 bg-gray-200 mr-14 md:mr-80">
-          <Statistic />
+          <Statistic
+            totalRevenue={totalRevenue}
+            loading={loading}
+            error={error}
+          />
         </div>
       </div>
     </div>
