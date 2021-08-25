@@ -26,7 +26,7 @@ const ModalUpdateItem = ({ setShowModalUpdate, fetch }) => {
         draggable: true,
         progress: undefined,
       });
-    }
+    },
   });
   const { data, loading } = useQuery(FETCH_CATEGORY);
   const { data: dataStockIngredients, loading: loadingIngredients } = useQuery(
@@ -39,7 +39,7 @@ const ModalUpdateItem = ({ setShowModalUpdate, fetch }) => {
     price: fetch.price,
     category: fetch.category._id,
     stock: fetch.stock,
-    recipes: []
+    recipes: [],
     // recipes: [{ingredient: fetch.recipes.ingredient._id, total: fetch.recipes.ingredient.total, qty: fetch.recipes.qty}],
   });
   const [recipe, setRecipe] = useState({
@@ -52,41 +52,57 @@ const ModalUpdateItem = ({ setShowModalUpdate, fetch }) => {
   function handleSubmit(e) {
     e.preventDefault();
     let { name, price, category, stock, recipes } = stockItem;
-    recipes.forEach(rcp => {
-      delete rcp.total
-    })
+    recipes.forEach((rcp) => {
+      delete rcp.total;
+    });
     price = Number(price);
     if (categoryName !== "Food") {
       recipes = [];
     }
     console.log(name, price, category, stock, recipes);
-    let maxStock = []
-    recipes.forEach(el => {
-      maxStock.push(el.total / el.qty)
-    })
-    maxStock = Math.floor(maxStock.sort((a, b) => a - b)[0])
-    console.log(maxStock, 'ini max stock');
-      if(categoryName !== "Food") {
-        editStockItem({
-          variables: { _id: fetch._id, file, name, price, category, recipes, stock },
+    let maxStock = [];
+    recipes.forEach((el) => {
+      maxStock.push(el.total / el.qty);
+    });
+    maxStock = Math.floor(maxStock.sort((a, b) => a - b)[0]);
+    console.log(maxStock, "ini max stock");
+    if (categoryName !== "Food") {
+      editStockItem({
+        variables: {
+          _id: fetch._id,
+          file,
+          name,
+          price,
+          category,
+          recipes,
+          stock,
+        },
+      });
+    } else {
+      if (stock > maxStock) {
+        toast.error(`Maximum stock is ${maxStock}`, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
         });
       } else {
-        if (stock > maxStock) {
-          toast.error(`Maximum stock is ${maxStock}`, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
-        } else {
-          editStockItem({
-            variables: { _id: fetch._id, file, name, price, category, recipes, stock },
-          });
-        }
+        editStockItem({
+          variables: {
+            _id: fetch._id,
+            file,
+            name,
+            price,
+            category,
+            recipes,
+            stock,
+          },
+        });
       }
+    }
   }
   function onChange({
     target: {
@@ -216,7 +232,11 @@ const ModalUpdateItem = ({ setShowModalUpdate, fetch }) => {
                           {!loading &&
                             data.categories.map((category) => {
                               return (
-                                <option key={category._id} value={category._id} selected={category._id === fetch.category}>
+                                <option
+                                  key={category._id}
+                                  value={category._id}
+                                  selected={category._id === fetch.category}
+                                >
                                   {category.name}
                                 </option>
                               );
@@ -327,7 +347,7 @@ const ModalUpdateItem = ({ setShowModalUpdate, fetch }) => {
                       Image:
                     </label>
                     <div className="relative">
-                      <input onChange={onChange} type="file" required/>
+                      <input onChange={onChange} type="file" required />
                     </div>
                   </div>
 
@@ -434,23 +454,26 @@ const ModalUpdateItem = ({ setShowModalUpdate, fetch }) => {
                             <input
                               onChange={(e) => {
                                 if (+e.target.value > stockIngredient.total) {
-                                  toast.error("Quantity cannot be greater than stock", {
-                                    position: "top-right",
-                                    autoClose: 5000,
-                                    hideProgressBar: false,
-                                    closeOnClick: true,
-                                    pauseOnHover: true,
-                                    draggable: true,
-                                    progress: undefined,
-                                  });
+                                  toast.error(
+                                    "Quantity cannot be greater than stock",
+                                    {
+                                      position: "top-right",
+                                      autoClose: 5000,
+                                      hideProgressBar: false,
+                                      closeOnClick: true,
+                                      pauseOnHover: true,
+                                      draggable: true,
+                                      progress: undefined,
+                                    }
+                                  );
                                 } else {
-                                setRecipe({
-                                  ingredient: stockIngredient._id,
-                                  total: stockIngredient.total,
-                                  qty: e.target.value,
-                                })
-                              }
-                            }}
+                                  setRecipe({
+                                    ingredient: stockIngredient._id,
+                                    total: stockIngredient.total,
+                                    qty: e.target.value,
+                                  });
+                                }
+                              }}
                               type="number"
                               className="border rounded-md px-2 w-20 ml-10 text-center"
                               min="0"

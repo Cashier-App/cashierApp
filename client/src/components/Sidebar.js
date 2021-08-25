@@ -1,11 +1,16 @@
 import { Link, useHistory } from "react-router-dom";
 
 const Sidebar = () => {
+  const history = useHistory();
   const {
     location: { pathname },
   } = useHistory();
   //   console.log(pathname);
-
+  const goToLogin = () => {
+    console.log("clicked");
+    localStorage.clear();
+    history.push("/login");
+  };
   return (
     <div
       className="
@@ -318,8 +323,9 @@ const Sidebar = () => {
               <span className="inline-flex justify-center items-center ml-4 p-1">
                 <i className="fas fa-sign-out-alt text-blue-500 text-lg"></i>
               </span>
-              <span
-                className="
+              <button onClick={goToLogin}>
+                <span
+                  className="
                    ml-2
                    text-sm
                    tracking-wide
@@ -328,9 +334,10 @@ const Sidebar = () => {
                    font-semibold
                    pl-1
                  "
-              >
-                Logout
-              </span>
+                >
+                  Logout
+                </span>
+              </button>
             </a>
           </li>
         </ul>
