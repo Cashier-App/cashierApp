@@ -258,7 +258,7 @@ const Sidebar = () => {
               </span>
             </Link>
           </li>
-          <li>
+          {/* <li>
             <Link
               to="/stock-ingredient"
               className="
@@ -297,7 +297,7 @@ const Sidebar = () => {
                 Stock Ingredients
               </span>
             </Link>
-          </li>
+          </li> */}
           <li>
             <a
               href="#"

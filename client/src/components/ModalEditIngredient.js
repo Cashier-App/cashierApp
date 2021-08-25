@@ -19,11 +19,6 @@ const ModalEditIngredient = ({ setShowModalEdit, ingredient }) => {
         { query: FETCH_ALL_INGREDIENTS },
         { query: FETCH_ALL_STOCK_ITEM },
       ],
-      onCompleted() {
-        let newData = client.readQuery({
-          query: FETCH_ALL_STOCK_ITEM,
-        });
-      },
     }
   );
 
