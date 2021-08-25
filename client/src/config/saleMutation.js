@@ -1,16 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const ADD_SALE = gql`
-  mutation AddSale(
-    $addSalesPayment: String
-    $addSalesAdminName: String
-    $addSalesItems: [add_item]
-  ) {
-    addSales(
-      payment: $addSalesPayment
-      adminName: $addSalesAdminName
-      items: $addSalesItems
-    ) {
+  mutation AddSale($items: [add_item], $payment: String, $adminName: String) {
+    addSales(items: $items, adminName: $payment, payment: $adminName) {
       _id
       items {
         _id
