@@ -12,7 +12,7 @@ const StatusItem = () => {
          p-4
          gap-4
          pb-5
-         bg-white
+         bg-gray-200
        "
     >
       <div

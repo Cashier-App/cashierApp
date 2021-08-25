@@ -89,7 +89,7 @@ const Login = () => {
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col mb-5">
               <label
-                for="email"
+                htmlFor="email"
                 className="mb-1 text-xs tracking-wide text-gray-600"
               >
                 E-Mail Address:
@@ -108,7 +108,7 @@ const Login = () => {
                     text-gray-400
                   "
                 >
-                  <i className="fas fa-at text-blue-500"></i>
+                  <i className="fas fa-at text-blue-500 z-20"></i>
                 </div>
 
                 <input
@@ -133,7 +133,7 @@ const Login = () => {
             </div>
             <div className="flex flex-col mb-6">
               <label
-                for="password"
+                htmlFor="password"
                 className="mb-1 text-xs sm:text-sm tracking-wide text-gray-600"
               >
                 Password:
@@ -149,11 +149,10 @@ const Login = () => {
                     top-0
                     h-full
                     w-10
-                    text-gray-400
                   "
                 >
                   <span>
-                    <i className="fas fa-lock text-blue-500"></i>
+                    <i className="fas fa-lock text-blue-500 "></i>
                   </span>
                 </div>
 

@@ -105,18 +105,8 @@ const typeDefs = gql`
       total: Float
     ): StockIngredient
     deleteStockIngredient(_id: ID): String
-    # mutation user
     loginUser(email: String, password: String): access_token
     registerUser(email: String, password: String, name: String): String
-    # mutation stockItems
-    # addStockItem(
-    #   name: String
-    #   price: Float
-    #   category: String
-    #   imageUrl: String
-    #   recipes: [add_recipe]
-    #   stock: Float
-    # ): StockItem
     editStockItem(
       _id: ID
       file: Upload
