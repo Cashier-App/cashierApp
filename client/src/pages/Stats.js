@@ -44,7 +44,9 @@ const Statistic = ({ totalRevenue, loading, error }) => {
       {
         label: "Total Sales",
         data: months,
-        backgroundColor: ["rgba(245, 229, 27, 1)", "rgba(245, 229, 27, 1)", "rgba(245, 229, 27, 1)"],
+        backgroundColor: ["rgba(54, 162, 235, 0.2)"],
+        borderColor: "rgba(54, 162, 235, 1)",
+        fill: false,
       },
     ],
   };
@@ -52,7 +54,7 @@ const Statistic = ({ totalRevenue, loading, error }) => {
   return (
     <div className="mt-6">
       <div>
-        <h1 className="hidden md:block font-bold uppercase ml-14 mt-6 text-3xl text-blue-600">Statistic</h1>
+        <h1 className="hidden md:block font-bold uppercase ml-14 mt-6 lg:text-3xl text-md text-blue-600">Statistic</h1>
       </div>
       <div
         className="rounded-b-2xl
@@ -67,7 +69,7 @@ const Statistic = ({ totalRevenue, loading, error }) => {
     pb-5
     bg-white"
       >
-        <div className="mini-box grid grid-cols-2 grid-rows-2 gap-4 mt-6 ml-8 text-2xl">
+        <div className="mini-box grid grid-cols-2 grid-rows-2 gap-4 mt-6 ml-8 text-sm lg:text-2xl">
           <div className="flex flex-col input-box stats-color mx-1 my-1 items-center justify-center relative">
             <div
               className="
@@ -260,7 +262,7 @@ const Statistic = ({ totalRevenue, loading, error }) => {
           </div>
         </div>
         <div>
-          <div className="box-statistic">
+          <div className="box-statistic p-2">
             <div>
               <Line
                 data={data}
