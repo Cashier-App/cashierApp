@@ -20,7 +20,7 @@ class Controller {
         return res.status(201).json(response);
       } else return res.status(400).json({ message: "Category already exist" });
     } catch (err) {
-      /* istanbul ignore else */
+      // /* istanbul ignore else */
       if (err.errors !== undefined) {
         return res.status(400).json({ message: err.errors.name.message });
       } else {
