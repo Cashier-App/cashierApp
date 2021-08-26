@@ -1,6 +1,6 @@
 const { ApolloServer } = require("apollo-server-express");
-const { typeDefs } = require("./graphQL/typeDef");
-const { resolvers } = require("./graphQL/resolvers");
+const { typeDefs } = require("./graphql/typeDef");
+const { resolvers } = require("./graphql/resolvers");
 const {
   GraphQLUpload,
   graphqlUploadExpress, // A Koa implementation is also exported.
