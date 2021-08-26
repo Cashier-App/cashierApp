@@ -4,8 +4,13 @@ import {
   // StatusStockItem,
   TableCategory,
 } from "../components";
-
+import { useEffect } from "react";
+import { useHistory } from "react-router-dom";
 const Category = () => {
+  const history = new useHistory();
+  useEffect(() => {
+    if (!localStorage.access_token) history.push("/login");
+  }, []);
   return (
     <div>
       <div

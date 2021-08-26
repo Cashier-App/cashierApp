@@ -7,7 +7,10 @@ import {
 import { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import { FETCH_SALES } from "../config/transactionQuery";
+import { useHistory } from "react-router-dom";
+
 const Transaction = () => {
+  const history = new useHistory();
   const { data, loading, error } = useQuery(FETCH_SALES);
   const [productSold, setProductSold] = useState(0);
   const [totalSales, setTotalSales] = useState(0);
@@ -27,6 +30,8 @@ const Transaction = () => {
       setTotalCategories([...new Set(categories)].length);
       setProductSold(allProductSold);
       setTotalSales(totalAllSales);
+
+      if (!localStorage.access_token) history.push("/login");
     }
   }, [data]);
   return (

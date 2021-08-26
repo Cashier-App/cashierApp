@@ -6,9 +6,14 @@ import {
 } from "../components";
 import { FETCH_ALL_STOCK_ITEM } from "../config/StockItem";
 import { useQuery } from "@apollo/client";
+import { useEffect } from "react";
+import { useHistory } from "react-router-dom";
 const StockItem = () => {
   const { data, loading, error } = useQuery(FETCH_ALL_STOCK_ITEM);
-
+  const history = new useHistory();
+  useEffect(() => {
+    if (!localStorage.access_token) history.push("/login");
+  }, []);
   return (
     <div>
       <div

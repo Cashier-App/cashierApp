@@ -2,8 +2,9 @@ import { useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { CardItem, Cart, Navbar, Sidebar, StatusItem } from "../components";
 import { FETCH_ALL_STOCK_ITEM } from "../config/StockItem";
-
+import { useHistory } from "react-router-dom";
 const Home = () => {
+  const history = new useHistory();
   const { data, loading, error } = useQuery(FETCH_ALL_STOCK_ITEM);
   const [cartItem, setCardItem] = useState([]);
   const [totalSale, setTotalSale] = useState(0);
@@ -13,6 +14,7 @@ const Home = () => {
     if (!loading) {
       setStockItems(data.stockItems);
     }
+    if (!localStorage.access_token) history.push("/login");
   }, [loading]);
 
   return (
