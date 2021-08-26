@@ -23,7 +23,7 @@ const CardItem = ({
         draggable: true,
         progress: undefined,
       });
-    } else if (item.stock < Number(quantity)) {
+    } else if (item.stock < Number(quantity) || Number(quantity) < 0) {
       toast.error("Not enough stock items!", { position: "top-right" });
       // Swal.fire({
       //   icon: "error",
