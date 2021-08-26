@@ -22,16 +22,14 @@ const Cart = ({
     refetchQueries: [FETCH_SALES],
   });
   const { data: dataStock } = useQuery(FETCH_ALL_STOCK_ITEM);
+  const [money, setMoney] = useState(0);
   const [editStock] = useMutation(EDIT_STOCK_ITEM, {
     refetchQueries: [FETCH_ALL_STOCK_ITEM],
   });
 
-  console.log("METHOD PAYMENT", methodPayment);
-
   const deletItem = (id) => {
     let deleteCartItem = {};
     const newCartItem = cartItem.filter((el) => {
-      // console.log("ELLLL", el);
       if (el.id == id) {
         deleteCartItem = { id: el.items._id, qty: el.qty };
         setTotalSale(totalSale - Number(el.total));
@@ -53,28 +51,38 @@ const Cart = ({
   };
 
   const postSale = () => {
-    const dataSale = {
-      items: [],
-      payment: methodPayment,
-      adminName: "Admin",
-    };
-    cartItem.forEach((el) => {
-      const newStock = el.items.stock - el.qty;
-      editStock({
+    if (money <= 0 || money < totalSale) {
+      toast.error("Nominal money is less!", { position: "top-right" });
+    } else {
+      const dataSale = {
+        items: [],
+        payment: methodPayment,
+        adminName: "Admin",
+      };
+      cartItem.forEach((el) => {
+        const newStock = el.items.stock - el.qty;
+        editStock({
+          variables: {
+            editStockItemId: el.items._id,
+            editStockItemStock: newStock,
+          },
+        });
+        dataSale.items.push({ item: el.items._id, qty: el.qty });
+      });
+      addSale({
         variables: {
-          editStockItemId: el.items._id,
-          editStockItemStock: newStock,
+          items: dataSale.items,
+          payment: dataSale.adminName,
+          adminName: dataSale.payment,
         },
       });
-      dataSale.items.push({ item: el.items._id, qty: el.qty });
-    });
-    addSale({
-      variables: {
-        items: dataSale.items,
-        payment: dataSale.adminName,
-        adminName: dataSale.payment,
-      },
-    });
+      setShowModal(false);
+      setCardItem([]);
+      setTotalSale(0);
+      toast.success("Checkout order item successfully", {
+        position: "top-right",
+      });
+    }
   };
 
   const checkoutNow = () => {
@@ -94,6 +102,8 @@ const Cart = ({
     <div>
       {showModal ? (
         <ModalAddSale
+          money={money}
+          setMoney={setMoney}
           setShowModal={setShowModal}
           totalSale={totalSale}
           postSale={postSale}
@@ -138,7 +148,7 @@ const Cart = ({
                 >
                   <img
                     className="rounded-xl w-12 m-1"
-                    src="https://ik.imagekit.io/damario789/bakmipolim/Bakmi-Ayam-Original-Komplit_ESX7TDS3A.jpeg?updatedAt=1627366608044"
+                    src={item.items.imageUrl}
                     alt="asd"
                   />
                   <div className="mr-2 ml-1 w-full flex flex-col justify-start mt-1">
@@ -168,7 +178,9 @@ const Cart = ({
                       >
                         {item.qty}
                       </div>
-                      <div className="font-semibold">Rp. {item.total}</div>
+                      <div className="font-semibold">
+                        Rp. {item.total.toLocaleString()}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -180,7 +192,7 @@ const Cart = ({
         <div className="h-20 rounded-xl w-auto mx-4 mb-4 bg-gray-200 text-white">
           <div className="flex justify-between text-center text-3xl font-bold text-gray-900 mx-3 py-3">
             <div>Rp.</div>
-            <div>{totalSale}</div>
+            <div>{totalSale.toLocaleString()}</div>
           </div>
         </div>
         <button

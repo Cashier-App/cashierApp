@@ -8,8 +8,10 @@ const ModalAddSale = ({
   totalSale,
   postSale,
   setMethodPayment,
+  money,
+  setMoney,
 }) => {
-  const [money, setMoney] = useState(0);
+  // const [money, setMoney] = useState(0);
   const [returnMoney, setReturnMoney] = useState(0);
 
   useEffect(() => {

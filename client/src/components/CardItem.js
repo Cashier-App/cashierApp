@@ -24,11 +24,12 @@ const CardItem = ({
         progress: undefined,
       });
     } else if (item.stock < Number(quantity)) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Not enough stock items!",
-      });
+      toast.error("Not enough stock items!", { position: "top-right" });
+      // Swal.fire({
+      //   icon: "error",
+      //   title: "Oops...",
+      //   text: "Not enough stock items!",
+      // });
     } else {
       const newItem = Object.assign({}, item);
       newItem.index = cartItem.length + 1;
@@ -85,7 +86,9 @@ const CardItem = ({
           <div className="mx-3">
             <div className="text-gray-800 font-bold">{item.name}</div>
             <div className="flex justify-between mt-1">
-              <div className="text-gray-800 text-sm">Rp. {item.price}</div>
+              <div className="text-gray-800 text-sm">
+                Rp. {item.price.toLocaleString()}
+              </div>
               <div className="bg-blue-200 text-sm w-16 text-center text-blue-700 rounded-md font-medium">
                 Stock: {item.stock}
               </div>

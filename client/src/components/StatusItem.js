@@ -1,4 +1,38 @@
+import { useQuery } from "@apollo/client";
+import { useEffect, useState } from "react";
+import { FETCH_SALES } from "../config/transactionQuery";
+
 const StatusItem = ({ stockItems }) => {
+  const { data, loading, error } = useQuery(FETCH_SALES);
+  const [totalSales, setTotalSales] = useState(0);
+  const [productSold, setProductSold] = useState(0);
+
+  let readyItems = 0;
+  let outItems = 0;
+
+  stockItems.map((el) => {
+    if (el.stock === 0) {
+      outItems += 1;
+    } else {
+      readyItems += 1;
+    }
+  });
+
+  useEffect(() => {
+    let allProductSold = 0;
+    let totalAllSales = 0;
+    if (!loading) {
+      data.sales.forEach((el) => {
+        totalAllSales += el.total;
+        el.items.forEach((el2) => {
+          allProductSold += el2.qty;
+        });
+      });
+      setProductSold(allProductSold);
+      setTotalSales(totalAllSales);
+    }
+  }, [data]);
+
   return (
     <div
       className="
@@ -104,13 +138,50 @@ const StatusItem = ({ stockItems }) => {
           </svg>
         </div>
         <div className="text-right text-gray-600">
-          <p className="text-2xl">557</p>
-          <p>Orders</p>
+          <p className="text-2xl">{readyItems}</p>
+          <p>Ready items</p>
         </div>
       </div>
       <div
         className="
            bg-white
+           shadow-lg
+           rounded-lg
+           flex
+           items-center
+           justify-between
+           p-3
+           text-white
+           font-medium
+           group
+         "
+      >
+        <div
+          className="
+             flex
+             justify-center
+             items-center
+             w-14
+             h-14
+             bg-blue-100
+             rounded-full
+             transition-all
+             duration-300
+             transform
+             group-hover:rotate-12
+           "
+        >
+          <i className="far fa-times-circle text-red-500 text-2xl"></i>
+        </div>
+        <div className="text-right text-gray-600">
+          <p className="text-2xl">{outItems}</p>
+          <p>Out of Items</p>
+        </div>
+      </div>
+      <div
+        className="
+           bg-white
+           dark:bg-gray-800
            shadow-lg
            rounded-lg
            flex
@@ -162,66 +233,8 @@ const StatusItem = ({ stockItems }) => {
           </svg>
         </div>
         <div className="text-right text-gray-600">
-          <p className="text-2xl">$11,257</p>
-          <p>Sales</p>
-        </div>
-      </div>
-      <div
-        className="
-           bg-white
-           dark:bg-gray-800
-           shadow-lg
-           rounded-lg
-           flex
-           items-center
-           justify-between
-           p-3
-           text-white
-           font-medium
-           group
-         "
-      >
-        <div
-          className="
-             flex
-             justify-center
-             items-center
-             w-14
-             h-14
-             bg-blue-100
-             rounded-full
-             transition-all
-             duration-300
-             transform
-             group-hover:rotate-12
-           "
-        >
-          <svg
-            width="30"
-            height="30"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            className="
-               stroke-current
-               text-blue-500
-               transform
-               transition-transform
-               duration-500
-               ease-in-out
-             "
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            ></path>
-          </svg>
-        </div>
-        <div className="text-right text-gray-600">
-          <p className="text-2xl">$75,257</p>
-          <p>Balances</p>
+          <p className="text-2xl">{productSold}</p>
+          <p>Total Sales</p>
         </div>
       </div>
     </div>
