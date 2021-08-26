@@ -63,7 +63,7 @@ const TableStockItem = ({ stockItems }) => {
                     dark:text-gray-400 dark:bg-gray-800
                   "
                 >
-                  <th className="px-4 py-3">Food Item</th>
+                  <th className="px-4 py-3">Stock Item</th>
                   <th className="px-4 py-3">Price</th>
                   <th className="px-4 py-3">Category</th>
                   <th className="px-4 py-3">Actions</th>

@@ -36,7 +36,7 @@ const TableTransaction = (props) => {
                  dark:text-gray-400 dark:bg-gray-800
                "
               >
-                <th className="px-4 py-3">Food Item</th>
+                <th className="px-4 py-3">Item</th>
                 <th className="px-4 py-3">Category</th>
                 <th className="px-4 py-3">Price</th>
                 <th className="px-4 py-3">Total</th>
@@ -68,7 +68,7 @@ const TableTransaction = (props) => {
                      dark:hover:bg-gray-900
                      text-gray-700
                      dark:text-gray-400
-                     
+                     border-l-0 border-white
                    `
                           : `bg-gray-50
                      dark:bg-gray-800

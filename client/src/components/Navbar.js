@@ -38,7 +38,7 @@ const Navbar = () => {
           src={Logo}
           alt="adsads"
         />
-        <span className="hidden md:block font-bold uppercase"></span>
+        <span className="hidden md:block font-bold uppercase">Cashier App</span>
       </div>
       <div
         className="

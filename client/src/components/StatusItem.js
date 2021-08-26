@@ -78,11 +78,11 @@ const StatusItem = ({ stockItems }) => {
              group-hover:rotate-12
            "
         >
-          <i className="fas fa-utensils text-blue-500 text-2xl"></i>
+          <i className="fas fa-warehouse text-blue-500 text-2xl"></i>
         </div>
         <div className="text-right text-gray-700">
           <p className="text-2xl">{stockItems.length}</p>
-          <p>Food Items</p>
+          <p>Stock Items</p>
         </div>
       </div>
       <div
