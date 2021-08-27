@@ -23,8 +23,10 @@ const Transaction = () => {
       data.sales.forEach((el) => {
         totalAllSales += el.total;
         el.items.forEach((el2) => {
-          categories.push(el2.item.category.name);
-          allProductSold += el2.qty;
+          if (el2.item !== null) {
+            categories.push(el2.item.category.name);
+            allProductSold += el2.qty;
+          }
         });
       });
       setTotalCategories([...new Set(categories)].length);

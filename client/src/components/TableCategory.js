@@ -6,8 +6,9 @@ import {
   DELETE_CATEGORY_MUTATION,
 } from "../config/categoryQuery";
 import { useQuery, useMutation, useApolloClient } from "@apollo/client";
-import { ToastContainer, toast } from "react-toastify";
-
+import { toast } from "react-toastify";
+import { FETCH_ALL_STOCK_ITEM } from "../config/StockItem";
+import { FETCH_SALES } from "../config/transactionQuery";
 const TableCategory = () => {
   const client = useApolloClient();
   const [showModal, setShowModal] = useState(false);
@@ -16,7 +17,24 @@ const TableCategory = () => {
   const [dataDelete, setDataDelete] = useState("");
   const { data, loading } = useQuery(FETCH_CATEGORY);
   const [deleteCategory] = useMutation(DELETE_CATEGORY_MUTATION, {
+    refetchQueries: [{ query: FETCH_ALL_STOCK_ITEM }],
     onCompleted() {
+      const { categories } = client.readQuery({ query: FETCH_CATEGORY });
+      const { sales } = client.readQuery({ query: FETCH_SALES });
+      let newCategoryList = [...categories];
+      console.log(dataDelete);
+
+      newCategoryList.forEach((el, index) => {
+        if (el._id === dataDelete) {
+          newCategoryList.splice(index, 1);
+        }
+      });
+      client.writeQuery({
+        query: FETCH_CATEGORY,
+        data: {
+          categories: newCategoryList,
+        },
+      });
       toast.success("Delete category success!", {
         position: "top-right",
         autoClose: 5000,
@@ -25,22 +43,6 @@ const TableCategory = () => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-      });
-      const { categories } = client.readQuery({ query: FETCH_CATEGORY });
-
-      let newCategoryList = [...categories];
-
-      newCategoryList.forEach((el, index) => {
-        if (el._id === dataDelete) {
-          newCategoryList.splice(index, 1);
-        }
-      });
-
-      client.writeQuery({
-        query: FETCH_CATEGORY,
-        data: {
-          categories: newCategoryList,
-        },
       });
     },
     onError() {

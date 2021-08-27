@@ -1,12 +1,14 @@
 import { useState } from "react";
+import { useQuery } from "@apollo/client";
+import { FETCH_SALES } from "../config/transactionQuery";
 const TableTransaction = (props) => {
   const { sales } = props;
-
+  const { data, loading, error } = useQuery(FETCH_SALES);
   /* Pagination */
   const [pageNumber, setPageNumber] = useState(1);
   const [postNumber] = useState(5);
   const currentPageNumber = pageNumber * postNumber - postNumber;
-  let copySales = Array.from(sales);
+  let copySales = [...data.sales];
   copySales = copySales.reverse();
   const paginatedPosts = copySales.splice(currentPageNumber, postNumber);
   const handlePrev = () => {
@@ -53,15 +55,13 @@ const TableTransaction = (props) => {
               {/* Pagination */}
               {paginatedPosts.map((items) => {
                 return items.items.map((item) => {
-                  {
-                    console.log(items.items.length);
-                  }
-                  return (
-                    <tr
-                      key={item._id}
-                      className={
-                        items.items.length > 1
-                          ? `
+                  if (item.item !== null) {
+                    console.log(item.item);
+                    return (
+                      <tr
+                        className={
+                          items.items.length > 1
+                            ? `
                      bg-gray-200
                      dark:bg-gray-800
                      hover:bg-gray-100
@@ -70,18 +70,18 @@ const TableTransaction = (props) => {
                      dark:text-gray-400
                      border-l-0 border-white
                    `
-                          : `bg-gray-50
+                            : `bg-gray-50
                      dark:bg-gray-800
                      hover:bg-gray-100
                      dark:hover:bg-gray-900
                      text-gray-700
                      dark:text-gray-400`
-                      }
-                    >
-                      <td className="px-4 py-3">
-                        <div className="flex items-center text-sm">
-                          <div
-                            className="
+                        }
+                      >
+                        <td className="px-4 py-3">
+                          <div className="flex items-center text-sm">
+                            <div
+                              className="
                        relative
                        hidden
                        w-8
@@ -90,40 +90,43 @@ const TableTransaction = (props) => {
                        rounded-full
                        md:block
                      "
-                          >
-                            <img
-                              className="object-cover w-full h-full rounded-full"
-                              src={item.item.imageUrl}
-                              alt=""
-                              loading="lazy"
-                            />
-                            <div
-                              className="absolute inset-0 rounded-full shadow-inner"
-                              aria-hidden="true"
-                            ></div>
+                            >
+                              <img
+                                className="object-cover w-full h-full rounded-full"
+                                src={
+                                  item.item.imageUrl ? item.item.imageUrl : ""
+                                }
+                                alt=""
+                                loading="lazy"
+                              />
+                              <div
+                                className="absolute inset-0 rounded-full shadow-inner"
+                                aria-hidden="true"
+                              ></div>
+                            </div>
+                            <div>
+                              <p className="font-semibold">{item.item.name}</p>
+                              <p className="text-xs text-gray-600 dark:text-gray-400">
+                                {item.qty} unit
+                              </p>
+                            </div>
                           </div>
-                          <div>
-                            <p className="font-semibold">{item.item.name}</p>
-                            <p className="text-xs text-gray-600 dark:text-gray-400">
-                              {item.qty} unit
-                            </p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 text-sm">
-                        {item.item.category.name}
-                      </td>
-                      <td className="px-4 py-3 text-sm">
-                        Rp. {item.item.price.toLocaleString()}
-                      </td>
-                      <td className="px-4 py-3 text-sm">
-                        Rp. {items.total.toLocaleString()}
-                      </td>
-                      <td className="px-4 py-3 text-sm">
-                        {new Date(items.date).toISOString().split("T")[0]}
-                      </td>
-                    </tr>
-                  );
+                        </td>
+                        <td className="px-4 py-3 text-sm">
+                          {item.item.category.name}
+                        </td>
+                        <td className="px-4 py-3 text-sm">
+                          Rp. {item.item.price.toLocaleString()}
+                        </td>
+                        <td className="px-4 py-3 text-sm">
+                          Rp. {items.total.toLocaleString()}
+                        </td>
+                        <td className="px-4 py-3 text-sm">
+                          {new Date(items.date).toISOString().split("T")[0]}
+                        </td>
+                      </tr>
+                    );
+                  }
                 });
               })}
               {/* Pagination */}

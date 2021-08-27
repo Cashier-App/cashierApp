@@ -5,13 +5,14 @@ import { DELETE_STOCK_ITEM } from "../config/StockItem";
 import { FETCH_ALL_STOCK_ITEM } from "../config/StockItem";
 import { useMutation } from "@apollo/client";
 import { toast } from "react-toastify";
+import { FETCH_SALES } from "../config/transactionQuery";
 
 const TableStockItem = ({ stockItems }) => {
   const [showModal, setShowModal] = useState(false);
   const [showModalUpdate, setShowModalUpdate] = useState(false);
   const [dataPopulate, setDataPopulate] = useState("");
   const [deleteStockItem] = useMutation(DELETE_STOCK_ITEM, {
-    refetchQueries: [FETCH_ALL_STOCK_ITEM],
+    refetchQueries: [FETCH_ALL_STOCK_ITEM, FETCH_SALES],
     onCompleted() {
       toast.success("Deleted!", {
         position: "top-right",
