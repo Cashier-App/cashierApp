@@ -414,33 +414,23 @@ const deleteStockItem = async (_id) => {
 
 // sales
 const getSales = async () => {
-  let sales = await redis.get("sales");
-  if (sales) return JSON.parse(sales);
-  else {
-    try {
-      let response = await API.get("/Sales");
-      const { data: dataSales } = response;
-      await redis.set("sales", JSON.stringify(dataSales));
-      return dataSales;
-    } catch (err) {
-      throw new Error(err.response.data.message);
-    }
+  try {
+    let response = await API.get("/Sales");
+    const { data: dataSales } = response;
+    await redis.set("sales", JSON.stringify(dataSales));
+    return dataSales;
+  } catch (err) {
+    throw new Error(err.response.data.message);
   }
 };
 
 const getSale = async (id) => {
-  let sales = await redis.get("sales");
-  if (sales) {
-    category = JSON.parse(sales).find((category) => category._id === id);
-    if (category) return category;
-  } else {
-    try {
-      let res = await API.get(`/Sales/${id}`);
-      const { data } = res;
-      return data;
-    } catch (err) {
-      throw new Error(err.response.data.message);
-    }
+  try {
+    let res = await API.get(`/Sales/${id}`);
+    const { data } = res;
+    return data;
+  } catch (err) {
+    throw new Error(err.response.data.message);
   }
 };
 
